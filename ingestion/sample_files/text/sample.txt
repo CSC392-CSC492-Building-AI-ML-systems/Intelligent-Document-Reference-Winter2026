@@ -1,0 +1,4 @@
+This is a sample plain text file for testing the ingestion pipeline.
+
+It contains multiple paragraphs and lines to verify that text parsing
+works correctly and preserves structure.

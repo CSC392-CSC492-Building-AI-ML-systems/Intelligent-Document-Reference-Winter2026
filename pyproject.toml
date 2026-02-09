@@ -6,10 +6,12 @@ readme = "README.md"
 requires-python = ">=3.11,<4.0"
 dependencies = [
     "fastapi>=0.128.3",
+    "tiktoken>=0.8.0",
     "httpx>=0.28.1",
     "numpy>=2.4.2",
     "openai>=2.17.0",
     "pillow>=12.1.0",
+    "pymupdf>=1.25.0",
     "python-dotenv>=1.2.1",
     "sqlite-vec>=0.1.6",
     "typer>=0.21.1",
@@ -17,6 +19,9 @@ dependencies = [
     "voyageai>=0.3.7",
     "watchdog>=6.0.0",
 ]
+
+[project.optional-dependencies]
+ocr = ["pytesseract>=0.3.10"]
 
 [dependency-groups]
 dev = [
