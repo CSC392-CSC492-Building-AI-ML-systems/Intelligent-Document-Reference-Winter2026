@@ -49,7 +49,7 @@ class DebounceHandler:
             if event.path in self._pending:
                 del self._pending[event.path]
         
-        # Call the callback
+        # Call the callback outside the lock to avoid deadlock
         try:
             self.callback(event)
         except Exception as e:
@@ -58,11 +58,20 @@ class DebounceHandler:
     
     def flush(self):
         """Flush all pending events immediately."""
+        events_to_fire = []
         with self._lock:
             for event, timer in self._pending.values():
                 timer.cancel()
-                self._fire_event(event)
+                events_to_fire.append(event)
             self._pending.clear()
+        
+        # Fire events outside the lock
+        for event in events_to_fire:
+            try:
+                self.callback(event)
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).error(f"Error processing event: {e}", exc_info=True)
 
 
 def debounce(events: list[FileEvent], delay: float = 2.0) -> list[FileEvent]:
