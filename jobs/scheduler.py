@@ -1,6 +1,6 @@
 """Scheduler and deduplication logic for job management."""
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
 from jobs.queue import Job, JobQueue, get_queue, enqueue as queue_enqueue
 
@@ -81,7 +81,7 @@ def schedule_delete_job(path: str, priority: int = 2) -> Optional[str]:
     )
 
 
-def schedule_batch(jobs: list[Dict[str, Any]]) -> list[Optional[str]]:
+def schedule_batch(jobs: List[Dict[str, Any]]) -> List[Optional[str]]:
     """
     Schedule multiple jobs in batch.
     

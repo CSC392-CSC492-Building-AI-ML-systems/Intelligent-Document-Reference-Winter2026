@@ -4,7 +4,7 @@ Debouncing prevents duplicate processing of rapid file changes.
 """
 import threading
 import time
-from typing import Callable, Dict, Optional
+from typing import Callable, Dict, Optional, Tuple, List
 from watcher.events import FileEvent
 
 
@@ -21,7 +21,7 @@ class DebounceHandler:
         """
         self.delay = delay
         self.callback = callback
-        self._pending: Dict[str, tuple[FileEvent, threading.Timer]] = {}
+        self._pending: Dict[str, Tuple[FileEvent, threading.Timer]] = {}
         self._lock = threading.Lock()
     
     def add_event(self, event: FileEvent):
@@ -74,7 +74,7 @@ class DebounceHandler:
                 logging.getLogger(__name__).error(f"Error processing event: {e}", exc_info=True)
 
 
-def debounce(events: list[FileEvent], delay: float = 2.0) -> list[FileEvent]:
+def debounce(events: List[FileEvent], delay: float = 2.0) -> List[FileEvent]:
     """
     Debounce a list of events by path.
     

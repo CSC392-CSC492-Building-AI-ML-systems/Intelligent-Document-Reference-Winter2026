@@ -1,5 +1,4 @@
 """Job queue implementation with priority and deduplication support."""
-import asyncio
 import hashlib
 import json
 import time

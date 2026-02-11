@@ -139,8 +139,8 @@ def get_queue_stats(queue: Optional[JobQueue] = None) -> Dict[str, Any]:
     q = queue or get_queue()
     stats = q.get_stats()
     
-    # Add additional metrics
-    stats['uptime'] = time.time()  # Placeholder - should track actual start time
+    # Note: 'uptime' tracking would require storing worker start time
+    # This is a placeholder that should be implemented with proper worker lifecycle tracking
     
     return stats
 
