@@ -1,6 +1,7 @@
 inclusion:
   files: []
-  directories: []
+  directories:
+  - C:\Users\zoyaf\Downloads\test
 exclusion:
   files: []
   directories: []

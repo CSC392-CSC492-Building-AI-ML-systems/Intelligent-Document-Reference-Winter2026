@@ -9,11 +9,21 @@ from jobs import JobQueue, transition_state
 
 logger = logging.getLogger(__name__)
 
+# processor functions are expected to accept a file path and optionally
+# an AppContext.  older versions also received a strategy argument, but the
+# signature has been simplified.
 ProcessorFn = Callable[..., None]
 
 
 class Worker:
-    """Async loop that dequeues jobs and runs a processor function."""
+    """Async loop that dequeues jobs and runs a processor function.
+
+    The processor will be called as ``processor(file_path, ctx)``.  The
+    context object is provided so that the function can access the database,
+    clients, settings, etc.  For backwards compatibility tests may still use
+    a variadic signature (``*args, **kwargs``) but production processors
+    should declare ``ctx`` explicitly.
+    """
 
     def __init__(
         self,
@@ -96,10 +106,12 @@ class Worker:
                         )
                         continue
 
-                    # 5. Execute processing based on strategy (Full Index vs. Metadata Update) [cite: 189]
+                    # 5. Execute processor. we no longer forward the strategy
+                    #     argument; `run_index` recomputes it internally and other
+                    #     processors are free to ignore it as well.
                     logger.info("Strategy for job %d: %s", job.id, strategy.value)
                     await asyncio.to_thread(
-                        self._processor, job.file_path, strategy, self._ctx
+                        self._processor, job.file_path, self._ctx
                     )
 
                     await asyncio.to_thread(

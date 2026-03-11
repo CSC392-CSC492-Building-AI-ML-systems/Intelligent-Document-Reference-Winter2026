@@ -254,10 +254,13 @@ class TestWorker:
     @pytest.mark.asyncio
     async def test_worker_processes_job(self, queue: JobQueue, mock_ctx) -> None:
         """Worker should dequeue a job, call the processor, and complete it."""
-        processed: List[str] = []
+        processed: List[tuple[str, object]] = []
 
-        def fake_processor(path: str, *args, **kwargs) -> None:
-            processed.append(path)
+        def fake_processor(path: str, ctx_arg) -> None:
+            # record both values so we can assert that the context went
+            # through and that no extra positional argument (e.g. strategy)
+            # was inserted.
+            processed.append((path, ctx_arg))
 
         queue.enqueue("/tmp/work.txt", source="ui")
 
@@ -269,7 +272,7 @@ class TestWorker:
         await asyncio.sleep(0.5)
         await worker.stop()
 
-        assert processed == ["/tmp/work.txt"]
+        assert processed == [("/tmp/work.txt", mock_ctx)]
         job = queue.list_jobs(status="completed")
         assert len(job) == 1
 
@@ -280,7 +283,9 @@ class TestWorker:
         """Worker should retry a failing job and eventually succeed."""
         call_count = 0
 
-        def flaky_processor(path: str, *args, **kwargs) -> None:
+        def flaky_processor(path: str, ctx_arg, *args, **kwargs) -> None:
+            # ensure ctx is passed and other args stay empty
+            assert ctx_arg is mock_ctx
             nonlocal call_count
             call_count += 1
             if call_count == 1:
@@ -303,7 +308,8 @@ class TestWorker:
     async def test_worker_permanent_failure(self, queue: JobQueue, mock_ctx) -> None:
         """Worker should mark a job as 'failed' after max_attempts."""
 
-        def always_fail(path: str, *args, **kwargs) -> None:
+        def always_fail(path: str, ctx_arg, *args, **kwargs) -> None:
+            assert ctx_arg is mock_ctx
             raise RuntimeError("permanent error")
 
         queue.enqueue("/tmp/permfail.txt", source="ui")
