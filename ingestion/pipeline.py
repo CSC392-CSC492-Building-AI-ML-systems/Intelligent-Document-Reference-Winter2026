@@ -545,7 +545,7 @@ class IngestionPipeline:
         )
 
 
-def run_index(path: str, strategy: Optional[ReindexStrategy] = None, ctx=None) -> None:
+def run_index(path: str, ctx=None, strategy: Optional[ReindexStrategy] = None) -> None:
     """Index a file or directory. Uses ingestion pipeline (final chunks → embed → store)."""
     db = getattr(ctx, "db", None) or (getattr(ctx, "unified_db", None) if ctx else None)
     # Support both ctx.embedder (legacy) and ctx.embedding_client (AppContext)
