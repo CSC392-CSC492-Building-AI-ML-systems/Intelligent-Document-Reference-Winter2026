@@ -11,7 +11,7 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, BinaryIO, Callable, List, Optional, Union
 
-from ingestion.change_detector import determine_strategy, ReindexStrategy
+from ingestion.change_detector import ReindexStrategy, determine_strategy
 from ingestion.chunking import chunk_document
 from ingestion.chunking.density_filter import filter_by_density
 from ingestion.chunking.structural import structural_chunk_document

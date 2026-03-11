@@ -28,6 +28,8 @@ def wiring(ctx):
 
     # Wire watcher to job queue for indexing
     if ctx.watcher and ctx.job_queue:
-        ctx.watcher.on_change = lambda path: ctx.job_queue.enqueue(path, source="watcher")
+        ctx.watcher.on_change = lambda path: ctx.job_queue.enqueue(
+            path, source="watcher"
+        )
 
     return ctx

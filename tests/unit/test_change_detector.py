@@ -135,6 +135,6 @@ def test_hash_failure_returns_skip(tmp_path):
     }
 
     # Mock calculate_file_hash to return None (failure)
-    with patch('ingestion.change_detector.calculate_file_hash', return_value=None):
+    with patch("ingestion.change_detector.calculate_file_hash", return_value=None):
         strategy = determine_strategy(str(f), db_record)
         assert strategy == ReindexStrategy.SKIP

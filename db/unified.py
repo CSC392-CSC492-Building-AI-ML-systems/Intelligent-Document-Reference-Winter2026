@@ -292,7 +292,7 @@ class UnifiedDatabase:
         try:
             cursor = conn.execute(
                 "SELECT file_hash, last_modified_timestamp FROM files WHERE path = ?",
-                (file_path,)
+                (file_path,),
             )
             row = cursor.fetchone()
             return dict(row) if row else None
@@ -308,15 +308,18 @@ class UnifiedDatabase:
         conn = self._get_conn()
         try:
             # First, delete vectors for chunks of this file
-            conn.execute("""
+            conn.execute(
+                """
                 DELETE FROM vec_items
                 WHERE rowid IN (
                     SELECT c.id FROM chunks c
                     JOIN files f ON c.file_id = f.id
                     WHERE f.path = ?
                 )
-            """, (file_path,))
-            
+            """,
+                (file_path,),
+            )
+
             # Then delete the file (cascades to chunks, versions, etc.)
             conn.execute("DELETE FROM files WHERE path = ?", (file_path,))
             conn.commit()
@@ -332,7 +335,7 @@ class UnifiedDatabase:
         try:
             conn.execute(
                 "UPDATE files SET last_modified_timestamp = ? WHERE path = ?",
-                (modified, file_path)
+                (modified, file_path),
             )
             conn.commit()
         finally:
