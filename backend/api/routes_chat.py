@@ -1,6 +1,7 @@
 """Chat / inference endpoints."""
 
 import logging
+import time
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -79,10 +80,12 @@ async def query(request: QueryRequest, ctx: AppContext = Depends(get_context)):
             embedding_client=ctx.embedding_client,
             inference_client=ctx.inference_client,
         )
+        start_time = time.monotonic()
         result = await responder.respond(
             query=request.query,
             top_k=request.top_k or 5,
         )
+        processing_time_ms = round((time.monotonic() - start_time) * 1000)
     except Exception:
         logger.exception("RAG pipeline error")
         raise HTTPException(status_code=500, detail="Error processing query")
@@ -92,4 +95,5 @@ async def query(request: QueryRequest, ctx: AppContext = Depends(get_context)):
         "citations": result["citations"],
         "model": request.model,
         "mode": request.mode,
+        "processing_time_ms": processing_time_ms,
     }

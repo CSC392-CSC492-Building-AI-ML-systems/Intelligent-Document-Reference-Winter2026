@@ -16,3 +16,4 @@ class AppContext:
     job_queue: Optional[Any] = None
     scheduler: Optional[Any] = None
     watcher: Optional[Any] = None
+    settings_store: Optional[Any] = None

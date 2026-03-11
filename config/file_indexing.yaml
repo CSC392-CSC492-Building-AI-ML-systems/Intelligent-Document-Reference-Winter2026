@@ -1,10 +1,22 @@
+# File indexing configuration
+# This file is managed by the UI and defines which files are included/excluded
+
 inclusion:
+  # List of file paths to include in indexing
   files: []
-  directories:
-  - C:\Users\zoyaf\Downloads\test
-exclusion:
-  files: []
+  # List of directory paths to include (all files within)
   directories: []
-  patterns: []
-context:
+
+exclusion:
+  # List of file paths to exclude from indexing
   files: []
+  # List of directory paths to exclude (all files within)
+  directories: []
+  # Exclusion patterns (wildcards, extensions, etc.)
+  patterns: []
+
+context:
+  # List of file paths selected for current conversation context
+  # Only leaf files (not directories) should be here
+  files: []
+  

@@ -21,7 +21,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/chat': {
+      '/chat/': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
       },
@@ -33,7 +33,7 @@ export default defineConfig({
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
       },
-      '/settings': {
+      '/settings/': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
       },

@@ -3,6 +3,7 @@
 from config.settings import load_settings
 from core.context import AppContext
 from db import UnifiedDatabase
+from db.settings_store import SettingsStore
 from jobs import JobQueue, Scheduler
 from model_clients.registry import ClientRegistry
 from watcher import FileRegistry, FileTrackingService
@@ -21,6 +22,8 @@ def bootstrap() -> AppContext:
     )
 
     ctx.db = UnifiedDatabase(db_path=settings.unified_db_path)
+
+    ctx.settings_store = SettingsStore(db_path=settings.unified_db_path)
 
     job_queue = JobQueue(db_path=settings.unified_db_path)
     ctx.job_queue = job_queue

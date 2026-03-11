@@ -5,6 +5,7 @@ import logging
 from typing import Callable, Optional
 
 from core.context import AppContext
+from ingestion.change_detector import ReindexStrategy, determine_strategy
 from jobs import JobQueue, transition_state
 
 logger = logging.getLogger(__name__)
@@ -85,12 +86,7 @@ class Worker:
                         self._ctx.db.get_file_record, job.file_path
                     )
 
-                    # 3. Determine if content actually changed using the detector [cite: 187]
-                    from ingestion.change_detector import (
-                        ReindexStrategy,
-                        determine_strategy,
-                    )
-
+                    # 3. Determine if content actually changed using the detector
                     strategy = await asyncio.to_thread(
                         determine_strategy, job.file_path, db_record
                     )

@@ -6,6 +6,7 @@ from typing import Generator, List
 
 import pytest
 
+from db.unified import UnifiedDatabase
 from jobs import (
     PRIORITY_UI,
     PRIORITY_WATCHER,
@@ -236,20 +237,16 @@ class TestWorker:
     """Tests for the async Worker with injected processor."""
 
     @pytest.fixture
-    def mock_ctx(self, queue):
-        """
-        Creates a mock context. Added a stub for 'get_file_record'
-        to prevent AttributeError in the worker.
-        """
+    def mock_ctx(self, queue: JobQueue, tmp_path: Path):
+        """Creates a context with a real UnifiedDatabase for get_file_record."""
 
         class MockContext:
-            def __init__(self, q):
-                self.db = q
-                # Add a dummy method that returns None (simulating no DB record)
-                # This satisfies the worker's internal requirements.
-                self.db.get_file_record = lambda path: None
+            def __init__(self, q: JobQueue, db: UnifiedDatabase) -> None:
+                self._queue = q
+                self.db = db
 
-        return MockContext(queue)
+        real_db = UnifiedDatabase(str(tmp_path / "mock_ctx.db"))
+        return MockContext(queue, real_db)
 
     @pytest.mark.asyncio
     async def test_worker_processes_job(self, queue: JobQueue, mock_ctx) -> None:
@@ -264,7 +261,6 @@ class TestWorker:
 
         queue.enqueue("/tmp/work.txt", source="ui")
 
-        # Injecting mock_ctx prevents the AttributeError
         worker = Worker(
             queue, processor=fake_processor, poll_interval=0.1, ctx=mock_ctx
         )

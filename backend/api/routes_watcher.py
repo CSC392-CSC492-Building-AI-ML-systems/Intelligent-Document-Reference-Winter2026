@@ -90,6 +90,89 @@ def open_folder_dialog():
     return path if path else ""
 
 
+def open_file_dialog():
+    """Open native file picker via subprocess so tkinter runs on a real main thread (required on macOS)."""
+    script = _PROJECT_ROOT / "scripts" / "file_picker.py"
+    if not script.exists():
+        raise HTTPException(
+            status_code=503,
+            detail="File picker script not found. Enter file paths manually.",
+        )
+    try:
+        result = subprocess.run(
+            [sys.executable, str(script)],
+            capture_output=True,
+            text=True,
+            timeout=300,
+            cwd=str(_PROJECT_ROOT),
+        )
+    except subprocess.TimeoutExpired:
+        return []
+    except Exception as e:
+        raise HTTPException(
+            status_code=503,
+            detail=f"File picker failed: {e}. Enter file paths manually.",
+        ) from e
+
+    if result.returncode != 0:
+        if "TKINTER_UNAVAILABLE" in (result.stderr or ""):
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    "File picker not available: this Python was not built with tkinter. "
+                    "See docs/TKINTER_SETUP.md or enter file paths manually."
+                ),
+            )
+        raise HTTPException(
+            status_code=503,
+            detail=result.stderr or "File picker failed. Enter file paths manually.",
+        )
+
+    lines = [
+        line.strip()
+        for line in (result.stdout or "").strip().splitlines()
+        if line.strip()
+    ]
+    return lines
+
+
+@router.post("/pick-files")
+def pick_files():
+    """Open native file picker and return the selected file paths only (no persistence)."""
+    paths = open_file_dialog()
+    if not paths:
+        return {"paths": [], "status": "cancelled"}
+
+    clean_paths = []
+    for p in paths:
+        clean = os.path.abspath(os.path.expanduser(p)).rstrip(os.sep)
+        if os.path.exists(clean):
+            clean_paths.append(clean)
+
+    if not clean_paths:
+        return {"paths": [], "status": "error", "detail": "No valid files selected"}
+
+    return {"paths": clean_paths, "status": "selected"}
+
+
+@router.post("/pick-folder")
+def pick_folder():
+    """Open native folder picker and return the selected path only (no persistence).
+
+    The caller is responsible for adding the path to local state and
+    persisting via the file-indexing save endpoint.
+    """
+    path = open_folder_dialog()
+    if not path or not path.strip():
+        return {"path": "", "status": "cancelled"}
+
+    clean_path = os.path.abspath(os.path.expanduser(path)).rstrip(os.sep)
+    if not os.path.exists(clean_path):
+        return {"path": clean_path, "status": "error", "detail": "Path does not exist"}
+
+    return {"path": clean_path, "status": "selected"}
+
+
 @router.post("/browse")
 def browse_folder(type: str = Query("inclusion", description="inclusion or exclusion")):
     """Open native folder picker (tkinter); get full path and add to inclusion or exclusion in YAML."""

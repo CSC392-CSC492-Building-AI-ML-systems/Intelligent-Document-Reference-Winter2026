@@ -65,7 +65,9 @@ class FakeInferenceClient:
 class FakeDB:
     """Returns the pre-built FAKE_CHUNKS from search_with_metadata."""
 
-    def search_with_metadata(self, query_vector, limit=5, file_id=None):
+    def search_with_metadata(
+        self, query_vector, limit=5, file_id=None, file_paths=None
+    ):
         return FAKE_CHUNKS[:limit]
 
 
@@ -115,8 +117,8 @@ class TestCitations:
     def test_format_citations_has_relevance(self):
         citations = format_citations(FAKE_CHUNKS)
         for c in citations:
-            assert "relevance" in c
-            assert 0.0 <= c["relevance"] <= 1.0
+            assert "relevance_score" in c
+            assert 0.0 <= c["relevance_score"] <= 1.0
 
     def test_empty_chunks(self):
         assert format_citations([]) == []

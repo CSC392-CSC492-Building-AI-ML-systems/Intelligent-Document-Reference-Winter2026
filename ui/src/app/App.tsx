@@ -3,6 +3,7 @@ import { ThemeProvider } from 'next-themes';
 import { ChatProvider, useChatContext } from '@/app/contexts/ChatContext';
 import { ChatPage } from '@/app/pages/ChatPage';
 import { SettingsPage } from '@/app/pages/SettingsPage';
+import { Toaster } from '@/app/components/ui/sonner';
 import { useEffect } from 'react';
 
 function DarkModeHandler() {
@@ -21,6 +22,8 @@ function DarkModeHandler() {
 }
 
 function AppContent() {
+  const { darkMode } = useChatContext();
+
   return (
     <>
       <DarkModeHandler />
@@ -29,6 +32,7 @@ function AppContent() {
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Routes>
+      <Toaster theme={darkMode ? 'dark' : 'light'} position="top-right" richColors />
     </>
   );
 }

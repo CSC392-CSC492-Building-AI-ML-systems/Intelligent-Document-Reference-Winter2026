@@ -4,7 +4,10 @@ export type MessageRole = 'user' | 'assistant';
 
 export interface Citation {
   file_path: string;
-  relevance: number;
+  file_name: string;
+  snippet: string;
+  relevance_score: number;
+  chunk_index: number;
 }
 
 export interface Message {
@@ -13,6 +16,9 @@ export interface Message {
   content: string;
   timestamp: Date;
   citations?: Citation[];
+  model?: string;
+  mode?: string;
+  processingTimeMs?: number;
 }
 
 // Chat history removed - not focusing on that right now
@@ -92,6 +98,10 @@ interface ChatContextType {
   getFileIndexingConfig: () => Promise<{ inclusion?: { directories?: string[] } }>;
   loadFileIndexingConfig: () => Promise<void>;
   loadFiles: () => Promise<void>;
+  saveSettings: () => Promise<void>;
+  saveSetting: (key: string, value: any) => Promise<void>;
+  pickFolder: () => Promise<{ path: string; status: string } | null>;
+  pickFiles: () => Promise<{ paths: string[]; status: string } | null>;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -152,6 +162,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     loadWatcherPath();
     loadUserRoot();
     checkPipelineStatus();
+    loadSettings();
   }, []);
 
   const loadContextFiles = async () => {
@@ -231,6 +242,102 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error('Failed to load user root:', error);
       setUserRootState(null);
+    }
+  };
+
+  const loadSettings = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/settings/`);
+      if (!response.ok) return;
+      const data = await response.json();
+      if (data.selectedModel) setSelectedModel(data.selectedModel);
+      if (data.modelProvider) setModelProvider(data.modelProvider);
+      if (data.apiKeys) setApiKeys((prev) => ({ ...prev, ...data.apiKeys }));
+      if (data.temperature !== undefined) setTemperature(data.temperature);
+      if (data.contextSize !== undefined) setContextSize(data.contextSize);
+      if (data.systemPrompt !== undefined) setSystemPrompt(data.systemPrompt);
+      if (data.darkMode !== undefined) setDarkMode(data.darkMode);
+      if (data.userInfo !== undefined) setUserInfo(data.userInfo);
+      if (data.localEndpoint) setLocalEndpoint(data.localEndpoint);
+    } catch (error) {
+      console.error('Failed to load settings:', error);
+    }
+  };
+
+  const saveSettings = async () => {
+    try {
+      await fetch(`${API_BASE_URL}/settings/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          selectedModel,
+          modelProvider,
+          apiKeys,
+          temperature,
+          contextSize,
+          systemPrompt,
+          darkMode,
+          userInfo,
+          localEndpoint,
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+    }
+  };
+
+  /** Persist a single setting immediately (e.g. dark mode toggle). */
+  const saveSetting = async (key: string, value: any) => {
+    try {
+      await fetch(`${API_BASE_URL}/settings/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [key]: value }),
+      });
+    } catch (error) {
+      console.error(`Failed to save setting ${key}:`, error);
+    }
+  };
+
+  /** Open native folder picker and return the path only (no backend persistence). */
+  const pickFolder = async (): Promise<{ path: string; status: string } | null> => {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5 * 60 * 1000);
+      const response = await fetch(`${API_BASE_URL}/watcher/pick-folder`, {
+        method: 'POST',
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.detail || response.statusText);
+      }
+      return { path: data.path ?? '', status: data.status ?? '' };
+    } catch (error) {
+      console.error('Failed to pick folder:', error);
+      throw error;
+    }
+  };
+
+  /** Open native file picker and return the selected paths only (no backend persistence). */
+  const pickFiles = async (): Promise<{ paths: string[]; status: string } | null> => {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5 * 60 * 1000);
+      const response = await fetch(`${API_BASE_URL}/watcher/pick-files`, {
+        method: 'POST',
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.detail || response.statusText);
+      }
+      return { paths: data.paths ?? [], status: data.status ?? '' };
+    } catch (error) {
+      console.error('Failed to pick files:', error);
+      throw error;
     }
   };
 
@@ -372,9 +479,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       });
       const data = await response.json();
       if (data.status === 'ok') {
-        // Reload context files after save
+        // Reload context files and file tree after save
         await loadContextFiles();
         await loadFileIndexingConfig();
+        await loadFiles();
         return true;
       }
       return false;
@@ -437,7 +545,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         role: 'assistant',
         content: data.answer || 'No response received',
         timestamp: new Date(),
-        citations: data.citations ?? [],
+        citations: data.citations || [],
+        model: data.model,
+        mode: data.mode,
+        processingTimeMs: data.processing_time_ms,
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
@@ -626,6 +737,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         getFileIndexingConfig,
         loadFileIndexingConfig,
         loadFiles,
+        saveSettings,
+        saveSetting,
+        pickFolder,
+        pickFiles,
       }}
     >
       {children}

@@ -88,3 +88,10 @@ CREATE INDEX IF NOT EXISTS idx_jobs_status_priority
 CREATE VIRTUAL TABLE IF NOT EXISTS vec_items USING vec0(
     embedding float[3072]
 );
+
+-- 8. Settings Table (key-value store for UI/app settings)
+CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
