@@ -110,9 +110,7 @@ class Worker:
                     #     argument; `run_index` recomputes it internally and other
                     #     processors are free to ignore it as well.
                     logger.info("Strategy for job %d: %s", job.id, strategy.value)
-                    await asyncio.to_thread(
-                        self._processor, job.file_path, self._ctx
-                    )
+                    await asyncio.to_thread(self._processor, job.file_path, self._ctx)
 
                     await asyncio.to_thread(
                         transition_state, self._queue, job.id, "completed"
