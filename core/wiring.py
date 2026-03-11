@@ -26,4 +26,8 @@ def wiring(ctx):
     else:
         logger.info("[core.wiring] All retrieval components wired successfully")
 
+    # Wire watcher to job queue for indexing
+    if ctx.watcher and ctx.job_queue:
+        ctx.watcher.on_change = lambda path: ctx.job_queue.enqueue(path, source="watcher")
+
     return ctx

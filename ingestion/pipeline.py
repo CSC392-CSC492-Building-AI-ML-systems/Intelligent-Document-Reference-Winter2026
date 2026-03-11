@@ -11,6 +11,7 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, BinaryIO, Callable, List, Optional, Union
 
+from ingestion.change_detector import determine_strategy, ReindexStrategy
 from ingestion.chunking import chunk_document
 from ingestion.chunking.density_filter import filter_by_density
 from ingestion.chunking.structural import structural_chunk_document
@@ -561,12 +562,30 @@ def run_index(path: str, ctx=None) -> None:
         embed_after_chunk=True, dedup_enabled=True
     )
     p = Path(path).resolve()
-    if not p.exists():
-        return
     if p.is_file():
         ext = p.suffix.lower()
         if ext not in config.supported_extensions:
             return
+        # Check if reindexing is needed
+        db_record = db.get_file_record(str(p)) if db else None
+        strategy = determine_strategy(str(p), db_record, "modified")
+        if strategy == ReindexStrategy.SKIP:
+            logger.info("Skipping indexing for %s: no changes detected", path)
+            return
+        elif strategy == ReindexStrategy.PURGE:
+            # Remove from DB
+            if db:
+                db.remove_file(str(p))
+            logger.info("Purged %s from index", path)
+            return
+        elif strategy == ReindexStrategy.METADATA_UPDATE:
+            # Update only metadata
+            if db:
+                st = p.stat()
+                db.update_file_metadata(str(p), st.st_mtime)
+            logger.info("Updated metadata for %s", path)
+            return
+        # For FULL_INDEX, proceed with indexing
         try:
             st = p.stat()
             run(
@@ -587,8 +606,13 @@ def run_index(path: str, ctx=None) -> None:
             )
         except Exception as e:
             logger.exception("Indexing failed for %s: %s", path, e)
-    else:
+    elif p.is_dir():
         run(p, config=config, db=db, embedder=embedder, llm_client=llm_client)
+    else:
+        # Path doesn't exist as file or dir, but check if it's in DB for purging
+        if db and db.get_file_record(str(p)):
+            db.remove_file(str(p))
+            logger.info("Purged %s from index", path)
 
 
 def ingest(
