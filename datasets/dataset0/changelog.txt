@@ -1,0 +1,16 @@
+Changelog
+=========
+v0.3.0 (2025-11-15)
+  - Added semantic chunking module
+  - Improved PDF parser accuracy
+  - Fixed memory leak in embedding pipeline
+
+v0.2.0 (2025-10-01)
+  - Initial RAG pipeline implementation
+  - Support for PDF and TXT ingestion
+  - Basic BM25 retrieval
+
+v0.1.0 (2025-08-20)
+  - Project scaffolding
+  - Configuration management
+  - Database schema design

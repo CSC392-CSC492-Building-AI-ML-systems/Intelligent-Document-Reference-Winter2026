@@ -1,0 +1,102 @@
+        version: '3.8'
+        services:
+    api-gateway:
+  build: ../services/api-gateway
+  ports:
+    - "8001:8001"
+  environment:
+    - DATABASE_URL=postgresql://user:pass@db:5432/api_gateway
+    - REDIS_URL=redis://redis:6379/0
+  depends_on:
+    - db
+    - redis
+
+auth-service:
+  build: ../services/auth-service
+  ports:
+    - "8002:8002"
+  environment:
+    - DATABASE_URL=postgresql://user:pass@db:5432/auth_service
+    - REDIS_URL=redis://redis:6379/1
+  depends_on:
+    - db
+    - redis
+
+document-service:
+  build: ../services/document-service
+  ports:
+    - "8003:8003"
+  environment:
+    - DATABASE_URL=postgresql://user:pass@db:5432/document_service
+    - REDIS_URL=redis://redis:6379/2
+  depends_on:
+    - db
+    - redis
+
+embedding-service:
+  build: ../services/embedding-service
+  ports:
+    - "8004:8004"
+  environment:
+    - DATABASE_URL=postgresql://user:pass@db:5432/embedding_service
+    - REDIS_URL=redis://redis:6379/3
+  depends_on:
+    - db
+    - redis
+
+search-service:
+  build: ../services/search-service
+  ports:
+    - "8005:8005"
+  environment:
+    - DATABASE_URL=postgresql://user:pass@db:5432/search_service
+    - REDIS_URL=redis://redis:6379/4
+  depends_on:
+    - db
+    - redis
+
+notification-service:
+  build: ../services/notification-service
+  ports:
+    - "8006:8006"
+  environment:
+    - DATABASE_URL=postgresql://user:pass@db:5432/notification_service
+    - REDIS_URL=redis://redis:6379/5
+  depends_on:
+    - db
+    - redis
+
+file-processor:
+  build: ../services/file-processor
+  ports:
+    - "8007:8007"
+  environment:
+    - DATABASE_URL=postgresql://user:pass@db:5432/file_processor
+    - REDIS_URL=redis://redis:6379/6
+  depends_on:
+    - db
+    - redis
+
+analytics-service:
+  build: ../services/analytics-service
+  ports:
+    - "8008:8008"
+  environment:
+    - DATABASE_URL=postgresql://user:pass@db:5432/analytics_service
+    - REDIS_URL=redis://redis:6379/7
+  depends_on:
+    - db
+    - redis
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: user
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+
+volumes:
+  pgdata:

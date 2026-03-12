@@ -1,0 +1,600 @@
+[2025-11-01 08:04:11] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 378, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-01 23:42:14] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 143, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-02 03:23:08] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 410, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-02 03:26:30] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 479, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-02 07:18:17] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 206, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-02 09:17:33] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 451, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-02 09:55:19] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 309, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-02 13:09:10] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 456, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-02 16:02:08] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 253, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-02 21:39:12] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 302, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-03 07:55:54] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 324, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-03 12:11:51] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 244, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-03 15:42:39] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 461, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-03 19:59:25] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 443, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-03 20:19:01] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 110, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-03 23:50:27] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 44, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-04 03:26:30] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 277, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-04 05:49:24] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 427, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-04 19:07:21] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 399, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-04 20:00:13] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 435, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-05 00:34:58] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 396, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-05 03:29:58] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 117, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-05 03:39:02] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 362, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-05 04:35:06] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 234, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-05 07:34:41] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 23, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-05 10:32:34] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 404, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-05 17:03:31] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 480, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-05 17:11:38] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 242, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-07 09:10:13] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 277, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-07 15:31:22] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 38, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-07 19:35:52] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 178, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-07 22:07:07] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 471, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-08 11:34:18] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 18, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-08 15:06:34] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 500, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-08 15:23:27] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 123, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-08 21:14:51] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 139, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-09 11:29:11] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 260, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-09 15:00:25] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 202, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-09 16:53:42] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 457, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-09 23:19:26] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 232, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-10 02:16:30] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 370, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-10 08:37:51] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 226, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-10 10:55:03] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 82, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-10 11:00:35] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 320, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-10 13:40:00] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 393, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-10 18:22:45] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 120, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-10 19:53:06] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 471, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-11 00:41:31] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 55, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-11 01:20:55] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 492, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-11 02:39:31] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 29, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-11 10:17:31] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 328, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-11 18:22:05] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 143, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-11 19:55:54] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 177, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-11 19:59:10] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 282, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-12 00:07:59] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 463, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-12 01:10:28] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 378, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-12 06:54:47] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 52, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-12 07:13:39] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 256, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-12 15:04:50] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 11, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-12 22:57:09] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 439, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-13 00:27:22] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 175, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-13 01:54:52] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 283, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-13 02:08:46] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 379, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-13 04:59:08] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 63, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-13 05:26:57] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 237, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-13 10:12:36] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 100, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-13 10:32:05] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 341, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-13 15:36:58] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 358, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-13 20:50:28] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 18, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-13 23:55:35] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 235, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-14 00:15:43] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 163, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-14 01:46:58] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 62, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-14 02:52:24] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 135, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-14 09:23:39] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 184, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-14 13:37:10] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 342, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-14 15:11:48] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 291, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-14 16:07:55] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 388, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-14 17:49:37] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 369, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-14 19:37:03] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 417, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-14 20:10:18] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 398, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-14 20:10:20] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 358, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-14 23:41:25] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 331, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-15 02:59:05] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 198, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-15 04:56:57] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 171, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-15 06:59:15] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 135, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-15 14:28:18] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 450, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-15 22:17:50] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 442, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-15 22:31:15] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 414, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-16 00:22:28] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 11, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-16 00:22:31] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 114, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-16 01:42:22] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 479, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-16 04:59:47] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 239, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-16 06:27:20] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 395, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-16 07:13:37] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 167, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-16 09:17:07] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 255, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-16 14:15:13] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 54, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-16 18:49:29] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 120, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-17 00:24:40] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 189, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-17 03:34:32] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 344, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-17 04:42:07] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 175, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-17 08:49:05] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 423, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-17 09:47:52] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 73, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-17 18:37:18] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 287, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-17 22:24:29] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 477, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-17 23:48:19] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 33, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-18 00:14:10] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 240, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-18 00:28:16] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 423, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-18 04:44:44] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 398, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-18 13:14:43] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 167, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-18 14:00:10] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 201, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-18 16:00:53] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 86, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-18 16:19:02] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 246, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-18 17:40:43] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 231, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-18 21:22:46] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 49, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-19 02:58:01] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 268, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-19 05:46:07] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 474, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-19 07:59:39] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 357, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-19 10:25:04] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 198, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-19 10:49:48] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 149, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-19 15:34:34] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 232, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-19 23:03:54] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 493, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-20 04:41:35] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 26, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-20 05:33:34] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 224, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-20 08:55:59] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 434, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-20 17:54:42] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 290, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-20 22:49:45] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 317, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-21 02:25:36] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 454, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-21 03:46:37] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 259, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-21 04:02:01] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 244, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-21 04:28:25] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 448, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-21 04:34:03] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 213, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-21 07:34:10] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 26, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-21 09:44:05] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 208, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-21 11:27:22] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 36, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-21 15:28:50] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 283, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-21 19:17:29] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 254, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-21 20:03:04] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 478, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-21 20:26:31] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 135, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-21 23:13:09] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 271, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-22 00:46:29] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 169, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-22 02:39:54] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 355, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-22 04:38:10] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 311, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-23 00:12:39] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 153, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-23 01:45:01] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 215, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-23 01:59:37] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 182, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-23 05:31:53] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 119, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-23 15:35:03] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 459, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-23 17:45:15] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 220, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-23 23:24:46] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 447, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-24 03:58:02] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 178, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-24 04:58:11] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 343, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-24 09:14:17] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 466, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-24 14:46:45] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 137, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-24 15:15:43] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 249, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-25 02:34:17] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 189, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-25 03:28:35] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 391, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-25 04:30:59] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 143, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-25 09:38:36] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 323, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-25 09:45:46] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 411, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-25 14:56:29] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 95, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-25 17:22:46] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 80, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-25 20:34:51] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 493, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-26 00:37:49] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 118, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-26 00:38:36] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 203, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-26 10:29:30] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 19, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-26 12:28:47] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 202, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-26 18:42:53] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 398, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-26 20:03:29] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 345, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-26 21:42:46] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 44, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-26 22:15:55] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 196, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-27 09:43:10] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 95, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-27 09:54:11] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 355, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-27 09:57:56] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 221, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-27 11:01:42] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 366, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-27 11:51:24] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 306, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-27 22:01:18] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 359, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-27 23:56:51] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 203, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-28 01:14:09] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 177, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-28 02:51:02] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 439, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-28 05:46:08] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 260, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-28 09:37:09] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 154, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-28 11:47:51] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 423, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-28 15:54:48] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 114, in process_batch
+    ValueError: Expected embedding dimension 384, got 768
+[2025-11-28 23:18:13] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 423, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-29 00:49:13] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 45, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-29 07:48:15] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 258, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-29 18:56:02] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 18, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-29 20:24:33] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 444, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-29 21:29:23] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 413, in process_batch
+    FileNotFoundError: No such file or directory: '/data/uploads/doc_874.pdf'
+[2025-11-30 01:13:41] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 436, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-30 01:38:03] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 184, in process_batch
+    KeyError: 'embeddings' not found in response payload
+[2025-11-30 05:22:50] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 216, in process_batch
+    PermissionError: Cannot write to index directory '/var/lib/index'
+[2025-11-30 07:17:26] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 189, in process_batch
+    json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-11-30 08:33:01] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 300, in process_batch
+    OSError: [Errno 28] No space left on device
+[2025-11-30 12:08:43] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 439, in process_batch
+    ConnectionError: Failed to connect to embedding service at localhost:11434
+[2025-11-30 12:18:41] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 53, in process_batch
+    RuntimeError: CUDA out of memory. Tried to allocate 2.5 GiB
+[2025-11-30 16:56:00] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 155, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-30 23:09:20] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 10, in process_batch
+    TimeoutError: Model inference exceeded 30s deadline
+[2025-11-30 23:18:29] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 351, in process_batch
+    sqlite3.OperationalError: database is locked
+[2025-11-30 23:30:45] [  ERROR] Traceback (most recent call last):
+  File "pipeline.py", line 304, in process_batch
+    sqlite3.OperationalError: database is locked

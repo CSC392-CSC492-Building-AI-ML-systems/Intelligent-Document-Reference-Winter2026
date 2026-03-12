@@ -1,0 +1,11 @@
+Large Text Documents Catalog
+============================
+Source: Project Gutenberg (public domain)
+
+1. Pride and Prejudice – Jane Austen (1813)
+2. Moby Dick – Herman Melville (1851)
+3. A Tale of Two Cities – Charles Dickens (1859)
+4. The Adventures of Sherlock Holmes – Arthur Conan Doyle (1892)
+
+These texts are used to test chunking strategies on long-form content
+and evaluate retrieval quality across large document collections.

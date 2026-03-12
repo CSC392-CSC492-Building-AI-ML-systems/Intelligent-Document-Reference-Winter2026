@@ -1,2 +1,1 @@
 """Scripts package."""
-

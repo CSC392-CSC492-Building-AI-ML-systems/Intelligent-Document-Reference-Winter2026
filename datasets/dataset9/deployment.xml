@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment>
+    <application name="doc-search" version="1.0.0">
+        <environment>production</environment>
+        <replicas>3</replicas>
+        <resources>
+            <cpu>2</cpu>
+            <memory>4Gi</memory>
+            <gpu>0</gpu>
+        </resources>
+    </application>
+
+    <services>
+        <service name="api" port="8000">
+            <healthCheck path="/health" interval="30s" />
+            <scaling min="2" max="10" targetCPU="70" />
+        </service>
+        <service name="worker" port="9000">
+            <healthCheck path="/status" interval="60s" />
+            <scaling min="1" max="5" targetCPU="80" />
+        </service>
+    </services>
+
+    <volumes>
+        <volume name="data" size="100Gi" storageClass="ssd" />
+        <volume name="index" size="50Gi" storageClass="ssd" />
+    </volumes>
+</deployment>

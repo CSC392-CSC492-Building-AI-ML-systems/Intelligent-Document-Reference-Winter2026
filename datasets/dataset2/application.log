@@ -1,0 +1,1500 @@
+[2025-11-01 08:06:29] [  DEBUG] jobs.worker: Retrying failed embedding request (attempt 3/3)
+[2025-11-01 09:03:55] [   INFO] ingestion.pipeline: Retrying failed embedding request (attempt 3/3)
+[2025-11-01 10:00:51] [WARNING] ingestion.pipeline: Processing document batch of 168 files
+[2025-11-01 10:19:14] [   INFO] inference.rag: Memory usage: 3297 MB (threshold: 4096 MB)
+[2025-11-01 11:08:14] [   INFO] inference.rag: Processing document batch of 301 files
+[2025-11-01 11:19:20] [  DEBUG] db.unified: Index rebuild triggered by schema migration
+[2025-11-01 12:01:06] [   INFO] watcher.service: Retrying failed embedding request (attempt 3/3)
+[2025-11-01 12:59:32] [WARNING] embeddings.router: Processing document batch of 114 files
+[2025-11-01 13:34:38] [   INFO] watcher.service: Processing document batch of 33 files
+[2025-11-01 14:48:33] [WARNING] inference.rag: Cache hit for query hash a9a6653e
+[2025-11-01 15:17:04] [   INFO] inference.rag: Job job-9515 completed with status=success
+[2025-11-01 15:24:21] [  DEBUG] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-01 16:50:34] [   INFO] embeddings.router: Processing document batch of 215 files
+[2025-11-01 17:16:14] [   INFO] inference.rag: Retrying failed embedding request (attempt 2/3)
+[2025-11-01 17:17:20] [  ERROR] db.unified: Timeout waiting for model response after 30s
+[2025-11-01 17:17:34] [WARNING] db.unified: Cache hit for query hash 0cb929ea
+[2025-11-01 17:23:44] [WARNING] watcher.service: Database connection pool at 34% capacity
+[2025-11-01 17:32:33] [   INFO] db.unified: Chunk 9888 indexed successfully
+[2025-11-01 18:19:11] [   INFO] embeddings.router: Retrying failed embedding request (attempt 1/3)
+[2025-11-01 19:20:23] [WARNING] ingestion.pipeline: Semantic search returned 480 results for query
+[2025-11-01 19:28:06] [   INFO] ingestion.pipeline: Embedding generation completed in 4.47s
+[2025-11-01 19:55:05] [  ERROR] jobs.worker: Embedding generation completed in 14.40s
+[2025-11-01 20:09:05] [  ERROR] jobs.worker: File watcher detected 22 changes
+[2025-11-01 20:33:35] [   INFO] inference.rag: Index rebuild triggered by schema migration
+[2025-11-01 20:52:52] [   INFO] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-01 21:03:17] [  ERROR] embeddings.router: Database connection pool at 44% capacity
+[2025-11-01 22:05:00] [   INFO] watcher.service: Retrying failed embedding request (attempt 2/3)
+[2025-11-01 22:21:31] [   INFO] db.unified: Chunk 3105 indexed successfully
+[2025-11-01 23:03:36] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-01 23:11:57] [   INFO] ingestion.pipeline: Rate limit approaching: 95/100 requests in window
+[2025-11-01 23:27:34] [WARNING] ingestion.pipeline: Rate limit approaching: 67/100 requests in window
+[2025-11-01 23:28:42] [  DEBUG] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-01 23:40:01] [  ERROR] inference.rag: Index rebuild triggered by schema migration
+[2025-11-02 00:02:25] [  DEBUG] watcher.service: Embedding generation completed in 6.82s
+[2025-11-02 00:12:40] [   INFO] inference.rag: Cache hit for query hash 58e4d44e
+[2025-11-02 00:14:47] [   INFO] ingestion.pipeline: Embedding generation completed in 5.89s
+[2025-11-02 00:29:54] [WARNING] inference.rag: Job job-1308 completed with status=success
+[2025-11-02 00:33:25] [   INFO] inference.rag: Index rebuild triggered by schema migration
+[2025-11-02 01:13:20] [  DEBUG] watcher.service: Embedding generation completed in 6.85s
+[2025-11-02 01:24:49] [   INFO] inference.rag: Cache hit for query hash 70222949
+[2025-11-02 02:00:51] [   INFO] ingestion.pipeline: File watcher detected 277 changes
+[2025-11-02 02:22:37] [  ERROR] db.unified: Database connection pool at 86% capacity
+[2025-11-02 02:40:42] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-02 02:50:06] [   INFO] embeddings.router: Processing document batch of 436 files
+[2025-11-02 03:05:41] [  DEBUG] db.unified: Cache hit for query hash c9e1074f
+[2025-11-02 03:47:59] [WARNING] jobs.worker: Index rebuild triggered by schema migration
+[2025-11-02 03:49:37] [WARNING] inference.rag: Database connection pool at 33% capacity
+[2025-11-02 04:08:28] [   INFO] db.unified: Database connection pool at 34% capacity
+[2025-11-02 04:59:32] [   INFO] ingestion.pipeline: Failed to parse document: unsupported format .xyz
+[2025-11-02 05:02:04] [WARNING] ingestion.pipeline: Semantic search returned 189 results for query
+[2025-11-02 05:09:29] [   INFO] embeddings.router: File watcher detected 500 changes
+[2025-11-02 05:14:11] [WARNING] ingestion.pipeline: Embedding generation completed in 2.20s
+[2025-11-02 05:18:19] [   INFO] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-02 05:34:45] [   INFO] watcher.service: Index rebuild triggered by schema migration
+[2025-11-02 07:53:50] [   INFO] db.unified: Job job-1131 completed with status=success
+[2025-11-02 08:14:41] [   INFO] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-02 09:15:27] [   INFO] jobs.worker: Memory usage: 3703 MB (threshold: 4096 MB)
+[2025-11-02 09:22:52] [WARNING] db.unified: Memory usage: 2613 MB (threshold: 4096 MB)
+[2025-11-02 10:44:01] [   INFO] ingestion.pipeline: Job job-3396 completed with status=success
+[2025-11-02 10:45:04] [WARNING] db.unified: Cache hit for query hash c058f544
+[2025-11-02 10:57:14] [   INFO] embeddings.router: Embedding generation completed in 10.48s
+[2025-11-02 11:06:16] [  ERROR] ingestion.pipeline: Job job-9689 completed with status=success
+[2025-11-02 11:28:43] [   INFO] inference.rag: Embedding generation completed in 6.38s
+[2025-11-02 12:07:03] [  ERROR] embeddings.router: Memory usage: 1778 MB (threshold: 4096 MB)
+[2025-11-02 12:12:12] [  ERROR] ingestion.pipeline: Embedding generation completed in 2.48s
+[2025-11-02 12:17:29] [  ERROR] inference.rag: Rate limit approaching: 69/100 requests in window
+[2025-11-02 12:26:35] [  ERROR] inference.rag: Index rebuild triggered by schema migration
+[2025-11-02 14:48:29] [   INFO] ingestion.pipeline: File watcher detected 238 changes
+[2025-11-02 15:12:41] [WARNING] jobs.worker: Cache hit for query hash b4288d9c
+[2025-11-02 16:59:35] [  DEBUG] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-02 17:59:14] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-02 18:21:19] [  ERROR] db.unified: Failed to parse document: unsupported format .xyz
+[2025-11-02 19:11:48] [   INFO] watcher.service: Semantic search returned 202 results for query
+[2025-11-02 19:34:36] [   INFO] watcher.service: File watcher detected 458 changes
+[2025-11-02 19:54:17] [   INFO] jobs.worker: Database connection pool at 10% capacity
+[2025-11-02 20:37:18] [   INFO] db.unified: Processing document batch of 260 files
+[2025-11-02 21:19:19] [  DEBUG] inference.rag: Rate limit approaching: 91/100 requests in window
+[2025-11-02 21:50:31] [  ERROR] inference.rag: Chunk 6974 indexed successfully
+[2025-11-02 22:14:50] [  DEBUG] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-02 22:28:03] [   INFO] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-02 22:28:42] [   INFO] db.unified: Chunk 3615 indexed successfully
+[2025-11-02 23:44:52] [  ERROR] watcher.service: Index rebuild triggered by schema migration
+[2025-11-02 23:51:48] [   INFO] jobs.worker: Database connection pool at 31% capacity
+[2025-11-03 00:52:25] [   INFO] ingestion.pipeline: Chunk 5752 indexed successfully
+[2025-11-03 01:07:45] [  ERROR] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-03 01:42:33] [  ERROR] jobs.worker: Job job-7580 completed with status=success
+[2025-11-03 01:56:58] [   INFO] embeddings.router: Memory usage: 3651 MB (threshold: 4096 MB)
+[2025-11-03 02:05:35] [  DEBUG] inference.rag: Cache hit for query hash f016e59c
+[2025-11-03 02:44:00] [   INFO] ingestion.pipeline: Job job-8599 completed with status=success
+[2025-11-03 03:39:34] [   INFO] jobs.worker: Semantic search returned 280 results for query
+[2025-11-03 04:18:34] [  DEBUG] embeddings.router: Embedding generation completed in 10.41s
+[2025-11-03 05:03:20] [  DEBUG] ingestion.pipeline: Job job-2540 completed with status=success
+[2025-11-03 05:10:31] [WARNING] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-03 05:52:44] [   INFO] db.unified: Job job-6937 completed with status=success
+[2025-11-03 05:56:01] [  DEBUG] jobs.worker: Memory usage: 329 MB (threshold: 4096 MB)
+[2025-11-03 06:21:37] [  DEBUG] jobs.worker: Chunk 5780 indexed successfully
+[2025-11-03 06:26:45] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-03 06:58:27] [  DEBUG] db.unified: Semantic search returned 443 results for query
+[2025-11-03 07:41:33] [WARNING] db.unified: Semantic search returned 124 results for query
+[2025-11-03 08:27:22] [   INFO] ingestion.pipeline: Job job-2490 completed with status=success
+[2025-11-03 08:45:22] [   INFO] db.unified: Rate limit approaching: 95/100 requests in window
+[2025-11-03 08:54:30] [WARNING] ingestion.pipeline: Memory usage: 3057 MB (threshold: 4096 MB)
+[2025-11-03 09:32:42] [  DEBUG] inference.rag: File watcher detected 278 changes
+[2025-11-03 09:55:40] [   INFO] jobs.worker: Processing document batch of 399 files
+[2025-11-03 10:53:31] [   INFO] ingestion.pipeline: File watcher detected 381 changes
+[2025-11-03 11:26:03] [WARNING] ingestion.pipeline: Processing document batch of 339 files
+[2025-11-03 12:01:30] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-03 12:08:43] [   INFO] embeddings.router: Memory usage: 1095 MB (threshold: 4096 MB)
+[2025-11-03 13:49:28] [  ERROR] embeddings.router: Semantic search returned 90 results for query
+[2025-11-03 14:00:41] [WARNING] jobs.worker: Embedding generation completed in 11.20s
+[2025-11-03 14:03:14] [   INFO] embeddings.router: Processing document batch of 327 files
+[2025-11-03 14:58:55] [   INFO] db.unified: Cache hit for query hash 2715518c
+[2025-11-03 15:10:47] [   INFO] embeddings.router: Rate limit approaching: 93/100 requests in window
+[2025-11-03 15:24:43] [   INFO] jobs.worker: Cache hit for query hash 39e4973b
+[2025-11-03 15:41:20] [   INFO] inference.rag: Semantic search returned 489 results for query
+[2025-11-03 17:17:39] [   INFO] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-03 17:43:01] [WARNING] jobs.worker: Semantic search returned 221 results for query
+[2025-11-03 19:19:18] [WARNING] watcher.service: Embedding generation completed in 6.58s
+[2025-11-03 19:24:40] [  DEBUG] jobs.worker: Job job-2956 completed with status=success
+[2025-11-03 19:33:26] [   INFO] embeddings.router: Processing document batch of 68 files
+[2025-11-03 19:38:50] [  DEBUG] watcher.service: Chunk 4712 indexed successfully
+[2025-11-03 19:49:04] [   INFO] embeddings.router: Embedding generation completed in 11.18s
+[2025-11-03 20:30:50] [  DEBUG] ingestion.pipeline: Chunk 8679 indexed successfully
+[2025-11-03 21:13:16] [   INFO] watcher.service: File watcher detected 127 changes
+[2025-11-03 21:25:29] [WARNING] embeddings.router: Processing document batch of 459 files
+[2025-11-03 21:53:18] [   INFO] db.unified: File watcher detected 455 changes
+[2025-11-03 22:53:04] [   INFO] watcher.service: Chunk 2089 indexed successfully
+[2025-11-03 22:53:42] [  ERROR] jobs.worker: Cache hit for query hash 766ebcd5
+[2025-11-03 23:11:24] [  DEBUG] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-04 01:00:52] [WARNING] embeddings.router: File watcher detected 441 changes
+[2025-11-04 01:03:15] [  DEBUG] watcher.service: File watcher detected 113 changes
+[2025-11-04 02:03:58] [WARNING] jobs.worker: Rate limit approaching: 74/100 requests in window
+[2025-11-04 02:16:12] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-04 02:55:25] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-04 03:39:57] [WARNING] watcher.service: Database connection pool at 90% capacity
+[2025-11-04 03:47:12] [  ERROR] db.unified: Cache hit for query hash 24b16fed
+[2025-11-04 04:06:14] [   INFO] embeddings.router: Processing document batch of 358 files
+[2025-11-04 04:30:19] [   INFO] watcher.service: File watcher detected 333 changes
+[2025-11-04 04:55:33] [   INFO] ingestion.pipeline: Database connection pool at 93% capacity
+[2025-11-04 04:59:07] [  DEBUG] watcher.service: Chunk 7070 indexed successfully
+[2025-11-04 06:19:01] [  ERROR] ingestion.pipeline: Rate limit approaching: 92/100 requests in window
+[2025-11-04 06:48:42] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-04 07:34:40] [   INFO] embeddings.router: Embedding generation completed in 6.09s
+[2025-11-04 07:54:09] [   INFO] inference.rag: Semantic search returned 24 results for query
+[2025-11-04 08:10:17] [  ERROR] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-04 11:19:54] [   INFO] ingestion.pipeline: Semantic search returned 230 results for query
+[2025-11-04 11:40:35] [   INFO] db.unified: Processing document batch of 164 files
+[2025-11-04 12:23:25] [   INFO] db.unified: Cache hit for query hash 8f468c87
+[2025-11-04 12:25:04] [  DEBUG] embeddings.router: File watcher detected 77 changes
+[2025-11-04 12:30:52] [  DEBUG] ingestion.pipeline: Failed to parse document: unsupported format .xyz
+[2025-11-04 12:33:38] [   INFO] embeddings.router: Retrying failed embedding request (attempt 2/3)
+[2025-11-04 12:38:16] [   INFO] embeddings.router: Processing document batch of 131 files
+[2025-11-04 17:03:45] [  DEBUG] db.unified: Semantic search returned 32 results for query
+[2025-11-04 17:07:39] [  ERROR] inference.rag: Timeout waiting for model response after 30s
+[2025-11-04 17:10:54] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-04 18:10:31] [   INFO] inference.rag: Cache hit for query hash eccbc87e
+[2025-11-04 18:44:11] [WARNING] ingestion.pipeline: Semantic search returned 212 results for query
+[2025-11-04 19:14:55] [  DEBUG] db.unified: Timeout waiting for model response after 30s
+[2025-11-04 19:34:47] [   INFO] db.unified: Cache hit for query hash 17c276c8
+[2025-11-04 20:31:05] [  ERROR] embeddings.router: Job job-1849 completed with status=success
+[2025-11-04 20:49:22] [   INFO] ingestion.pipeline: Semantic search returned 247 results for query
+[2025-11-04 21:33:02] [WARNING] watcher.service: Retrying failed embedding request (attempt 2/3)
+[2025-11-04 21:33:58] [   INFO] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-04 21:48:31] [   INFO] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-04 22:14:53] [  DEBUG] inference.rag: File watcher detected 443 changes
+[2025-11-04 22:25:29] [  ERROR] watcher.service: Processing document batch of 80 files
+[2025-11-04 22:44:18] [  DEBUG] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-04 22:56:53] [   INFO] watcher.service: Rate limit approaching: 95/100 requests in window
+[2025-11-04 23:26:50] [   INFO] jobs.worker: Chunk 418 indexed successfully
+[2025-11-04 23:30:41] [  DEBUG] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-04 23:53:05] [  DEBUG] jobs.worker: Semantic search returned 359 results for query
+[2025-11-04 23:55:38] [   INFO] inference.rag: File watcher detected 149 changes
+[2025-11-05 00:17:23] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-05 00:40:10] [   INFO] watcher.service: Index rebuild triggered by schema migration
+[2025-11-05 00:48:34] [   INFO] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-05 00:51:37] [   INFO] jobs.worker: Database connection pool at 57% capacity
+[2025-11-05 00:54:23] [   INFO] ingestion.pipeline: Cache hit for query hash c8ed21db
+[2025-11-05 01:24:50] [   INFO] inference.rag: Processing document batch of 357 files
+[2025-11-05 01:28:31] [  ERROR] db.unified: Semantic search returned 63 results for query
+[2025-11-05 01:37:16] [WARNING] jobs.worker: Embedding generation completed in 8.47s
+[2025-11-05 01:45:08] [  ERROR] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-05 01:54:09] [  DEBUG] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-05 02:35:25] [   INFO] inference.rag: Index rebuild triggered by schema migration
+[2025-11-05 02:52:01] [WARNING] ingestion.pipeline: Failed to parse document: unsupported format .xyz
+[2025-11-05 03:09:30] [   INFO] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-05 03:57:50] [   INFO] watcher.service: Embedding generation completed in 3.62s
+[2025-11-05 04:41:31] [   INFO] embeddings.router: Database connection pool at 34% capacity
+[2025-11-05 04:59:50] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-05 05:23:06] [WARNING] db.unified: Cache hit for query hash 6aab1270
+[2025-11-05 06:09:50] [WARNING] embeddings.router: Retrying failed embedding request (attempt 2/3)
+[2025-11-05 06:13:16] [  ERROR] ingestion.pipeline: Failed to parse document: unsupported format .xyz
+[2025-11-05 07:20:43] [   INFO] inference.rag: Retrying failed embedding request (attempt 3/3)
+[2025-11-05 08:53:09] [  ERROR] embeddings.router: Processing document batch of 458 files
+[2025-11-05 09:03:31] [  DEBUG] jobs.worker: Embedding generation completed in 10.00s
+[2025-11-05 10:13:32] [   INFO] ingestion.pipeline: Embedding generation completed in 3.44s
+[2025-11-05 10:20:08] [WARNING] embeddings.router: Chunk 8827 indexed successfully
+[2025-11-05 12:37:03] [   INFO] jobs.worker: Failed to parse document: unsupported format .xyz
+[2025-11-05 12:47:00] [WARNING] db.unified: Chunk 585 indexed successfully
+[2025-11-05 12:55:26] [WARNING] watcher.service: Timeout waiting for model response after 30s
+[2025-11-05 13:58:06] [   INFO] embeddings.router: Database connection pool at 20% capacity
+[2025-11-05 14:46:43] [WARNING] watcher.service: Embedding generation completed in 13.93s
+[2025-11-05 15:11:41] [  ERROR] watcher.service: Memory usage: 2869 MB (threshold: 4096 MB)
+[2025-11-05 15:32:25] [   INFO] inference.rag: Memory usage: 3213 MB (threshold: 4096 MB)
+[2025-11-05 15:54:15] [   INFO] ingestion.pipeline: Chunk 4068 indexed successfully
+[2025-11-05 16:10:09] [   INFO] ingestion.pipeline: Failed to parse document: unsupported format .xyz
+[2025-11-05 16:11:37] [  ERROR] jobs.worker: Retrying failed embedding request (attempt 3/3)
+[2025-11-05 16:21:29] [   INFO] ingestion.pipeline: Rate limit approaching: 77/100 requests in window
+[2025-11-05 16:37:51] [   INFO] inference.rag: Embedding generation completed in 3.03s
+[2025-11-05 16:53:04] [   INFO] watcher.service: Memory usage: 2175 MB (threshold: 4096 MB)
+[2025-11-05 17:03:04] [  DEBUG] db.unified: Timeout waiting for model response after 30s
+[2025-11-05 17:07:49] [WARNING] jobs.worker: Failed to parse document: unsupported format .xyz
+[2025-11-05 17:14:23] [  DEBUG] watcher.service: Semantic search returned 77 results for query
+[2025-11-05 17:23:01] [  ERROR] inference.rag: Rate limit approaching: 73/100 requests in window
+[2025-11-05 17:24:01] [   INFO] watcher.service: Processing document batch of 228 files
+[2025-11-05 17:55:41] [   INFO] db.unified: Semantic search returned 451 results for query
+[2025-11-05 18:00:30] [  ERROR] db.unified: Retrying failed embedding request (attempt 3/3)
+[2025-11-05 20:10:11] [  ERROR] db.unified: Processing document batch of 74 files
+[2025-11-05 20:18:53] [  ERROR] inference.rag: Database connection pool at 22% capacity
+[2025-11-05 20:57:48] [   INFO] embeddings.router: Semantic search returned 417 results for query
+[2025-11-05 21:04:06] [WARNING] db.unified: Memory usage: 1334 MB (threshold: 4096 MB)
+[2025-11-05 21:33:01] [WARNING] inference.rag: Processing document batch of 451 files
+[2025-11-05 21:39:21] [   INFO] watcher.service: Job job-7789 completed with status=success
+[2025-11-05 21:44:48] [  DEBUG] watcher.service: Semantic search returned 23 results for query
+[2025-11-05 23:47:39] [WARNING] watcher.service: Chunk 376 indexed successfully
+[2025-11-06 01:36:31] [  ERROR] watcher.service: Processing document batch of 342 files
+[2025-11-06 01:46:47] [   INFO] ingestion.pipeline: Chunk 277 indexed successfully
+[2025-11-06 01:47:28] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-06 01:53:59] [WARNING] jobs.worker: Database connection pool at 27% capacity
+[2025-11-06 01:55:56] [WARNING] embeddings.router: Cache hit for query hash e744f91c
+[2025-11-06 02:31:04] [WARNING] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-06 03:09:02] [   INFO] jobs.worker: Semantic search returned 410 results for query
+[2025-11-06 03:17:33] [  DEBUG] inference.rag: Retrying failed embedding request (attempt 2/3)
+[2025-11-06 03:52:45] [   INFO] jobs.worker: Failed to parse document: unsupported format .xyz
+[2025-11-06 04:36:34] [WARNING] watcher.service: Job job-4093 completed with status=success
+[2025-11-06 04:39:30] [   INFO] embeddings.router: Database connection pool at 49% capacity
+[2025-11-06 04:48:47] [WARNING] embeddings.router: Cache hit for query hash e58cc5ca
+[2025-11-06 04:50:49] [  DEBUG] embeddings.router: Semantic search returned 73 results for query
+[2025-11-06 05:16:37] [   INFO] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-06 05:35:47] [   INFO] ingestion.pipeline: File watcher detected 244 changes
+[2025-11-06 05:45:40] [  ERROR] jobs.worker: Memory usage: 857 MB (threshold: 4096 MB)
+[2025-11-06 06:16:05] [   INFO] embeddings.router: Semantic search returned 64 results for query
+[2025-11-06 06:34:55] [  ERROR] ingestion.pipeline: Chunk 5152 indexed successfully
+[2025-11-06 07:08:01] [WARNING] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-06 07:08:55] [   INFO] embeddings.router: Database connection pool at 60% capacity
+[2025-11-06 07:18:28] [   INFO] embeddings.router: Rate limit approaching: 57/100 requests in window
+[2025-11-06 07:39:46] [  DEBUG] watcher.service: Semantic search returned 356 results for query
+[2025-11-06 08:19:54] [  DEBUG] jobs.worker: Semantic search returned 104 results for query
+[2025-11-06 08:59:20] [  DEBUG] db.unified: File watcher detected 246 changes
+[2025-11-06 09:07:42] [  ERROR] db.unified: Semantic search returned 311 results for query
+[2025-11-06 09:51:06] [   INFO] inference.rag: Memory usage: 2781 MB (threshold: 4096 MB)
+[2025-11-06 09:55:51] [   INFO] db.unified: Rate limit approaching: 74/100 requests in window
+[2025-11-06 11:13:42] [  DEBUG] watcher.service: Database connection pool at 94% capacity
+[2025-11-06 11:18:14] [WARNING] ingestion.pipeline: Processing document batch of 361 files
+[2025-11-06 11:28:58] [WARNING] inference.rag: File watcher detected 444 changes
+[2025-11-06 12:04:39] [   INFO] watcher.service: Chunk 4076 indexed successfully
+[2025-11-06 12:19:05] [   INFO] watcher.service: File watcher detected 218 changes
+[2025-11-06 12:27:06] [  DEBUG] inference.rag: Timeout waiting for model response after 30s
+[2025-11-06 12:43:18] [   INFO] ingestion.pipeline: Cache hit for query hash 8613985e
+[2025-11-06 13:35:36] [WARNING] jobs.worker: Embedding generation completed in 1.43s
+[2025-11-06 13:36:15] [   INFO] embeddings.router: Processing document batch of 118 files
+[2025-11-06 15:06:58] [   INFO] ingestion.pipeline: Processing document batch of 398 files
+[2025-11-06 15:31:54] [WARNING] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-06 15:49:01] [   INFO] db.unified: Retrying failed embedding request (attempt 3/3)
+[2025-11-06 17:42:07] [   INFO] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-06 17:50:06] [WARNING] jobs.worker: File watcher detected 17 changes
+[2025-11-06 18:20:36] [  DEBUG] ingestion.pipeline: Memory usage: 1307 MB (threshold: 4096 MB)
+[2025-11-06 18:21:23] [  ERROR] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-06 19:04:45] [WARNING] watcher.service: Index rebuild triggered by schema migration
+[2025-11-06 19:12:42] [   INFO] db.unified: Chunk 5207 indexed successfully
+[2025-11-06 21:15:46] [   INFO] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-06 21:45:00] [   INFO] jobs.worker: Index rebuild triggered by schema migration
+[2025-11-06 21:50:57] [WARNING] embeddings.router: Job job-2905 completed with status=success
+[2025-11-06 22:10:58] [   INFO] db.unified: Processing document batch of 325 files
+[2025-11-06 22:38:43] [  DEBUG] jobs.worker: Embedding generation completed in 9.37s
+[2025-11-06 23:05:44] [   INFO] watcher.service: Database connection pool at 93% capacity
+[2025-11-06 23:49:11] [WARNING] embeddings.router: File watcher detected 194 changes
+[2025-11-07 01:19:54] [  DEBUG] embeddings.router: Retrying failed embedding request (attempt 1/3)
+[2025-11-07 01:22:47] [   INFO] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-07 01:47:39] [WARNING] inference.rag: Timeout waiting for model response after 30s
+[2025-11-07 01:57:45] [   INFO] embeddings.router: Database connection pool at 64% capacity
+[2025-11-07 02:04:25] [WARNING] ingestion.pipeline: Processing document batch of 107 files
+[2025-11-07 02:14:46] [   INFO] jobs.worker: File watcher detected 171 changes
+[2025-11-07 02:23:15] [   INFO] inference.rag: Timeout waiting for model response after 30s
+[2025-11-07 02:43:35] [  DEBUG] watcher.service: Processing document batch of 383 files
+[2025-11-07 03:01:47] [   INFO] watcher.service: Processing document batch of 294 files
+[2025-11-07 04:36:58] [  DEBUG] ingestion.pipeline: File watcher detected 85 changes
+[2025-11-07 05:03:47] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-07 05:07:21] [   INFO] ingestion.pipeline: Processing document batch of 95 files
+[2025-11-07 05:47:38] [   INFO] watcher.service: Embedding generation completed in 4.44s
+[2025-11-07 05:48:28] [   INFO] jobs.worker: Cache hit for query hash e0040614
+[2025-11-07 06:07:09] [  DEBUG] watcher.service: Index rebuild triggered by schema migration
+[2025-11-07 06:21:01] [  DEBUG] jobs.worker: Chunk 1675 indexed successfully
+[2025-11-07 06:37:06] [  DEBUG] inference.rag: Index rebuild triggered by schema migration
+[2025-11-07 07:08:14] [  ERROR] db.unified: Timeout waiting for model response after 30s
+[2025-11-07 07:12:29] [   INFO] ingestion.pipeline: Processing document batch of 434 files
+[2025-11-07 08:12:45] [WARNING] ingestion.pipeline: Memory usage: 2273 MB (threshold: 4096 MB)
+[2025-11-07 09:59:33] [  ERROR] embeddings.router: Rate limit approaching: 64/100 requests in window
+[2025-11-07 10:04:43] [   INFO] watcher.service: File watcher detected 370 changes
+[2025-11-07 10:51:15] [   INFO] inference.rag: Retrying failed embedding request (attempt 2/3)
+[2025-11-07 11:03:14] [  DEBUG] jobs.worker: Cache hit for query hash c2aee861
+[2025-11-07 11:17:53] [   INFO] ingestion.pipeline: Semantic search returned 440 results for query
+[2025-11-07 11:42:22] [  ERROR] inference.rag: Memory usage: 2472 MB (threshold: 4096 MB)
+[2025-11-07 13:34:42] [WARNING] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-07 16:12:35] [WARNING] ingestion.pipeline: File watcher detected 172 changes
+[2025-11-07 17:03:40] [  ERROR] db.unified: Timeout waiting for model response after 30s
+[2025-11-07 17:41:17] [   INFO] ingestion.pipeline: Chunk 4558 indexed successfully
+[2025-11-07 17:51:26] [WARNING] db.unified: File watcher detected 350 changes
+[2025-11-07 18:06:47] [  DEBUG] inference.rag: Processing document batch of 346 files
+[2025-11-07 18:17:38] [   INFO] watcher.service: Processing document batch of 272 files
+[2025-11-07 18:18:49] [  ERROR] ingestion.pipeline: Chunk 1183 indexed successfully
+[2025-11-07 18:33:16] [  ERROR] jobs.worker: Rate limit approaching: 56/100 requests in window
+[2025-11-07 18:42:51] [   INFO] jobs.worker: Processing document batch of 183 files
+[2025-11-07 18:54:24] [  ERROR] inference.rag: Processing document batch of 181 files
+[2025-11-07 19:22:18] [  DEBUG] embeddings.router: Rate limit approaching: 59/100 requests in window
+[2025-11-07 19:30:41] [WARNING] embeddings.router: Memory usage: 1899 MB (threshold: 4096 MB)
+[2025-11-07 19:42:04] [  ERROR] jobs.worker: Chunk 8917 indexed successfully
+[2025-11-07 19:54:46] [   INFO] jobs.worker: Retrying failed embedding request (attempt 3/3)
+[2025-11-07 20:25:01] [  DEBUG] watcher.service: Index rebuild triggered by schema migration
+[2025-11-07 20:30:48] [   INFO] watcher.service: Embedding generation completed in 0.43s
+[2025-11-07 20:56:41] [  DEBUG] jobs.worker: Retrying failed embedding request (attempt 3/3)
+[2025-11-07 21:00:56] [  ERROR] watcher.service: Rate limit approaching: 52/100 requests in window
+[2025-11-07 21:50:26] [  DEBUG] embeddings.router: Database connection pool at 65% capacity
+[2025-11-07 22:04:57] [   INFO] inference.rag: Processing document batch of 17 files
+[2025-11-07 22:20:23] [   INFO] inference.rag: Job job-7617 completed with status=success
+[2025-11-07 23:16:22] [WARNING] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-07 23:31:21] [  ERROR] inference.rag: Index rebuild triggered by schema migration
+[2025-11-07 23:36:41] [   INFO] db.unified: Index rebuild triggered by schema migration
+[2025-11-07 23:52:09] [   INFO] jobs.worker: Embedding generation completed in 5.24s
+[2025-11-08 00:06:41] [WARNING] watcher.service: Memory usage: 1559 MB (threshold: 4096 MB)
+[2025-11-08 01:47:16] [  ERROR] db.unified: Chunk 9536 indexed successfully
+[2025-11-08 02:16:12] [  ERROR] inference.rag: Chunk 8893 indexed successfully
+[2025-11-08 02:31:00] [WARNING] jobs.worker: Retrying failed embedding request (attempt 3/3)
+[2025-11-08 02:46:36] [   INFO] jobs.worker: Rate limit approaching: 97/100 requests in window
+[2025-11-08 02:55:52] [  ERROR] inference.rag: File watcher detected 126 changes
+[2025-11-08 03:01:52] [  ERROR] db.unified: Memory usage: 3358 MB (threshold: 4096 MB)
+[2025-11-08 04:05:19] [   INFO] embeddings.router: Chunk 523 indexed successfully
+[2025-11-08 05:25:36] [   INFO] db.unified: Semantic search returned 171 results for query
+[2025-11-08 05:28:21] [   INFO] db.unified: Timeout waiting for model response after 30s
+[2025-11-08 05:29:08] [   INFO] inference.rag: Processing document batch of 377 files
+[2025-11-08 05:58:24] [  ERROR] watcher.service: Memory usage: 2486 MB (threshold: 4096 MB)
+[2025-11-08 06:11:27] [   INFO] db.unified: File watcher detected 102 changes
+[2025-11-08 06:19:33] [  DEBUG] watcher.service: Timeout waiting for model response after 30s
+[2025-11-08 06:21:35] [  DEBUG] watcher.service: Rate limit approaching: 97/100 requests in window
+[2025-11-08 07:47:36] [   INFO] embeddings.router: Job job-5419 completed with status=success
+[2025-11-08 07:56:48] [  ERROR] watcher.service: Index rebuild triggered by schema migration
+[2025-11-08 08:13:09] [   INFO] jobs.worker: Rate limit approaching: 83/100 requests in window
+[2025-11-08 08:15:06] [   INFO] jobs.worker: Job job-3482 completed with status=success
+[2025-11-08 08:37:28] [   INFO] embeddings.router: Embedding generation completed in 1.05s
+[2025-11-08 09:22:34] [   INFO] inference.rag: Chunk 7918 indexed successfully
+[2025-11-08 09:24:22] [   INFO] db.unified: Semantic search returned 38 results for query
+[2025-11-08 09:35:38] [  ERROR] ingestion.pipeline: Retrying failed embedding request (attempt 2/3)
+[2025-11-08 09:36:10] [   INFO] watcher.service: Retrying failed embedding request (attempt 2/3)
+[2025-11-08 10:48:56] [  DEBUG] jobs.worker: Database connection pool at 83% capacity
+[2025-11-08 11:31:46] [  DEBUG] ingestion.pipeline: Embedding generation completed in 1.13s
+[2025-11-08 12:22:00] [WARNING] jobs.worker: Memory usage: 975 MB (threshold: 4096 MB)
+[2025-11-08 12:50:47] [WARNING] inference.rag: Embedding generation completed in 7.37s
+[2025-11-08 12:52:37] [  ERROR] watcher.service: Chunk 449 indexed successfully
+[2025-11-08 13:21:36] [   INFO] ingestion.pipeline: File watcher detected 218 changes
+[2025-11-08 13:42:35] [   INFO] inference.rag: Timeout waiting for model response after 30s
+[2025-11-08 13:52:36] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-08 14:21:32] [   INFO] ingestion.pipeline: File watcher detected 91 changes
+[2025-11-08 15:33:31] [  DEBUG] inference.rag: Job job-9693 completed with status=success
+[2025-11-08 15:44:11] [WARNING] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-08 16:34:14] [  DEBUG] inference.rag: Cache hit for query hash 46072631
+[2025-11-08 16:48:13] [   INFO] inference.rag: Database connection pool at 20% capacity
+[2025-11-08 16:57:43] [   INFO] ingestion.pipeline: Job job-6853 completed with status=success
+[2025-11-08 17:26:07] [  DEBUG] inference.rag: Memory usage: 2537 MB (threshold: 4096 MB)
+[2025-11-08 18:36:05] [   INFO] ingestion.pipeline: File watcher detected 348 changes
+[2025-11-08 18:38:13] [   INFO] watcher.service: Semantic search returned 121 results for query
+[2025-11-08 18:43:36] [   INFO] db.unified: File watcher detected 246 changes
+[2025-11-08 19:22:52] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-08 19:32:05] [   INFO] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-08 20:48:40] [WARNING] watcher.service: Memory usage: 3530 MB (threshold: 4096 MB)
+[2025-11-08 20:50:36] [   INFO] ingestion.pipeline: Processing document batch of 301 files
+[2025-11-08 21:57:06] [   INFO] embeddings.router: Job job-3653 completed with status=success
+[2025-11-08 21:59:52] [   INFO] db.unified: Retrying failed embedding request (attempt 3/3)
+[2025-11-08 22:44:41] [   INFO] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-08 23:03:13] [WARNING] embeddings.router: Cache hit for query hash 97e8527f
+[2025-11-08 23:42:29] [   INFO] watcher.service: Memory usage: 1639 MB (threshold: 4096 MB)
+[2025-11-09 00:59:53] [  DEBUG] ingestion.pipeline: Memory usage: 3717 MB (threshold: 4096 MB)
+[2025-11-09 01:30:05] [   INFO] db.unified: Rate limit approaching: 93/100 requests in window
+[2025-11-09 01:44:49] [WARNING] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-09 02:08:41] [   INFO] inference.rag: Job job-2551 completed with status=success
+[2025-11-09 02:15:15] [   INFO] watcher.service: Database connection pool at 60% capacity
+[2025-11-09 02:16:08] [WARNING] db.unified: Semantic search returned 54 results for query
+[2025-11-09 02:46:56] [   INFO] jobs.worker: Processing document batch of 222 files
+[2025-11-09 04:14:41] [WARNING] watcher.service: Timeout waiting for model response after 30s
+[2025-11-09 04:43:42] [WARNING] watcher.service: Database connection pool at 67% capacity
+[2025-11-09 04:48:10] [   INFO] embeddings.router: File watcher detected 310 changes
+[2025-11-09 05:54:51] [   INFO] jobs.worker: Memory usage: 3447 MB (threshold: 4096 MB)
+[2025-11-09 05:57:37] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-09 06:18:26] [WARNING] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-09 06:36:30] [  ERROR] jobs.worker: Processing document batch of 355 files
+[2025-11-09 07:06:16] [  DEBUG] embeddings.router: Job job-2002 completed with status=success
+[2025-11-09 07:12:06] [  ERROR] db.unified: Embedding generation completed in 10.96s
+[2025-11-09 09:39:17] [  ERROR] ingestion.pipeline: Embedding generation completed in 10.37s
+[2025-11-09 09:59:10] [   INFO] jobs.worker: Failed to parse document: unsupported format .xyz
+[2025-11-09 10:08:11] [WARNING] ingestion.pipeline: Chunk 855 indexed successfully
+[2025-11-09 10:10:44] [  ERROR] jobs.worker: Semantic search returned 413 results for query
+[2025-11-09 11:01:04] [   INFO] db.unified: Chunk 5528 indexed successfully
+[2025-11-09 11:50:26] [  ERROR] ingestion.pipeline: Processing document batch of 3 files
+[2025-11-09 11:59:18] [   INFO] inference.rag: Retrying failed embedding request (attempt 2/3)
+[2025-11-09 12:10:36] [   INFO] jobs.worker: Memory usage: 949 MB (threshold: 4096 MB)
+[2025-11-09 12:32:32] [WARNING] inference.rag: Processing document batch of 73 files
+[2025-11-09 12:40:13] [   INFO] inference.rag: Semantic search returned 90 results for query
+[2025-11-09 13:05:08] [  ERROR] watcher.service: Failed to parse document: unsupported format .xyz
+[2025-11-09 13:59:16] [  DEBUG] db.unified: Embedding generation completed in 8.90s
+[2025-11-09 14:27:33] [   INFO] watcher.service: Cache hit for query hash ad71c82b
+[2025-11-09 15:56:48] [  DEBUG] watcher.service: Database connection pool at 78% capacity
+[2025-11-09 16:05:32] [   INFO] db.unified: Chunk 3187 indexed successfully
+[2025-11-09 16:33:06] [WARNING] db.unified: Database connection pool at 12% capacity
+[2025-11-09 16:51:08] [   INFO] jobs.worker: Memory usage: 2712 MB (threshold: 4096 MB)
+[2025-11-09 17:26:05] [   INFO] ingestion.pipeline: Database connection pool at 20% capacity
+[2025-11-09 17:42:53] [WARNING] watcher.service: Timeout waiting for model response after 30s
+[2025-11-09 17:52:11] [   INFO] ingestion.pipeline: Database connection pool at 69% capacity
+[2025-11-09 17:58:14] [   INFO] inference.rag: Chunk 108 indexed successfully
+[2025-11-09 19:10:07] [   INFO] db.unified: Failed to parse document: unsupported format .xyz
+[2025-11-09 20:02:07] [   INFO] inference.rag: Database connection pool at 88% capacity
+[2025-11-09 20:06:28] [WARNING] inference.rag: Database connection pool at 73% capacity
+[2025-11-09 20:08:37] [   INFO] inference.rag: Embedding generation completed in 8.43s
+[2025-11-09 20:09:28] [  DEBUG] embeddings.router: Rate limit approaching: 88/100 requests in window
+[2025-11-09 22:26:25] [  ERROR] watcher.service: Chunk 7264 indexed successfully
+[2025-11-09 22:29:39] [   INFO] watcher.service: Database connection pool at 24% capacity
+[2025-11-09 23:02:26] [   INFO] db.unified: File watcher detected 113 changes
+[2025-11-10 00:16:56] [  ERROR] ingestion.pipeline: Semantic search returned 265 results for query
+[2025-11-10 00:42:53] [   INFO] watcher.service: Index rebuild triggered by schema migration
+[2025-11-10 01:34:26] [   INFO] inference.rag: Memory usage: 3361 MB (threshold: 4096 MB)
+[2025-11-10 01:34:54] [   INFO] db.unified: File watcher detected 39 changes
+[2025-11-10 02:03:21] [   INFO] watcher.service: Cache hit for query hash 5f0f5e5f
+[2025-11-10 03:48:16] [WARNING] embeddings.router: Rate limit approaching: 98/100 requests in window
+[2025-11-10 04:13:08] [  ERROR] ingestion.pipeline: Database connection pool at 77% capacity
+[2025-11-10 04:16:30] [  ERROR] embeddings.router: File watcher detected 416 changes
+[2025-11-10 04:45:59] [WARNING] embeddings.router: Memory usage: 3775 MB (threshold: 4096 MB)
+[2025-11-10 04:46:52] [  DEBUG] jobs.worker: Rate limit approaching: 91/100 requests in window
+[2025-11-10 04:55:17] [   INFO] embeddings.router: Database connection pool at 44% capacity
+[2025-11-10 05:19:06] [   INFO] jobs.worker: Rate limit approaching: 78/100 requests in window
+[2025-11-10 05:40:51] [  DEBUG] watcher.service: Embedding generation completed in 9.40s
+[2025-11-10 06:39:05] [   INFO] ingestion.pipeline: Memory usage: 2056 MB (threshold: 4096 MB)
+[2025-11-10 06:40:26] [   INFO] watcher.service: Embedding generation completed in 11.09s
+[2025-11-10 07:40:14] [   INFO] db.unified: Index rebuild triggered by schema migration
+[2025-11-10 08:08:06] [WARNING] db.unified: Embedding generation completed in 0.61s
+[2025-11-10 08:19:18] [WARNING] db.unified: Database connection pool at 66% capacity
+[2025-11-10 08:45:22] [WARNING] embeddings.router: Retrying failed embedding request (attempt 2/3)
+[2025-11-10 08:47:05] [   INFO] embeddings.router: Memory usage: 446 MB (threshold: 4096 MB)
+[2025-11-10 09:19:59] [   INFO] inference.rag: Job job-8289 completed with status=success
+[2025-11-10 09:37:37] [  ERROR] embeddings.router: Job job-8829 completed with status=success
+[2025-11-10 09:38:44] [   INFO] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-10 09:39:35] [   INFO] ingestion.pipeline: File watcher detected 391 changes
+[2025-11-10 10:12:35] [   INFO] db.unified: Processing document batch of 155 files
+[2025-11-10 10:18:14] [   INFO] jobs.worker: Database connection pool at 44% capacity
+[2025-11-10 10:40:03] [WARNING] jobs.worker: Embedding generation completed in 4.02s
+[2025-11-10 11:07:40] [   INFO] inference.rag: Memory usage: 3283 MB (threshold: 4096 MB)
+[2025-11-10 11:14:54] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-10 11:24:46] [   INFO] inference.rag: Chunk 2543 indexed successfully
+[2025-11-10 11:25:18] [  ERROR] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-10 11:41:36] [  ERROR] embeddings.router: Memory usage: 941 MB (threshold: 4096 MB)
+[2025-11-10 12:06:04] [  DEBUG] watcher.service: Embedding generation completed in 8.94s
+[2025-11-10 12:07:01] [   INFO] db.unified: Job job-7889 completed with status=success
+[2025-11-10 13:06:04] [   INFO] embeddings.router: File watcher detected 69 changes
+[2025-11-10 13:18:44] [  ERROR] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-10 13:32:00] [WARNING] jobs.worker: Job job-9099 completed with status=success
+[2025-11-10 13:41:53] [   INFO] watcher.service: Cache hit for query hash 38b3eff8
+[2025-11-10 14:27:07] [WARNING] jobs.worker: Rate limit approaching: 72/100 requests in window
+[2025-11-10 15:06:01] [   INFO] ingestion.pipeline: Processing document batch of 17 files
+[2025-11-10 15:33:00] [WARNING] jobs.worker: Processing document batch of 428 files
+[2025-11-10 17:04:22] [   INFO] jobs.worker: Cache hit for query hash 73278a4a
+[2025-11-10 17:36:29] [   INFO] embeddings.router: Cache hit for query hash 8065d07d
+[2025-11-10 18:12:23] [   INFO] embeddings.router: File watcher detected 494 changes
+[2025-11-10 18:33:07] [  DEBUG] jobs.worker: File watcher detected 316 changes
+[2025-11-10 18:41:16] [WARNING] watcher.service: Embedding generation completed in 6.08s
+[2025-11-10 19:32:22] [  ERROR] jobs.worker: Processing document batch of 355 files
+[2025-11-10 19:45:26] [WARNING] ingestion.pipeline: File watcher detected 232 changes
+[2025-11-10 19:53:14] [WARNING] watcher.service: Job job-3290 completed with status=success
+[2025-11-10 20:01:16] [   INFO] db.unified: Retrying failed embedding request (attempt 1/3)
+[2025-11-10 20:11:19] [   INFO] embeddings.router: Cache hit for query hash 34ed066d
+[2025-11-10 20:32:07] [  DEBUG] jobs.worker: Processing document batch of 405 files
+[2025-11-10 20:33:41] [   INFO] db.unified: Processing document batch of 28 files
+[2025-11-10 20:42:18] [   INFO] inference.rag: Index rebuild triggered by schema migration
+[2025-11-10 21:00:05] [   INFO] ingestion.pipeline: Memory usage: 2086 MB (threshold: 4096 MB)
+[2025-11-10 21:12:43] [  ERROR] db.unified: Embedding generation completed in 3.68s
+[2025-11-10 22:04:58] [   INFO] db.unified: Processing document batch of 357 files
+[2025-11-10 22:12:13] [   INFO] embeddings.router: File watcher detected 20 changes
+[2025-11-10 22:51:30] [   INFO] inference.rag: File watcher detected 433 changes
+[2025-11-10 23:03:39] [  DEBUG] jobs.worker: Failed to parse document: unsupported format .xyz
+[2025-11-10 23:10:44] [  ERROR] db.unified: Embedding generation completed in 5.34s
+[2025-11-10 23:25:00] [  ERROR] jobs.worker: Index rebuild triggered by schema migration
+[2025-11-10 23:59:42] [  DEBUG] db.unified: Chunk 2894 indexed successfully
+[2025-11-11 00:02:28] [   INFO] jobs.worker: Semantic search returned 11 results for query
+[2025-11-11 01:05:05] [  ERROR] embeddings.router: Memory usage: 1412 MB (threshold: 4096 MB)
+[2025-11-11 01:26:34] [WARNING] db.unified: Cache hit for query hash ef575e88
+[2025-11-11 01:41:00] [   INFO] watcher.service: Failed to parse document: unsupported format .xyz
+[2025-11-11 02:11:50] [WARNING] inference.rag: Timeout waiting for model response after 30s
+[2025-11-11 03:01:00] [   INFO] watcher.service: File watcher detected 468 changes
+[2025-11-11 04:31:13] [  ERROR] embeddings.router: Chunk 5947 indexed successfully
+[2025-11-11 04:42:55] [   INFO] inference.rag: Chunk 497 indexed successfully
+[2025-11-11 04:43:27] [   INFO] db.unified: File watcher detected 453 changes
+[2025-11-11 05:47:09] [  ERROR] embeddings.router: Retrying failed embedding request (attempt 3/3)
+[2025-11-11 05:50:25] [   INFO] watcher.service: Semantic search returned 304 results for query
+[2025-11-11 05:52:04] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-11 06:32:12] [   INFO] watcher.service: Index rebuild triggered by schema migration
+[2025-11-11 07:28:44] [WARNING] db.unified: Job job-4834 completed with status=success
+[2025-11-11 07:31:18] [   INFO] watcher.service: Failed to parse document: unsupported format .xyz
+[2025-11-11 08:32:07] [  DEBUG] watcher.service: Rate limit approaching: 62/100 requests in window
+[2025-11-11 08:37:17] [   INFO] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-11 08:45:38] [   INFO] jobs.worker: Chunk 2166 indexed successfully
+[2025-11-11 08:57:00] [WARNING] watcher.service: File watcher detected 345 changes
+[2025-11-11 09:11:28] [   INFO] db.unified: Embedding generation completed in 2.81s
+[2025-11-11 09:47:53] [   INFO] db.unified: Timeout waiting for model response after 30s
+[2025-11-11 09:58:49] [   INFO] ingestion.pipeline: Processing document batch of 212 files
+[2025-11-11 12:31:56] [  ERROR] embeddings.router: Embedding generation completed in 9.60s
+[2025-11-11 12:46:54] [WARNING] inference.rag: Semantic search returned 263 results for query
+[2025-11-11 13:23:07] [   INFO] ingestion.pipeline: Cache hit for query hash bcbe3365
+[2025-11-11 14:10:09] [   INFO] inference.rag: Embedding generation completed in 4.57s
+[2025-11-11 14:35:09] [   INFO] watcher.service: Chunk 1389 indexed successfully
+[2025-11-11 14:44:51] [   INFO] embeddings.router: File watcher detected 56 changes
+[2025-11-11 15:59:32] [   INFO] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-11 15:59:34] [   INFO] jobs.worker: Retrying failed embedding request (attempt 3/3)
+[2025-11-11 17:28:14] [   INFO] embeddings.router: File watcher detected 284 changes
+[2025-11-11 18:07:01] [   INFO] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-11 18:51:28] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-11 19:00:38] [  DEBUG] jobs.worker: File watcher detected 427 changes
+[2025-11-11 19:32:58] [   INFO] watcher.service: Failed to parse document: unsupported format .xyz
+[2025-11-11 19:55:41] [   INFO] jobs.worker: Processing document batch of 105 files
+[2025-11-11 20:27:47] [  ERROR] embeddings.router: Cache hit for query hash 84117275
+[2025-11-11 20:31:01] [WARNING] jobs.worker: Semantic search returned 296 results for query
+[2025-11-11 20:46:33] [  ERROR] embeddings.router: Memory usage: 1791 MB (threshold: 4096 MB)
+[2025-11-11 20:51:42] [  ERROR] inference.rag: Semantic search returned 369 results for query
+[2025-11-11 21:01:51] [   INFO] watcher.service: Cache hit for query hash d2ddea18
+[2025-11-11 21:20:20] [  DEBUG] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-11 21:45:36] [   INFO] ingestion.pipeline: Processing document batch of 10 files
+[2025-11-11 22:27:19] [   INFO] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-11 22:28:07] [   INFO] inference.rag: Rate limit approaching: 90/100 requests in window
+[2025-11-11 23:00:06] [   INFO] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-11 23:14:12] [WARNING] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-11 23:17:27] [   INFO] db.unified: Embedding generation completed in 1.46s
+[2025-11-12 00:03:57] [   INFO] db.unified: Processing document batch of 378 files
+[2025-11-12 00:13:29] [  ERROR] db.unified: Failed to parse document: unsupported format .xyz
+[2025-11-12 00:45:17] [  DEBUG] watcher.service: Embedding generation completed in 10.08s
+[2025-11-12 01:06:12] [WARNING] ingestion.pipeline: Processing document batch of 54 files
+[2025-11-12 01:38:36] [   INFO] ingestion.pipeline: Processing document batch of 367 files
+[2025-11-12 01:49:06] [   INFO] ingestion.pipeline: Chunk 6079 indexed successfully
+[2025-11-12 02:14:36] [  ERROR] embeddings.router: Retrying failed embedding request (attempt 1/3)
+[2025-11-12 02:39:06] [   INFO] watcher.service: File watcher detected 273 changes
+[2025-11-12 03:37:27] [WARNING] db.unified: Retrying failed embedding request (attempt 1/3)
+[2025-11-12 03:41:48] [  DEBUG] inference.rag: Database connection pool at 39% capacity
+[2025-11-12 03:50:46] [   INFO] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-12 04:58:50] [WARNING] watcher.service: File watcher detected 164 changes
+[2025-11-12 05:54:20] [   INFO] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-12 05:59:17] [   INFO] db.unified: Failed to parse document: unsupported format .xyz
+[2025-11-12 06:43:04] [   INFO] ingestion.pipeline: Processing document batch of 355 files
+[2025-11-12 06:43:43] [   INFO] embeddings.router: File watcher detected 219 changes
+[2025-11-12 06:44:58] [  DEBUG] ingestion.pipeline: Processing document batch of 113 files
+[2025-11-12 07:09:12] [  ERROR] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-12 08:08:07] [WARNING] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-12 08:16:29] [   INFO] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-12 08:27:26] [  DEBUG] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-12 09:57:10] [  DEBUG] embeddings.router: Chunk 7286 indexed successfully
+[2025-11-12 10:17:16] [   INFO] inference.rag: Database connection pool at 84% capacity
+[2025-11-12 11:25:35] [   INFO] db.unified: Rate limit approaching: 56/100 requests in window
+[2025-11-12 11:44:53] [WARNING] inference.rag: Chunk 203 indexed successfully
+[2025-11-12 12:06:12] [   INFO] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-12 12:42:58] [   INFO] jobs.worker: Database connection pool at 33% capacity
+[2025-11-12 15:33:10] [   INFO] ingestion.pipeline: Failed to parse document: unsupported format .xyz
+[2025-11-12 16:18:44] [   INFO] watcher.service: File watcher detected 48 changes
+[2025-11-12 16:20:07] [  ERROR] inference.rag: Memory usage: 3086 MB (threshold: 4096 MB)
+[2025-11-12 17:07:08] [  ERROR] watcher.service: Memory usage: 3256 MB (threshold: 4096 MB)
+[2025-11-12 17:29:04] [  DEBUG] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-12 17:31:39] [   INFO] inference.rag: Memory usage: 1684 MB (threshold: 4096 MB)
+[2025-11-12 17:33:54] [  DEBUG] watcher.service: Failed to parse document: unsupported format .xyz
+[2025-11-12 17:48:23] [WARNING] watcher.service: Semantic search returned 439 results for query
+[2025-11-12 17:49:11] [WARNING] jobs.worker: Semantic search returned 87 results for query
+[2025-11-12 17:55:28] [   INFO] embeddings.router: Memory usage: 3750 MB (threshold: 4096 MB)
+[2025-11-12 18:03:53] [WARNING] inference.rag: Retrying failed embedding request (attempt 3/3)
+[2025-11-12 18:09:51] [   INFO] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-12 18:20:15] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-12 18:37:03] [  ERROR] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-12 19:10:43] [   INFO] db.unified: Timeout waiting for model response after 30s
+[2025-11-12 19:19:35] [   INFO] db.unified: Rate limit approaching: 50/100 requests in window
+[2025-11-12 20:23:40] [  ERROR] embeddings.router: Rate limit approaching: 99/100 requests in window
+[2025-11-12 20:25:30] [  ERROR] ingestion.pipeline: Cache hit for query hash 8b406655
+[2025-11-12 20:35:50] [   INFO] inference.rag: Rate limit approaching: 86/100 requests in window
+[2025-11-12 20:41:10] [   INFO] ingestion.pipeline: Failed to parse document: unsupported format .xyz
+[2025-11-12 21:11:14] [   INFO] db.unified: Chunk 3154 indexed successfully
+[2025-11-12 21:38:16] [  ERROR] embeddings.router: Processing document batch of 295 files
+[2025-11-12 22:06:45] [  DEBUG] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-12 22:13:36] [  ERROR] inference.rag: Database connection pool at 15% capacity
+[2025-11-12 22:14:31] [   INFO] embeddings.router: Chunk 5818 indexed successfully
+[2025-11-12 22:39:26] [   INFO] db.unified: File watcher detected 16 changes
+[2025-11-12 23:09:04] [   INFO] jobs.worker: Memory usage: 2990 MB (threshold: 4096 MB)
+[2025-11-12 23:36:06] [  DEBUG] db.unified: Cache hit for query hash 677e0972
+[2025-11-12 23:44:21] [  ERROR] inference.rag: Index rebuild triggered by schema migration
+[2025-11-12 23:51:03] [WARNING] jobs.worker: Embedding generation completed in 9.32s
+[2025-11-12 23:56:02] [  DEBUG] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-13 00:24:46] [   INFO] embeddings.router: Memory usage: 877 MB (threshold: 4096 MB)
+[2025-11-13 01:12:34] [   INFO] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-13 01:45:22] [  DEBUG] inference.rag: Index rebuild triggered by schema migration
+[2025-11-13 02:50:44] [  DEBUG] db.unified: Database connection pool at 65% capacity
+[2025-11-13 03:51:02] [   INFO] jobs.worker: Memory usage: 498 MB (threshold: 4096 MB)
+[2025-11-13 04:42:15] [  DEBUG] jobs.worker: Failed to parse document: unsupported format .xyz
+[2025-11-13 04:53:16] [WARNING] watcher.service: Chunk 5048 indexed successfully
+[2025-11-13 05:09:09] [  DEBUG] inference.rag: Job job-1396 completed with status=success
+[2025-11-13 05:18:14] [  DEBUG] ingestion.pipeline: Cache hit for query hash f7e9050c
+[2025-11-13 05:31:29] [   INFO] jobs.worker: Index rebuild triggered by schema migration
+[2025-11-13 06:36:59] [  ERROR] ingestion.pipeline: Job job-6459 completed with status=success
+[2025-11-13 06:58:20] [   INFO] jobs.worker: Retrying failed embedding request (attempt 3/3)
+[2025-11-13 07:39:27] [WARNING] watcher.service: Database connection pool at 34% capacity
+[2025-11-13 07:40:31] [   INFO] embeddings.router: Chunk 8343 indexed successfully
+[2025-11-13 08:44:43] [  DEBUG] watcher.service: Database connection pool at 19% capacity
+[2025-11-13 09:04:15] [   INFO] db.unified: Database connection pool at 81% capacity
+[2025-11-13 09:32:41] [   INFO] watcher.service: Embedding generation completed in 0.01s
+[2025-11-13 09:47:35] [  DEBUG] watcher.service: Retrying failed embedding request (attempt 3/3)
+[2025-11-13 10:11:47] [   INFO] jobs.worker: File watcher detected 120 changes
+[2025-11-13 10:15:55] [  DEBUG] embeddings.router: Rate limit approaching: 79/100 requests in window
+[2025-11-13 11:58:14] [  DEBUG] ingestion.pipeline: Job job-4932 completed with status=success
+[2025-11-13 12:29:20] [WARNING] ingestion.pipeline: Embedding generation completed in 0.17s
+[2025-11-13 12:49:11] [  ERROR] watcher.service: Rate limit approaching: 59/100 requests in window
+[2025-11-13 12:52:06] [   INFO] watcher.service: Semantic search returned 100 results for query
+[2025-11-13 13:12:52] [   INFO] embeddings.router: Embedding generation completed in 0.95s
+[2025-11-13 13:23:39] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-13 13:25:35] [   INFO] db.unified: Index rebuild triggered by schema migration
+[2025-11-13 13:27:18] [  DEBUG] ingestion.pipeline: Cache hit for query hash 6602294b
+[2025-11-13 13:32:43] [   INFO] jobs.worker: Processing document batch of 47 files
+[2025-11-13 13:37:03] [  DEBUG] ingestion.pipeline: Cache hit for query hash 1c383cd3
+[2025-11-13 13:42:58] [   INFO] jobs.worker: Semantic search returned 439 results for query
+[2025-11-13 13:46:30] [  DEBUG] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-13 14:20:20] [   INFO] inference.rag: Cache hit for query hash 7dcd340d
+[2025-11-13 14:26:06] [   INFO] watcher.service: Database connection pool at 72% capacity
+[2025-11-13 15:01:12] [   INFO] inference.rag: Processing document batch of 17 files
+[2025-11-13 16:38:23] [  DEBUG] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-13 16:47:19] [   INFO] jobs.worker: Processing document batch of 226 files
+[2025-11-13 18:45:23] [   INFO] jobs.worker: Rate limit approaching: 90/100 requests in window
+[2025-11-13 18:55:42] [   INFO] watcher.service: Semantic search returned 199 results for query
+[2025-11-13 19:10:04] [WARNING] embeddings.router: Processing document batch of 497 files
+[2025-11-13 19:53:24] [   INFO] inference.rag: Memory usage: 3671 MB (threshold: 4096 MB)
+[2025-11-13 20:20:47] [   INFO] jobs.worker: Memory usage: 3096 MB (threshold: 4096 MB)
+[2025-11-13 20:41:20] [WARNING] watcher.service: Semantic search returned 456 results for query
+[2025-11-13 20:41:41] [  DEBUG] db.unified: Timeout waiting for model response after 30s
+[2025-11-13 21:08:58] [   INFO] watcher.service: Job job-1281 completed with status=success
+[2025-11-13 21:18:50] [  DEBUG] inference.rag: Job job-6335 completed with status=success
+[2025-11-13 21:21:45] [  ERROR] embeddings.router: Semantic search returned 486 results for query
+[2025-11-13 22:19:46] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-13 23:02:58] [   INFO] embeddings.router: Retrying failed embedding request (attempt 1/3)
+[2025-11-13 23:19:07] [  ERROR] inference.rag: Semantic search returned 322 results for query
+[2025-11-14 00:07:52] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-14 00:09:32] [   INFO] jobs.worker: Rate limit approaching: 51/100 requests in window
+[2025-11-14 00:50:51] [   INFO] db.unified: Processing document batch of 423 files
+[2025-11-14 01:10:21] [  DEBUG] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-14 01:24:48] [WARNING] inference.rag: Timeout waiting for model response after 30s
+[2025-11-14 02:05:51] [  DEBUG] embeddings.router: Embedding generation completed in 9.55s
+[2025-11-14 02:37:10] [   INFO] embeddings.router: Semantic search returned 395 results for query
+[2025-11-14 03:42:53] [   INFO] db.unified: Index rebuild triggered by schema migration
+[2025-11-14 04:38:27] [  DEBUG] watcher.service: Cache hit for query hash c86a7ee3
+[2025-11-14 04:45:52] [  ERROR] jobs.worker: Rate limit approaching: 62/100 requests in window
+[2025-11-14 04:53:27] [  DEBUG] embeddings.router: Rate limit approaching: 97/100 requests in window
+[2025-11-14 05:09:11] [   INFO] jobs.worker: File watcher detected 496 changes
+[2025-11-14 05:46:30] [   INFO] ingestion.pipeline: Rate limit approaching: 74/100 requests in window
+[2025-11-14 07:05:19] [   INFO] db.unified: Semantic search returned 150 results for query
+[2025-11-14 07:12:03] [   INFO] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-14 07:25:57] [  ERROR] watcher.service: Failed to parse document: unsupported format .xyz
+[2025-11-14 07:59:15] [   INFO] embeddings.router: Semantic search returned 330 results for query
+[2025-11-14 08:37:05] [   INFO] embeddings.router: Semantic search returned 202 results for query
+[2025-11-14 08:53:54] [  DEBUG] inference.rag: Timeout waiting for model response after 30s
+[2025-11-14 09:33:48] [   INFO] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-14 09:40:50] [   INFO] db.unified: Database connection pool at 66% capacity
+[2025-11-14 11:34:00] [  ERROR] embeddings.router: Processing document batch of 66 files
+[2025-11-14 11:43:30] [  ERROR] ingestion.pipeline: Chunk 9678 indexed successfully
+[2025-11-14 12:11:04] [   INFO] inference.rag: Database connection pool at 60% capacity
+[2025-11-14 12:15:58] [   INFO] jobs.worker: Database connection pool at 64% capacity
+[2025-11-14 13:37:09] [  DEBUG] jobs.worker: Processing document batch of 213 files
+[2025-11-14 14:27:43] [  DEBUG] db.unified: Job job-3260 completed with status=success
+[2025-11-14 14:46:01] [   INFO] watcher.service: File watcher detected 206 changes
+[2025-11-14 14:59:11] [   INFO] db.unified: Chunk 3588 indexed successfully
+[2025-11-14 15:45:45] [   INFO] embeddings.router: Processing document batch of 420 files
+[2025-11-14 16:28:24] [  DEBUG] jobs.worker: Chunk 3388 indexed successfully
+[2025-11-14 16:56:46] [   INFO] ingestion.pipeline: Rate limit approaching: 92/100 requests in window
+[2025-11-14 17:06:55] [  DEBUG] db.unified: Database connection pool at 27% capacity
+[2025-11-14 17:35:22] [   INFO] ingestion.pipeline: Chunk 7780 indexed successfully
+[2025-11-14 17:41:33] [   INFO] inference.rag: Index rebuild triggered by schema migration
+[2025-11-14 17:45:40] [   INFO] db.unified: Cache hit for query hash e836d813
+[2025-11-14 17:54:10] [   INFO] embeddings.router: Memory usage: 3550 MB (threshold: 4096 MB)
+[2025-11-14 17:59:12] [  DEBUG] watcher.service: Rate limit approaching: 93/100 requests in window
+[2025-11-14 18:47:02] [WARNING] db.unified: Processing document batch of 301 files
+[2025-11-14 19:23:12] [  ERROR] ingestion.pipeline: Semantic search returned 384 results for query
+[2025-11-14 19:30:30] [   INFO] embeddings.router: Job job-8984 completed with status=success
+[2025-11-14 19:49:08] [  ERROR] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-14 20:24:47] [  DEBUG] embeddings.router: Semantic search returned 84 results for query
+[2025-11-14 20:41:17] [WARNING] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-14 20:59:51] [   INFO] jobs.worker: Memory usage: 2041 MB (threshold: 4096 MB)
+[2025-11-14 21:01:07] [   INFO] jobs.worker: Cache hit for query hash aa169b49
+[2025-11-14 21:48:56] [   INFO] inference.rag: Chunk 4079 indexed successfully
+[2025-11-14 21:49:51] [  DEBUG] watcher.service: Chunk 7219 indexed successfully
+[2025-11-14 22:27:38] [  ERROR] jobs.worker: Database connection pool at 52% capacity
+[2025-11-14 23:37:57] [   INFO] watcher.service: Processing document batch of 395 files
+[2025-11-15 00:15:34] [  ERROR] inference.rag: Semantic search returned 372 results for query
+[2025-11-15 00:17:04] [  DEBUG] jobs.worker: Database connection pool at 65% capacity
+[2025-11-15 00:43:32] [   INFO] ingestion.pipeline: Embedding generation completed in 10.21s
+[2025-11-15 01:09:32] [   INFO] db.unified: Embedding generation completed in 6.65s
+[2025-11-15 01:42:50] [  DEBUG] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-15 01:45:55] [WARNING] db.unified: File watcher detected 280 changes
+[2025-11-15 02:46:38] [   INFO] watcher.service: Database connection pool at 77% capacity
+[2025-11-15 02:50:34] [  DEBUG] db.unified: Processing document batch of 425 files
+[2025-11-15 03:46:12] [   INFO] embeddings.router: Job job-9752 completed with status=success
+[2025-11-15 03:55:37] [  ERROR] db.unified: Index rebuild triggered by schema migration
+[2025-11-15 04:36:08] [  DEBUG] embeddings.router: Memory usage: 2887 MB (threshold: 4096 MB)
+[2025-11-15 05:55:34] [WARNING] watcher.service: Processing document batch of 400 files
+[2025-11-15 05:58:38] [   INFO] db.unified: Job job-8158 completed with status=success
+[2025-11-15 07:11:34] [  ERROR] inference.rag: Chunk 5455 indexed successfully
+[2025-11-15 07:26:27] [  DEBUG] watcher.service: File watcher detected 410 changes
+[2025-11-15 08:10:59] [  ERROR] inference.rag: Semantic search returned 205 results for query
+[2025-11-15 08:20:52] [  ERROR] db.unified: Embedding generation completed in 4.46s
+[2025-11-15 08:39:04] [   INFO] watcher.service: File watcher detected 296 changes
+[2025-11-15 08:40:58] [WARNING] watcher.service: Timeout waiting for model response after 30s
+[2025-11-15 09:59:20] [   INFO] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-15 10:19:00] [   INFO] inference.rag: Chunk 8041 indexed successfully
+[2025-11-15 10:23:20] [   INFO] embeddings.router: Rate limit approaching: 75/100 requests in window
+[2025-11-15 12:14:51] [   INFO] embeddings.router: Retrying failed embedding request (attempt 3/3)
+[2025-11-15 12:21:28] [WARNING] db.unified: Embedding generation completed in 6.16s
+[2025-11-15 12:29:18] [   INFO] embeddings.router: File watcher detected 272 changes
+[2025-11-15 12:36:42] [  ERROR] ingestion.pipeline: Retrying failed embedding request (attempt 3/3)
+[2025-11-15 14:04:07] [   INFO] db.unified: Semantic search returned 490 results for query
+[2025-11-15 14:25:57] [WARNING] watcher.service: Embedding generation completed in 14.99s
+[2025-11-15 14:43:32] [   INFO] jobs.worker: Chunk 8728 indexed successfully
+[2025-11-15 14:46:08] [WARNING] embeddings.router: File watcher detected 274 changes
+[2025-11-15 15:00:34] [   INFO] watcher.service: Database connection pool at 32% capacity
+[2025-11-15 15:52:33] [  ERROR] embeddings.router: Semantic search returned 293 results for query
+[2025-11-15 15:56:12] [  ERROR] inference.rag: Job job-8920 completed with status=success
+[2025-11-15 15:58:25] [  ERROR] jobs.worker: Cache hit for query hash 6d70cb65
+[2025-11-15 16:20:16] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-15 16:37:40] [   INFO] db.unified: Embedding generation completed in 8.71s
+[2025-11-15 16:50:40] [   INFO] watcher.service: Retrying failed embedding request (attempt 1/3)
+[2025-11-15 17:15:09] [  DEBUG] jobs.worker: Cache hit for query hash a5e0ff62
+[2025-11-15 17:26:36] [  DEBUG] watcher.service: File watcher detected 458 changes
+[2025-11-15 19:05:47] [  DEBUG] embeddings.router: Semantic search returned 25 results for query
+[2025-11-15 19:57:09] [   INFO] embeddings.router: Job job-9869 completed with status=success
+[2025-11-15 20:01:34] [WARNING] watcher.service: Database connection pool at 58% capacity
+[2025-11-15 20:26:47] [   INFO] embeddings.router: Job job-8805 completed with status=success
+[2025-11-15 20:38:22] [WARNING] watcher.service: Chunk 7404 indexed successfully
+[2025-11-15 20:57:49] [   INFO] ingestion.pipeline: Retrying failed embedding request (attempt 2/3)
+[2025-11-15 21:21:09] [   INFO] jobs.worker: Job job-4332 completed with status=success
+[2025-11-15 21:25:05] [  ERROR] watcher.service: Semantic search returned 310 results for query
+[2025-11-15 21:30:11] [   INFO] ingestion.pipeline: Semantic search returned 465 results for query
+[2025-11-15 21:37:31] [   INFO] db.unified: Index rebuild triggered by schema migration
+[2025-11-15 21:55:35] [  ERROR] db.unified: Memory usage: 1053 MB (threshold: 4096 MB)
+[2025-11-15 22:19:45] [  DEBUG] embeddings.router: Chunk 5918 indexed successfully
+[2025-11-15 22:52:44] [  DEBUG] jobs.worker: Retrying failed embedding request (attempt 2/3)
+[2025-11-15 23:04:59] [   INFO] embeddings.router: Chunk 3433 indexed successfully
+[2025-11-15 23:13:56] [WARNING] ingestion.pipeline: Cache hit for query hash 9431c87f
+[2025-11-16 00:54:57] [   INFO] embeddings.router: Chunk 6842 indexed successfully
+[2025-11-16 01:32:27] [  DEBUG] db.unified: Failed to parse document: unsupported format .xyz
+[2025-11-16 02:06:24] [   INFO] inference.rag: Retrying failed embedding request (attempt 2/3)
+[2025-11-16 03:54:30] [  DEBUG] watcher.service: File watcher detected 51 changes
+[2025-11-16 04:01:50] [   INFO] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-16 04:03:05] [   INFO] ingestion.pipeline: Retrying failed embedding request (attempt 2/3)
+[2025-11-16 04:05:39] [  ERROR] ingestion.pipeline: Processing document batch of 146 files
+[2025-11-16 04:12:02] [  DEBUG] inference.rag: Index rebuild triggered by schema migration
+[2025-11-16 05:23:11] [   INFO] embeddings.router: Memory usage: 1807 MB (threshold: 4096 MB)
+[2025-11-16 05:33:47] [   INFO] db.unified: Cache hit for query hash 32bb90e8
+[2025-11-16 05:58:46] [   INFO] db.unified: Chunk 3520 indexed successfully
+[2025-11-16 06:30:51] [   INFO] ingestion.pipeline: Embedding generation completed in 11.06s
+[2025-11-16 06:37:46] [   INFO] jobs.worker: Retrying failed embedding request (attempt 1/3)
+[2025-11-16 08:03:52] [   INFO] ingestion.pipeline: Chunk 198 indexed successfully
+[2025-11-16 08:07:57] [   INFO] jobs.worker: Job job-5680 completed with status=success
+[2025-11-16 08:33:45] [  ERROR] ingestion.pipeline: Rate limit approaching: 99/100 requests in window
+[2025-11-16 10:02:29] [WARNING] inference.rag: Rate limit approaching: 50/100 requests in window
+[2025-11-16 10:33:01] [   INFO] watcher.service: Semantic search returned 108 results for query
+[2025-11-16 11:06:02] [   INFO] inference.rag: Chunk 7603 indexed successfully
+[2025-11-16 11:42:53] [   INFO] ingestion.pipeline: Chunk 7210 indexed successfully
+[2025-11-16 11:54:52] [  ERROR] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-16 12:14:16] [   INFO] db.unified: Embedding generation completed in 4.92s
+[2025-11-16 12:55:47] [   INFO] jobs.worker: Job job-4427 completed with status=success
+[2025-11-16 14:42:27] [  DEBUG] inference.rag: Job job-8382 completed with status=success
+[2025-11-16 15:22:50] [  DEBUG] inference.rag: Index rebuild triggered by schema migration
+[2025-11-16 16:22:46] [   INFO] db.unified: Job job-4691 completed with status=success
+[2025-11-16 16:47:13] [  DEBUG] embeddings.router: Database connection pool at 70% capacity
+[2025-11-16 17:46:15] [   INFO] embeddings.router: Processing document batch of 166 files
+[2025-11-16 17:58:36] [   INFO] ingestion.pipeline: Rate limit approaching: 70/100 requests in window
+[2025-11-16 18:53:37] [   INFO] jobs.worker: Memory usage: 3365 MB (threshold: 4096 MB)
+[2025-11-16 18:58:57] [   INFO] embeddings.router: Rate limit approaching: 87/100 requests in window
+[2025-11-16 19:34:58] [   INFO] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-16 19:44:11] [  DEBUG] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-16 20:16:24] [WARNING] inference.rag: Cache hit for query hash 1714726c
+[2025-11-16 20:49:37] [  ERROR] watcher.service: Index rebuild triggered by schema migration
+[2025-11-16 20:55:27] [  DEBUG] inference.rag: Cache hit for query hash a0161022
+[2025-11-16 21:11:19] [   INFO] jobs.worker: Chunk 256 indexed successfully
+[2025-11-16 21:20:28] [  DEBUG] jobs.worker: Database connection pool at 34% capacity
+[2025-11-16 21:28:16] [WARNING] watcher.service: Memory usage: 1413 MB (threshold: 4096 MB)
+[2025-11-16 21:34:17] [  ERROR] db.unified: Failed to parse document: unsupported format .xyz
+[2025-11-16 21:34:25] [   INFO] embeddings.router: Chunk 6084 indexed successfully
+[2025-11-16 22:14:44] [WARNING] watcher.service: Embedding generation completed in 4.99s
+[2025-11-16 22:15:31] [WARNING] inference.rag: Cache hit for query hash 68053af2
+[2025-11-16 22:46:17] [  DEBUG] db.unified: Processing document batch of 378 files
+[2025-11-16 22:58:24] [  DEBUG] embeddings.router: Rate limit approaching: 51/100 requests in window
+[2025-11-16 23:49:59] [  DEBUG] embeddings.router: Processing document batch of 78 files
+[2025-11-16 23:55:04] [   INFO] jobs.worker: Rate limit approaching: 66/100 requests in window
+[2025-11-17 00:09:25] [   INFO] embeddings.router: Job job-6045 completed with status=success
+[2025-11-17 01:30:13] [WARNING] watcher.service: Processing document batch of 453 files
+[2025-11-17 01:50:10] [  ERROR] db.unified: Index rebuild triggered by schema migration
+[2025-11-17 02:29:41] [   INFO] embeddings.router: Semantic search returned 470 results for query
+[2025-11-17 03:12:57] [  ERROR] watcher.service: Rate limit approaching: 58/100 requests in window
+[2025-11-17 03:38:40] [   INFO] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-17 03:51:31] [   INFO] inference.rag: Semantic search returned 138 results for query
+[2025-11-17 04:33:12] [  DEBUG] jobs.worker: Embedding generation completed in 9.63s
+[2025-11-17 04:42:43] [   INFO] embeddings.router: Embedding generation completed in 10.94s
+[2025-11-17 05:13:56] [   INFO] watcher.service: Job job-6147 completed with status=success
+[2025-11-17 05:24:24] [   INFO] watcher.service: Processing document batch of 147 files
+[2025-11-17 05:26:46] [   INFO] jobs.worker: Database connection pool at 45% capacity
+[2025-11-17 06:19:36] [WARNING] inference.rag: Job job-5920 completed with status=success
+[2025-11-17 06:48:03] [  ERROR] jobs.worker: Processing document batch of 116 files
+[2025-11-17 06:49:55] [   INFO] watcher.service: Rate limit approaching: 51/100 requests in window
+[2025-11-17 07:37:36] [   INFO] jobs.worker: Processing document batch of 349 files
+[2025-11-17 07:45:10] [   INFO] watcher.service: Embedding generation completed in 8.37s
+[2025-11-17 07:54:10] [WARNING] jobs.worker: Rate limit approaching: 86/100 requests in window
+[2025-11-17 07:56:48] [WARNING] inference.rag: Semantic search returned 478 results for query
+[2025-11-17 08:05:00] [  DEBUG] watcher.service: Memory usage: 1693 MB (threshold: 4096 MB)
+[2025-11-17 11:51:08] [   INFO] ingestion.pipeline: Retrying failed embedding request (attempt 2/3)
+[2025-11-17 11:52:42] [WARNING] ingestion.pipeline: Cache hit for query hash 93db85ed
+[2025-11-17 13:44:03] [  DEBUG] inference.rag: Timeout waiting for model response after 30s
+[2025-11-17 14:11:11] [  DEBUG] ingestion.pipeline: Retrying failed embedding request (attempt 2/3)
+[2025-11-17 14:18:05] [WARNING] jobs.worker: File watcher detected 143 changes
+[2025-11-17 14:27:47] [  ERROR] ingestion.pipeline: Rate limit approaching: 68/100 requests in window
+[2025-11-17 15:10:44] [  DEBUG] inference.rag: Semantic search returned 378 results for query
+[2025-11-17 15:27:16] [   INFO] watcher.service: Index rebuild triggered by schema migration
+[2025-11-17 15:29:59] [   INFO] db.unified: Failed to parse document: unsupported format .xyz
+[2025-11-17 16:07:12] [WARNING] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-17 16:27:41] [   INFO] inference.rag: Index rebuild triggered by schema migration
+[2025-11-17 16:47:27] [   INFO] inference.rag: Cache hit for query hash f4573fc7
+[2025-11-17 17:04:01] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-17 17:04:45] [   INFO] watcher.service: Job job-7727 completed with status=success
+[2025-11-17 17:25:11] [WARNING] ingestion.pipeline: Rate limit approaching: 58/100 requests in window
+[2025-11-17 17:40:04] [  ERROR] db.unified: Cache hit for query hash 4f4adcbf
+[2025-11-17 17:42:21] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-17 17:52:22] [   INFO] watcher.service: Memory usage: 3319 MB (threshold: 4096 MB)
+[2025-11-17 20:12:38] [  ERROR] watcher.service: Index rebuild triggered by schema migration
+[2025-11-17 20:27:35] [  DEBUG] embeddings.router: Memory usage: 3140 MB (threshold: 4096 MB)
+[2025-11-17 21:15:41] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-17 21:43:13] [   INFO] inference.rag: Cache hit for query hash d045c59a
+[2025-11-17 22:07:53] [  DEBUG] watcher.service: Embedding generation completed in 1.24s
+[2025-11-17 22:34:16] [   INFO] db.unified: Processing document batch of 469 files
+[2025-11-17 22:57:49] [  ERROR] ingestion.pipeline: Processing document batch of 150 files
+[2025-11-17 23:33:10] [  ERROR] jobs.worker: Semantic search returned 390 results for query
+[2025-11-18 00:56:20] [  ERROR] embeddings.router: Cache hit for query hash 996009f2
+[2025-11-18 01:04:58] [   INFO] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-18 01:54:49] [  DEBUG] ingestion.pipeline: Chunk 8933 indexed successfully
+[2025-11-18 02:10:07] [   INFO] db.unified: Processing document batch of 252 files
+[2025-11-18 03:25:07] [WARNING] jobs.worker: Memory usage: 1378 MB (threshold: 4096 MB)
+[2025-11-18 03:49:53] [  ERROR] inference.rag: Retrying failed embedding request (attempt 2/3)
+[2025-11-18 04:02:13] [  DEBUG] embeddings.router: Memory usage: 3023 MB (threshold: 4096 MB)
+[2025-11-18 05:17:13] [  ERROR] inference.rag: Semantic search returned 109 results for query
+[2025-11-18 05:22:41] [   INFO] ingestion.pipeline: Job job-7408 completed with status=success
+[2025-11-18 06:14:33] [   INFO] embeddings.router: Processing document batch of 474 files
+[2025-11-18 06:22:11] [WARNING] inference.rag: Timeout waiting for model response after 30s
+[2025-11-18 06:44:19] [   INFO] watcher.service: Index rebuild triggered by schema migration
+[2025-11-18 07:16:08] [   INFO] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-18 07:27:21] [WARNING] db.unified: Embedding generation completed in 14.99s
+[2025-11-18 08:39:35] [   INFO] db.unified: Processing document batch of 68 files
+[2025-11-18 08:59:17] [  ERROR] ingestion.pipeline: Embedding generation completed in 11.04s
+[2025-11-18 09:02:26] [  ERROR] db.unified: Cache hit for query hash d56b9fc4
+[2025-11-18 09:14:55] [   INFO] ingestion.pipeline: Job job-9811 completed with status=success
+[2025-11-18 09:23:25] [   INFO] inference.rag: Index rebuild triggered by schema migration
+[2025-11-18 10:26:01] [  ERROR] watcher.service: Job job-7554 completed with status=success
+[2025-11-18 10:53:19] [  ERROR] jobs.worker: Rate limit approaching: 87/100 requests in window
+[2025-11-18 11:42:18] [   INFO] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-18 12:08:08] [  DEBUG] ingestion.pipeline: File watcher detected 94 changes
+[2025-11-18 12:29:22] [   INFO] db.unified: Memory usage: 2733 MB (threshold: 4096 MB)
+[2025-11-18 12:48:17] [  ERROR] db.unified: Processing document batch of 410 files
+[2025-11-18 12:55:12] [   INFO] jobs.worker: Database connection pool at 86% capacity
+[2025-11-18 14:05:45] [   INFO] jobs.worker: Retrying failed embedding request (attempt 2/3)
+[2025-11-18 14:16:14] [WARNING] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-18 14:53:09] [  DEBUG] db.unified: Cache hit for query hash fa83a11a
+[2025-11-18 15:23:44] [  ERROR] watcher.service: Embedding generation completed in 5.22s
+[2025-11-18 15:35:25] [  ERROR] jobs.worker: File watcher detected 458 changes
+[2025-11-18 15:47:45] [  DEBUG] embeddings.router: Semantic search returned 171 results for query
+[2025-11-18 16:00:53] [   INFO] ingestion.pipeline: Embedding generation completed in 4.36s
+[2025-11-18 16:20:11] [   INFO] ingestion.pipeline: Cache hit for query hash 30bb3825
+[2025-11-18 16:41:01] [  DEBUG] db.unified: Semantic search returned 471 results for query
+[2025-11-18 17:03:48] [WARNING] ingestion.pipeline: Cache hit for query hash c32d9bf2
+[2025-11-18 17:12:32] [   INFO] watcher.service: Failed to parse document: unsupported format .xyz
+[2025-11-18 17:41:26] [  DEBUG] jobs.worker: Semantic search returned 296 results for query
+[2025-11-18 18:08:05] [  DEBUG] db.unified: Memory usage: 1768 MB (threshold: 4096 MB)
+[2025-11-18 18:17:02] [WARNING] inference.rag: Semantic search returned 188 results for query
+[2025-11-18 19:21:50] [  DEBUG] inference.rag: Semantic search returned 392 results for query
+[2025-11-18 20:39:59] [   INFO] ingestion.pipeline: Failed to parse document: unsupported format .xyz
+[2025-11-18 21:19:26] [  DEBUG] inference.rag: Processing document batch of 133 files
+[2025-11-18 21:32:29] [   INFO] db.unified: File watcher detected 239 changes
+[2025-11-19 00:52:18] [WARNING] embeddings.router: Chunk 3315 indexed successfully
+[2025-11-19 00:58:53] [  ERROR] watcher.service: File watcher detected 180 changes
+[2025-11-19 02:14:22] [  ERROR] watcher.service: Job job-7396 completed with status=success
+[2025-11-19 02:23:19] [WARNING] inference.rag: Processing document batch of 37 files
+[2025-11-19 02:28:11] [WARNING] ingestion.pipeline: File watcher detected 55 changes
+[2025-11-19 02:42:18] [  DEBUG] ingestion.pipeline: Cache hit for query hash ab817c93
+[2025-11-19 03:10:22] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-19 03:27:38] [  DEBUG] watcher.service: Retrying failed embedding request (attempt 1/3)
+[2025-11-19 05:10:18] [   INFO] jobs.worker: Database connection pool at 66% capacity
+[2025-11-19 05:20:11] [  DEBUG] db.unified: Database connection pool at 19% capacity
+[2025-11-19 07:30:53] [   INFO] embeddings.router: Embedding generation completed in 3.51s
+[2025-11-19 08:05:41] [   INFO] inference.rag: Job job-6206 completed with status=success
+[2025-11-19 08:06:57] [  DEBUG] watcher.service: Rate limit approaching: 66/100 requests in window
+[2025-11-19 08:10:15] [  DEBUG] inference.rag: Rate limit approaching: 87/100 requests in window
+[2025-11-19 08:32:34] [  DEBUG] ingestion.pipeline: Embedding generation completed in 4.78s
+[2025-11-19 08:33:24] [   INFO] db.unified: File watcher detected 172 changes
+[2025-11-19 09:59:53] [  ERROR] embeddings.router: Memory usage: 3529 MB (threshold: 4096 MB)
+[2025-11-19 10:36:15] [   INFO] ingestion.pipeline: Embedding generation completed in 11.58s
+[2025-11-19 11:03:55] [   INFO] embeddings.router: Database connection pool at 85% capacity
+[2025-11-19 11:21:04] [   INFO] ingestion.pipeline: Cache hit for query hash 6faa8040
+[2025-11-19 12:23:04] [  DEBUG] jobs.worker: Failed to parse document: unsupported format .xyz
+[2025-11-19 12:56:25] [WARNING] ingestion.pipeline: Rate limit approaching: 68/100 requests in window
+[2025-11-19 13:06:44] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-19 14:04:55] [  DEBUG] jobs.worker: Index rebuild triggered by schema migration
+[2025-11-19 14:44:21] [  ERROR] jobs.worker: Rate limit approaching: 88/100 requests in window
+[2025-11-19 15:32:32] [   INFO] jobs.worker: Processing document batch of 199 files
+[2025-11-19 16:00:38] [   INFO] db.unified: Chunk 6638 indexed successfully
+[2025-11-19 16:38:49] [  DEBUG] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-19 16:52:20] [WARNING] embeddings.router: Embedding generation completed in 1.31s
+[2025-11-19 17:37:10] [  ERROR] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-19 19:05:11] [   INFO] jobs.worker: Retrying failed embedding request (attempt 2/3)
+[2025-11-19 19:18:34] [   INFO] jobs.worker: Failed to parse document: unsupported format .xyz
+[2025-11-19 19:54:15] [   INFO] embeddings.router: Embedding generation completed in 10.78s
+[2025-11-19 20:03:07] [   INFO] ingestion.pipeline: Processing document batch of 252 files
+[2025-11-19 20:14:09] [  ERROR] db.unified: Cache hit for query hash e369853d
+[2025-11-19 20:25:48] [  ERROR] embeddings.router: File watcher detected 188 changes
+[2025-11-19 20:27:44] [  ERROR] jobs.worker: Cache hit for query hash eddb904a
+[2025-11-19 20:28:54] [   INFO] ingestion.pipeline: Rate limit approaching: 56/100 requests in window
+[2025-11-19 21:14:45] [   INFO] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-19 21:19:53] [  ERROR] db.unified: File watcher detected 299 changes
+[2025-11-19 21:19:54] [   INFO] inference.rag: Chunk 9474 indexed successfully
+[2025-11-19 21:44:25] [  DEBUG] ingestion.pipeline: Cache hit for query hash d61e4bbd
+[2025-11-19 22:38:16] [   INFO] embeddings.router: Database connection pool at 45% capacity
+[2025-11-19 23:42:42] [   INFO] jobs.worker: Job job-2002 completed with status=success
+[2025-11-19 23:49:13] [   INFO] jobs.worker: Semantic search returned 155 results for query
+[2025-11-20 00:04:12] [   INFO] watcher.service: Semantic search returned 329 results for query
+[2025-11-20 01:36:33] [WARNING] db.unified: File watcher detected 134 changes
+[2025-11-20 01:47:10] [   INFO] jobs.worker: Memory usage: 1669 MB (threshold: 4096 MB)
+[2025-11-20 01:51:48] [   INFO] watcher.service: File watcher detected 316 changes
+[2025-11-20 02:32:31] [  DEBUG] embeddings.router: Chunk 6694 indexed successfully
+[2025-11-20 02:43:17] [  ERROR] db.unified: Job job-5375 completed with status=success
+[2025-11-20 03:52:45] [  ERROR] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-20 03:59:55] [   INFO] inference.rag: Rate limit approaching: 91/100 requests in window
+[2025-11-20 04:21:27] [WARNING] db.unified: Processing document batch of 170 files
+[2025-11-20 04:43:07] [  ERROR] inference.rag: Job job-5675 completed with status=success
+[2025-11-20 05:47:02] [WARNING] inference.rag: Processing document batch of 247 files
+[2025-11-20 06:18:21] [  DEBUG] inference.rag: Embedding generation completed in 0.21s
+[2025-11-20 07:12:35] [   INFO] inference.rag: Processing document batch of 262 files
+[2025-11-20 07:27:32] [  DEBUG] jobs.worker: Cache hit for query hash 362e80d4
+[2025-11-20 07:48:12] [   INFO] inference.rag: Processing document batch of 488 files
+[2025-11-20 07:54:40] [  DEBUG] embeddings.router: Database connection pool at 90% capacity
+[2025-11-20 08:50:05] [WARNING] jobs.worker: Index rebuild triggered by schema migration
+[2025-11-20 09:10:47] [  ERROR] inference.rag: Chunk 6527 indexed successfully
+[2025-11-20 09:47:03] [   INFO] embeddings.router: File watcher detected 228 changes
+[2025-11-20 10:13:24] [  ERROR] watcher.service: Cache hit for query hash e034fb6b
+[2025-11-20 10:25:47] [   INFO] db.unified: Memory usage: 2568 MB (threshold: 4096 MB)
+[2025-11-20 10:49:00] [   INFO] embeddings.router: Processing document batch of 241 files
+[2025-11-20 10:56:10] [   INFO] watcher.service: Rate limit approaching: 54/100 requests in window
+[2025-11-20 11:02:40] [   INFO] ingestion.pipeline: Memory usage: 2636 MB (threshold: 4096 MB)
+[2025-11-20 11:32:27] [  ERROR] watcher.service: File watcher detected 76 changes
+[2025-11-20 11:52:03] [  DEBUG] db.unified: Timeout waiting for model response after 30s
+[2025-11-20 11:57:22] [  ERROR] watcher.service: Cache hit for query hash 49ae49a2
+[2025-11-20 12:25:40] [  DEBUG] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-20 13:09:02] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-20 13:24:28] [   INFO] ingestion.pipeline: Processing document batch of 165 files
+[2025-11-20 13:26:09] [   INFO] watcher.service: Memory usage: 1654 MB (threshold: 4096 MB)
+[2025-11-20 13:39:32] [WARNING] ingestion.pipeline: Processing document batch of 283 files
+[2025-11-20 13:56:41] [  ERROR] inference.rag: Memory usage: 912 MB (threshold: 4096 MB)
+[2025-11-20 13:58:12] [  ERROR] embeddings.router: Job job-7965 completed with status=success
+[2025-11-20 14:44:59] [   INFO] embeddings.router: Semantic search returned 4 results for query
+[2025-11-20 15:06:32] [  ERROR] inference.rag: Job job-4014 completed with status=success
+[2025-11-20 15:37:21] [  DEBUG] watcher.service: Processing document batch of 286 files
+[2025-11-20 15:49:44] [WARNING] jobs.worker: File watcher detected 84 changes
+[2025-11-20 15:52:16] [   INFO] embeddings.router: Rate limit approaching: 85/100 requests in window
+[2025-11-20 15:56:30] [   INFO] watcher.service: Database connection pool at 23% capacity
+[2025-11-20 17:09:51] [WARNING] db.unified: Timeout waiting for model response after 30s
+[2025-11-20 17:12:59] [   INFO] jobs.worker: Retrying failed embedding request (attempt 1/3)
+[2025-11-20 17:17:01] [  DEBUG] jobs.worker: Rate limit approaching: 65/100 requests in window
+[2025-11-20 18:56:42] [   INFO] db.unified: Index rebuild triggered by schema migration
+[2025-11-20 19:18:30] [  DEBUG] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-20 20:02:36] [  DEBUG] db.unified: Semantic search returned 113 results for query
+[2025-11-20 20:56:36] [WARNING] watcher.service: Processing document batch of 164 files
+[2025-11-20 21:30:38] [  DEBUG] db.unified: Embedding generation completed in 14.48s
+[2025-11-20 21:31:47] [   INFO] jobs.worker: Memory usage: 2792 MB (threshold: 4096 MB)
+[2025-11-20 22:18:09] [WARNING] jobs.worker: Failed to parse document: unsupported format .xyz
+[2025-11-20 23:26:10] [   INFO] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-20 23:40:13] [   INFO] watcher.service: Rate limit approaching: 86/100 requests in window
+[2025-11-21 00:29:38] [WARNING] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-21 00:35:42] [   INFO] watcher.service: File watcher detected 20 changes
+[2025-11-21 01:06:01] [   INFO] watcher.service: Job job-8953 completed with status=success
+[2025-11-21 01:09:51] [  DEBUG] watcher.service: Chunk 82 indexed successfully
+[2025-11-21 01:15:00] [   INFO] ingestion.pipeline: Memory usage: 3616 MB (threshold: 4096 MB)
+[2025-11-21 01:19:01] [WARNING] watcher.service: Memory usage: 2360 MB (threshold: 4096 MB)
+[2025-11-21 01:28:49] [   INFO] db.unified: Processing document batch of 446 files
+[2025-11-21 02:02:32] [   INFO] embeddings.router: Cache hit for query hash e97ee205
+[2025-11-21 02:24:59] [  ERROR] inference.rag: Cache hit for query hash 2a38a4a9
+[2025-11-21 02:37:53] [   INFO] embeddings.router: Chunk 7 indexed successfully
+[2025-11-21 02:39:01] [   INFO] jobs.worker: Failed to parse document: unsupported format .xyz
+[2025-11-21 02:42:28] [   INFO] embeddings.router: Retrying failed embedding request (attempt 2/3)
+[2025-11-21 03:09:05] [   INFO] db.unified: Embedding generation completed in 3.81s
+[2025-11-21 05:18:42] [   INFO] watcher.service: Semantic search returned 322 results for query
+[2025-11-21 05:23:42] [   INFO] db.unified: Semantic search returned 356 results for query
+[2025-11-21 06:46:29] [  ERROR] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-21 06:48:30] [WARNING] jobs.worker: File watcher detected 495 changes
+[2025-11-21 08:19:30] [  ERROR] inference.rag: Processing document batch of 229 files
+[2025-11-21 09:30:04] [WARNING] embeddings.router: Memory usage: 3608 MB (threshold: 4096 MB)
+[2025-11-21 09:30:19] [   INFO] jobs.worker: Processing document batch of 67 files
+[2025-11-21 10:15:06] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-21 10:17:01] [  ERROR] db.unified: Chunk 4289 indexed successfully
+[2025-11-21 10:43:01] [WARNING] watcher.service: Memory usage: 2140 MB (threshold: 4096 MB)
+[2025-11-21 10:51:49] [  ERROR] ingestion.pipeline: Processing document batch of 58 files
+[2025-11-21 11:00:58] [  DEBUG] watcher.service: Semantic search returned 384 results for query
+[2025-11-21 11:32:11] [   INFO] watcher.service: Cache hit for query hash 04025959
+[2025-11-21 12:05:40] [   INFO] db.unified: Processing document batch of 283 files
+[2025-11-21 12:21:51] [  DEBUG] embeddings.router: Chunk 1565 indexed successfully
+[2025-11-21 13:04:39] [  DEBUG] ingestion.pipeline: Database connection pool at 89% capacity
+[2025-11-21 13:19:21] [  DEBUG] inference.rag: Embedding generation completed in 7.10s
+[2025-11-21 13:23:48] [  DEBUG] inference.rag: Cache hit for query hash e820a45f
+[2025-11-21 13:47:07] [  DEBUG] ingestion.pipeline: Job job-4098 completed with status=success
+[2025-11-21 14:01:20] [WARNING] db.unified: File watcher detected 153 changes
+[2025-11-21 15:08:42] [  ERROR] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-21 15:27:31] [  DEBUG] db.unified: Database connection pool at 90% capacity
+[2025-11-21 16:14:20] [   INFO] ingestion.pipeline: Semantic search returned 17 results for query
+[2025-11-21 16:59:02] [   INFO] db.unified: Cache hit for query hash ce78d1da
+[2025-11-21 17:04:50] [  DEBUG] db.unified: Rate limit approaching: 63/100 requests in window
+[2025-11-21 17:06:07] [  ERROR] embeddings.router: Retrying failed embedding request (attempt 1/3)
+[2025-11-21 17:19:25] [  DEBUG] inference.rag: Semantic search returned 108 results for query
+[2025-11-21 18:10:28] [  ERROR] db.unified: Retrying failed embedding request (attempt 2/3)
+[2025-11-21 18:49:58] [   INFO] ingestion.pipeline: Failed to parse document: unsupported format .xyz
+[2025-11-21 18:59:37] [   INFO] inference.rag: Job job-7259 completed with status=success
+[2025-11-21 19:35:42] [WARNING] db.unified: Index rebuild triggered by schema migration
+[2025-11-21 20:40:01] [  DEBUG] jobs.worker: Memory usage: 2735 MB (threshold: 4096 MB)
+[2025-11-21 20:48:36] [WARNING] jobs.worker: Embedding generation completed in 9.00s
+[2025-11-21 21:01:25] [  ERROR] inference.rag: Embedding generation completed in 6.27s
+[2025-11-21 21:07:54] [  ERROR] db.unified: Database connection pool at 37% capacity
+[2025-11-21 21:08:17] [   INFO] ingestion.pipeline: Rate limit approaching: 77/100 requests in window
+[2025-11-21 21:16:10] [WARNING] embeddings.router: File watcher detected 250 changes
+[2025-11-21 21:23:00] [   INFO] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-21 22:21:45] [   INFO] watcher.service: Database connection pool at 60% capacity
+[2025-11-21 22:33:44] [   INFO] inference.rag: Job job-9945 completed with status=success
+[2025-11-21 22:56:04] [WARNING] watcher.service: Chunk 7915 indexed successfully
+[2025-11-21 23:27:38] [  DEBUG] inference.rag: File watcher detected 126 changes
+[2025-11-21 23:32:11] [  DEBUG] watcher.service: Job job-3484 completed with status=success
+[2025-11-22 00:52:21] [   INFO] embeddings.router: Processing document batch of 412 files
+[2025-11-22 01:54:40] [   INFO] jobs.worker: Memory usage: 897 MB (threshold: 4096 MB)
+[2025-11-22 02:49:58] [  DEBUG] ingestion.pipeline: Retrying failed embedding request (attempt 2/3)
+[2025-11-22 04:23:10] [WARNING] inference.rag: Job job-4259 completed with status=success
+[2025-11-22 06:02:39] [   INFO] inference.rag: Cache hit for query hash 67e103b0
+[2025-11-22 06:05:49] [   INFO] ingestion.pipeline: Processing document batch of 27 files
+[2025-11-22 06:31:04] [   INFO] inference.rag: Chunk 1263 indexed successfully
+[2025-11-22 07:04:49] [  ERROR] ingestion.pipeline: Chunk 5390 indexed successfully
+[2025-11-22 07:18:30] [  DEBUG] watcher.service: Processing document batch of 258 files
+[2025-11-22 07:53:39] [  ERROR] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-22 08:39:26] [  ERROR] watcher.service: Failed to parse document: unsupported format .xyz
+[2025-11-22 08:45:03] [   INFO] watcher.service: Processing document batch of 277 files
+[2025-11-22 09:17:56] [   INFO] inference.rag: Semantic search returned 187 results for query
+[2025-11-22 09:36:44] [  DEBUG] ingestion.pipeline: Processing document batch of 466 files
+[2025-11-22 10:38:09] [   INFO] ingestion.pipeline: File watcher detected 384 changes
+[2025-11-22 10:39:19] [WARNING] embeddings.router: Processing document batch of 288 files
+[2025-11-22 10:59:33] [  ERROR] jobs.worker: Processing document batch of 392 files
+[2025-11-22 11:04:30] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-22 11:24:10] [   INFO] ingestion.pipeline: Cache hit for query hash 0188e8b8
+[2025-11-22 12:39:34] [   INFO] watcher.service: Job job-7263 completed with status=success
+[2025-11-22 12:53:34] [  DEBUG] inference.rag: Memory usage: 2359 MB (threshold: 4096 MB)
+[2025-11-22 13:46:55] [   INFO] embeddings.router: Retrying failed embedding request (attempt 2/3)
+[2025-11-22 14:02:16] [   INFO] embeddings.router: Cache hit for query hash 6f4922f4
+[2025-11-22 14:12:10] [  DEBUG] watcher.service: Job job-5957 completed with status=success
+[2025-11-22 14:37:25] [   INFO] ingestion.pipeline: Semantic search returned 381 results for query
+[2025-11-22 14:44:16] [   INFO] jobs.worker: Chunk 6099 indexed successfully
+[2025-11-22 15:19:20] [   INFO] db.unified: Embedding generation completed in 3.69s
+[2025-11-22 15:21:48] [  DEBUG] inference.rag: Index rebuild triggered by schema migration
+[2025-11-22 15:26:51] [WARNING] jobs.worker: Retrying failed embedding request (attempt 3/3)
+[2025-11-22 15:49:01] [  DEBUG] embeddings.router: Memory usage: 447 MB (threshold: 4096 MB)
+[2025-11-22 16:11:20] [   INFO] inference.rag: Rate limit approaching: 57/100 requests in window
+[2025-11-22 17:35:00] [  DEBUG] jobs.worker: File watcher detected 218 changes
+[2025-11-22 18:43:59] [   INFO] db.unified: Rate limit approaching: 59/100 requests in window
+[2025-11-22 18:57:53] [WARNING] inference.rag: Timeout waiting for model response after 30s
+[2025-11-22 19:31:52] [  ERROR] jobs.worker: Retrying failed embedding request (attempt 3/3)
+[2025-11-22 20:33:37] [WARNING] ingestion.pipeline: Failed to parse document: unsupported format .xyz
+[2025-11-22 20:34:47] [   INFO] embeddings.router: File watcher detected 205 changes
+[2025-11-22 20:52:43] [WARNING] jobs.worker: Processing document batch of 242 files
+[2025-11-22 21:07:35] [WARNING] jobs.worker: Semantic search returned 6 results for query
+[2025-11-22 21:10:21] [  DEBUG] db.unified: Retrying failed embedding request (attempt 3/3)
+[2025-11-22 22:39:38] [  DEBUG] db.unified: Retrying failed embedding request (attempt 3/3)
+[2025-11-22 23:05:44] [WARNING] jobs.worker: Rate limit approaching: 56/100 requests in window
+[2025-11-22 23:32:54] [   INFO] jobs.worker: Rate limit approaching: 66/100 requests in window
+[2025-11-23 00:02:07] [  ERROR] watcher.service: Timeout waiting for model response after 30s
+[2025-11-23 00:21:59] [   INFO] watcher.service: Database connection pool at 94% capacity
+[2025-11-23 00:36:08] [   INFO] jobs.worker: Job job-6658 completed with status=success
+[2025-11-23 00:50:01] [  DEBUG] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-23 00:53:01] [   INFO] db.unified: Chunk 3825 indexed successfully
+[2025-11-23 01:14:02] [   INFO] db.unified: Index rebuild triggered by schema migration
+[2025-11-23 01:17:37] [   INFO] inference.rag: Database connection pool at 77% capacity
+[2025-11-23 01:18:58] [   INFO] watcher.service: Memory usage: 2102 MB (threshold: 4096 MB)
+[2025-11-23 01:44:39] [   INFO] inference.rag: Memory usage: 2660 MB (threshold: 4096 MB)
+[2025-11-23 01:52:57] [   INFO] jobs.worker: Semantic search returned 34 results for query
+[2025-11-23 01:58:56] [   INFO] jobs.worker: Semantic search returned 144 results for query
+[2025-11-23 02:32:17] [   INFO] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-23 02:38:01] [   INFO] ingestion.pipeline: Embedding generation completed in 6.67s
+[2025-11-23 03:10:10] [  DEBUG] inference.rag: Timeout waiting for model response after 30s
+[2025-11-23 03:52:20] [  ERROR] ingestion.pipeline: Job job-7599 completed with status=success
+[2025-11-23 03:59:41] [   INFO] ingestion.pipeline: Failed to parse document: unsupported format .xyz
+[2025-11-23 04:47:20] [  DEBUG] jobs.worker: Failed to parse document: unsupported format .xyz
+[2025-11-23 05:47:34] [   INFO] ingestion.pipeline: Semantic search returned 393 results for query
+[2025-11-23 06:17:55] [   INFO] embeddings.router: Processing document batch of 149 files
+[2025-11-23 07:18:16] [  DEBUG] ingestion.pipeline: Chunk 4460 indexed successfully
+[2025-11-23 08:07:06] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-23 08:17:58] [  DEBUG] embeddings.router: Retrying failed embedding request (attempt 1/3)
+[2025-11-23 08:27:06] [  DEBUG] jobs.worker: Processing document batch of 207 files
+[2025-11-23 08:44:06] [  ERROR] jobs.worker: Job job-6906 completed with status=success
+[2025-11-23 08:47:33] [   INFO] ingestion.pipeline: Cache hit for query hash f61d6947
+[2025-11-23 10:05:42] [  DEBUG] embeddings.router: Job job-3856 completed with status=success
+[2025-11-23 11:34:42] [  DEBUG] watcher.service: Cache hit for query hash 903ce922
+[2025-11-23 11:51:11] [WARNING] watcher.service: Rate limit approaching: 83/100 requests in window
+[2025-11-23 12:00:16] [   INFO] inference.rag: Index rebuild triggered by schema migration
+[2025-11-23 13:26:15] [  DEBUG] inference.rag: Rate limit approaching: 86/100 requests in window
+[2025-11-23 13:56:10] [   INFO] ingestion.pipeline: Embedding generation completed in 13.19s
+[2025-11-23 14:28:46] [WARNING] inference.rag: Chunk 4706 indexed successfully
+[2025-11-23 14:38:56] [WARNING] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-23 14:54:20] [   INFO] watcher.service: Chunk 9101 indexed successfully
+[2025-11-23 15:03:04] [  ERROR] inference.rag: Database connection pool at 40% capacity
+[2025-11-23 16:01:05] [   INFO] watcher.service: Job job-4058 completed with status=success
+[2025-11-23 16:20:25] [  DEBUG] db.unified: Timeout waiting for model response after 30s
+[2025-11-23 16:36:13] [  DEBUG] db.unified: Database connection pool at 72% capacity
+[2025-11-23 16:42:05] [   INFO] inference.rag: Index rebuild triggered by schema migration
+[2025-11-23 17:12:17] [  ERROR] watcher.service: Failed to parse document: unsupported format .xyz
+[2025-11-23 17:34:26] [  DEBUG] jobs.worker: Processing document batch of 165 files
+[2025-11-23 18:19:10] [   INFO] inference.rag: Index rebuild triggered by schema migration
+[2025-11-23 18:39:40] [WARNING] inference.rag: Cache hit for query hash 01161aaa
+[2025-11-23 18:44:28] [   INFO] db.unified: Cache hit for query hash 69adc1e1
+[2025-11-23 19:27:57] [  ERROR] jobs.worker: Job job-1320 completed with status=success
+[2025-11-23 19:40:22] [  ERROR] db.unified: Rate limit approaching: 55/100 requests in window
+[2025-11-23 20:09:39] [  DEBUG] db.unified: Cache hit for query hash ec895663
+[2025-11-23 20:13:36] [   INFO] ingestion.pipeline: Memory usage: 2422 MB (threshold: 4096 MB)
+[2025-11-23 20:30:29] [  DEBUG] jobs.worker: File watcher detected 268 changes
+[2025-11-23 20:54:37] [  DEBUG] inference.rag: Database connection pool at 73% capacity
+[2025-11-23 21:22:01] [WARNING] watcher.service: Timeout waiting for model response after 30s
+[2025-11-23 21:35:06] [  DEBUG] watcher.service: Retrying failed embedding request (attempt 1/3)
+[2025-11-23 22:00:09] [   INFO] embeddings.router: Job job-2659 completed with status=success
+[2025-11-23 22:29:06] [WARNING] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-23 22:45:44] [  ERROR] watcher.service: Memory usage: 445 MB (threshold: 4096 MB)
+[2025-11-23 23:34:40] [WARNING] inference.rag: Chunk 133 indexed successfully
+[2025-11-24 00:19:08] [WARNING] ingestion.pipeline: Job job-3676 completed with status=success
+[2025-11-24 00:21:19] [   INFO] jobs.worker: Cache hit for query hash 37f0e884
+[2025-11-24 02:06:20] [   INFO] watcher.service: Job job-5735 completed with status=success
+[2025-11-24 02:55:47] [   INFO] watcher.service: Memory usage: 2501 MB (threshold: 4096 MB)
+[2025-11-24 03:32:01] [   INFO] jobs.worker: Embedding generation completed in 0.31s
+[2025-11-24 03:36:58] [  DEBUG] db.unified: Retrying failed embedding request (attempt 3/3)
+[2025-11-24 03:43:50] [  DEBUG] db.unified: Processing document batch of 356 files
+[2025-11-24 03:52:44] [  DEBUG] embeddings.router: Chunk 3202 indexed successfully
+[2025-11-24 04:08:08] [   INFO] db.unified: Job job-4708 completed with status=success
+[2025-11-24 04:45:30] [  ERROR] ingestion.pipeline: Semantic search returned 478 results for query
+[2025-11-24 05:18:33] [WARNING] ingestion.pipeline: File watcher detected 325 changes
+[2025-11-24 05:22:04] [  ERROR] watcher.service: Processing document batch of 19 files
+[2025-11-24 05:22:21] [  ERROR] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-24 05:31:28] [  DEBUG] watcher.service: Failed to parse document: unsupported format .xyz
+[2025-11-24 05:48:02] [   INFO] inference.rag: File watcher detected 428 changes
+[2025-11-24 07:17:16] [   INFO] inference.rag: Retrying failed embedding request (attempt 2/3)
+[2025-11-24 07:41:54] [  ERROR] inference.rag: File watcher detected 33 changes
+[2025-11-24 07:46:51] [  DEBUG] watcher.service: Timeout waiting for model response after 30s
+[2025-11-24 07:56:07] [  DEBUG] ingestion.pipeline: Cache hit for query hash 11b9842e
+[2025-11-24 08:15:06] [  DEBUG] embeddings.router: File watcher detected 145 changes
+[2025-11-24 08:45:21] [WARNING] watcher.service: Cache hit for query hash 35cf8659
+[2025-11-24 09:12:23] [   INFO] embeddings.router: Rate limit approaching: 70/100 requests in window
+[2025-11-24 09:37:27] [   INFO] watcher.service: File watcher detected 217 changes
+[2025-11-24 11:34:42] [   INFO] db.unified: Failed to parse document: unsupported format .xyz
+[2025-11-24 12:26:45] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-24 13:25:20] [  ERROR] watcher.service: Memory usage: 383 MB (threshold: 4096 MB)
+[2025-11-24 13:45:04] [   INFO] embeddings.router: File watcher detected 178 changes
+[2025-11-24 13:49:44] [   INFO] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-24 14:03:35] [  DEBUG] ingestion.pipeline: Cache hit for query hash 2f29b6e3
+[2025-11-24 14:17:51] [  DEBUG] jobs.worker: File watcher detected 478 changes
+[2025-11-24 14:44:28] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-24 15:38:23] [   INFO] embeddings.router: Chunk 8564 indexed successfully
+[2025-11-24 16:19:35] [   INFO] embeddings.router: File watcher detected 403 changes
+[2025-11-24 16:36:28] [  ERROR] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-24 17:48:20] [   INFO] watcher.service: Index rebuild triggered by schema migration
+[2025-11-24 17:52:04] [   INFO] jobs.worker: Memory usage: 3275 MB (threshold: 4096 MB)
+[2025-11-24 18:46:40] [   INFO] embeddings.router: File watcher detected 283 changes
+[2025-11-24 18:49:39] [   INFO] inference.rag: Rate limit approaching: 74/100 requests in window
+[2025-11-24 19:40:41] [  DEBUG] ingestion.pipeline: Rate limit approaching: 79/100 requests in window
+[2025-11-24 19:57:17] [   INFO] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-24 20:27:33] [  DEBUG] db.unified: Memory usage: 768 MB (threshold: 4096 MB)
+[2025-11-24 20:45:10] [   INFO] jobs.worker: Processing document batch of 409 files
+[2025-11-24 21:11:57] [WARNING] db.unified: Rate limit approaching: 58/100 requests in window
+[2025-11-24 21:24:35] [WARNING] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-24 21:45:43] [WARNING] watcher.service: Timeout waiting for model response after 30s
+[2025-11-24 22:11:35] [  ERROR] db.unified: File watcher detected 436 changes
+[2025-11-24 22:43:19] [  ERROR] watcher.service: Rate limit approaching: 59/100 requests in window
+[2025-11-24 23:01:07] [   INFO] inference.rag: Chunk 3043 indexed successfully
+[2025-11-24 23:16:16] [WARNING] watcher.service: Processing document batch of 330 files
+[2025-11-24 23:22:16] [   INFO] inference.rag: Retrying failed embedding request (attempt 2/3)
+[2025-11-24 23:27:41] [   INFO] jobs.worker: Memory usage: 917 MB (threshold: 4096 MB)
+[2025-11-25 03:31:53] [  DEBUG] embeddings.router: Embedding generation completed in 9.03s
+[2025-11-25 03:37:28] [   INFO] db.unified: Index rebuild triggered by schema migration
+[2025-11-25 04:20:07] [   INFO] inference.rag: Semantic search returned 248 results for query
+[2025-11-25 04:36:18] [WARNING] inference.rag: Chunk 1648 indexed successfully
+[2025-11-25 04:43:36] [WARNING] watcher.service: Index rebuild triggered by schema migration
+[2025-11-25 04:51:59] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-25 05:29:22] [  DEBUG] jobs.worker: Database connection pool at 33% capacity
+[2025-11-25 05:49:21] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-25 06:02:52] [  ERROR] db.unified: Index rebuild triggered by schema migration
+[2025-11-25 06:23:46] [  DEBUG] ingestion.pipeline: Rate limit approaching: 84/100 requests in window
+[2025-11-25 06:56:54] [   INFO] ingestion.pipeline: Rate limit approaching: 80/100 requests in window
+[2025-11-25 08:18:47] [   INFO] db.unified: Timeout waiting for model response after 30s
+[2025-11-25 08:25:23] [  ERROR] watcher.service: Index rebuild triggered by schema migration
+[2025-11-25 09:08:00] [   INFO] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-25 09:24:23] [   INFO] inference.rag: Embedding generation completed in 1.47s
+[2025-11-25 09:25:56] [   INFO] embeddings.router: Embedding generation completed in 12.07s
+[2025-11-25 09:43:41] [   INFO] jobs.worker: Cache hit for query hash cd89fef7
+[2025-11-25 09:55:33] [   INFO] ingestion.pipeline: Failed to parse document: unsupported format .xyz
+[2025-11-25 10:19:36] [  ERROR] ingestion.pipeline: Memory usage: 2837 MB (threshold: 4096 MB)
+[2025-11-25 10:54:28] [   INFO] jobs.worker: Retrying failed embedding request (attempt 3/3)
+[2025-11-25 10:56:14] [  DEBUG] watcher.service: Semantic search returned 253 results for query
+[2025-11-25 11:27:24] [   INFO] jobs.worker: Database connection pool at 63% capacity
+[2025-11-25 11:51:48] [  ERROR] ingestion.pipeline: Chunk 5356 indexed successfully
+[2025-11-25 11:52:17] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-25 12:55:18] [WARNING] jobs.worker: Chunk 9541 indexed successfully
+[2025-11-25 13:06:13] [  ERROR] jobs.worker: Rate limit approaching: 68/100 requests in window
+[2025-11-25 13:15:26] [   INFO] inference.rag: Timeout waiting for model response after 30s
+[2025-11-25 13:24:52] [WARNING] watcher.service: File watcher detected 430 changes
+[2025-11-25 13:44:47] [   INFO] watcher.service: Embedding generation completed in 14.79s
+[2025-11-25 14:10:28] [  ERROR] watcher.service: Database connection pool at 81% capacity
+[2025-11-25 14:13:25] [   INFO] ingestion.pipeline: Chunk 6022 indexed successfully
+[2025-11-25 15:44:14] [WARNING] db.unified: Timeout waiting for model response after 30s
+[2025-11-25 16:55:43] [   INFO] ingestion.pipeline: Embedding generation completed in 10.45s
+[2025-11-25 17:12:30] [  ERROR] ingestion.pipeline: Processing document batch of 146 files
+[2025-11-25 17:19:00] [   INFO] jobs.worker: Memory usage: 1093 MB (threshold: 4096 MB)
+[2025-11-25 17:25:37] [  DEBUG] db.unified: Rate limit approaching: 75/100 requests in window
+[2025-11-25 18:20:03] [   INFO] jobs.worker: Job job-3830 completed with status=success
+[2025-11-25 18:27:26] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-25 18:31:50] [   INFO] embeddings.router: Rate limit approaching: 53/100 requests in window
+[2025-11-25 20:12:40] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-25 20:20:44] [   INFO] watcher.service: File watcher detected 456 changes
+[2025-11-25 20:32:59] [   INFO] watcher.service: Embedding generation completed in 6.38s
+[2025-11-25 21:08:04] [   INFO] jobs.worker: Embedding generation completed in 9.47s
+[2025-11-25 21:10:00] [   INFO] embeddings.router: Processing document batch of 320 files
+[2025-11-25 21:21:02] [   INFO] db.unified: Failed to parse document: unsupported format .xyz
+[2025-11-25 21:37:58] [  DEBUG] ingestion.pipeline: Memory usage: 2702 MB (threshold: 4096 MB)
+[2025-11-25 22:17:42] [  ERROR] inference.rag: Chunk 5649 indexed successfully
+[2025-11-25 23:17:32] [  DEBUG] ingestion.pipeline: Memory usage: 3049 MB (threshold: 4096 MB)
+[2025-11-25 23:44:15] [WARNING] inference.rag: Chunk 6694 indexed successfully
+[2025-11-26 00:53:32] [   INFO] inference.rag: Retrying failed embedding request (attempt 2/3)
+[2025-11-26 01:49:31] [   INFO] db.unified: Processing document batch of 349 files
+[2025-11-26 02:07:20] [  ERROR] watcher.service: Memory usage: 3015 MB (threshold: 4096 MB)
+[2025-11-26 03:21:38] [   INFO] inference.rag: Processing document batch of 103 files
+[2025-11-26 04:09:12] [   INFO] inference.rag: Retrying failed embedding request (attempt 3/3)
+[2025-11-26 04:10:27] [   INFO] embeddings.router: Embedding generation completed in 0.18s
+[2025-11-26 04:23:17] [WARNING] ingestion.pipeline: Retrying failed embedding request (attempt 2/3)
+[2025-11-26 04:27:59] [  DEBUG] ingestion.pipeline: Processing document batch of 2 files
+[2025-11-26 06:44:06] [  DEBUG] watcher.service: File watcher detected 465 changes
+[2025-11-26 07:25:37] [   INFO] jobs.worker: Memory usage: 3686 MB (threshold: 4096 MB)
+[2025-11-26 07:33:07] [WARNING] inference.rag: Memory usage: 955 MB (threshold: 4096 MB)
+[2025-11-26 07:39:14] [WARNING] jobs.worker: Processing document batch of 274 files
+[2025-11-26 08:28:14] [  ERROR] watcher.service: Memory usage: 530 MB (threshold: 4096 MB)
+[2025-11-26 08:45:35] [  DEBUG] embeddings.router: Chunk 4887 indexed successfully
+[2025-11-26 09:03:22] [   INFO] watcher.service: Cache hit for query hash 8d3bba74
+[2025-11-26 10:08:06] [  ERROR] inference.rag: Rate limit approaching: 59/100 requests in window
+[2025-11-26 11:01:49] [   INFO] embeddings.router: Cache hit for query hash 4edaa105
+[2025-11-26 11:30:17] [   INFO] watcher.service: Database connection pool at 79% capacity
+[2025-11-26 12:10:46] [WARNING] db.unified: Rate limit approaching: 66/100 requests in window
+[2025-11-26 12:10:49] [   INFO] embeddings.router: Database connection pool at 57% capacity
+[2025-11-26 13:13:23] [   INFO] watcher.service: Failed to parse document: unsupported format .xyz
+[2025-11-26 13:26:35] [   INFO] watcher.service: Memory usage: 939 MB (threshold: 4096 MB)
+[2025-11-26 13:34:13] [   INFO] jobs.worker: Semantic search returned 403 results for query
+[2025-11-26 14:02:33] [  ERROR] watcher.service: Cache hit for query hash 8b16ebc0
+[2025-11-26 14:05:12] [   INFO] jobs.worker: Semantic search returned 388 results for query
+[2025-11-26 14:06:00] [  DEBUG] embeddings.router: Processing document batch of 58 files
+[2025-11-26 14:35:21] [  ERROR] inference.rag: Index rebuild triggered by schema migration
+[2025-11-26 15:18:36] [   INFO] db.unified: Timeout waiting for model response after 30s
+[2025-11-26 16:03:39] [  DEBUG] db.unified: Memory usage: 1398 MB (threshold: 4096 MB)
+[2025-11-26 16:06:41] [WARNING] jobs.worker: Chunk 8305 indexed successfully
+[2025-11-26 16:55:39] [   INFO] jobs.worker: Index rebuild triggered by schema migration
+[2025-11-26 17:02:04] [  DEBUG] inference.rag: Retrying failed embedding request (attempt 1/3)
+[2025-11-26 18:15:46] [   INFO] ingestion.pipeline: Embedding generation completed in 11.69s
+[2025-11-26 18:29:10] [   INFO] watcher.service: Retrying failed embedding request (attempt 2/3)
+[2025-11-26 19:04:39] [   INFO] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-26 19:06:56] [   INFO] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-26 19:57:54] [   INFO] db.unified: Cache hit for query hash 757b505c
+[2025-11-26 19:59:07] [   INFO] watcher.service: Processing document batch of 410 files
+[2025-11-26 20:05:22] [  DEBUG] embeddings.router: Processing document batch of 144 files
+[2025-11-26 20:19:00] [  ERROR] jobs.worker: Memory usage: 938 MB (threshold: 4096 MB)
+[2025-11-26 20:38:01] [   INFO] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-26 21:33:52] [   INFO] inference.rag: Retrying failed embedding request (attempt 2/3)
+[2025-11-26 21:46:41] [  DEBUG] db.unified: Memory usage: 975 MB (threshold: 4096 MB)
+[2025-11-26 22:49:10] [WARNING] ingestion.pipeline: Embedding generation completed in 9.76s
+[2025-11-26 23:02:21] [  DEBUG] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-27 01:04:17] [   INFO] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-27 02:12:30] [WARNING] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-27 02:23:32] [WARNING] embeddings.router: File watcher detected 475 changes
+[2025-11-27 02:30:12] [WARNING] watcher.service: Retrying failed embedding request (attempt 3/3)
+[2025-11-27 04:03:33] [   INFO] inference.rag: Processing document batch of 474 files
+[2025-11-27 06:29:43] [   INFO] ingestion.pipeline: Database connection pool at 16% capacity
+[2025-11-27 06:36:05] [WARNING] db.unified: Embedding generation completed in 1.72s
+[2025-11-27 07:18:28] [  DEBUG] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-27 07:50:30] [  DEBUG] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-27 09:46:58] [   INFO] watcher.service: Retrying failed embedding request (attempt 1/3)
+[2025-11-27 10:07:14] [   INFO] inference.rag: Memory usage: 3338 MB (threshold: 4096 MB)
+[2025-11-27 10:07:35] [   INFO] embeddings.router: Database connection pool at 58% capacity
+[2025-11-27 10:18:37] [   INFO] inference.rag: Database connection pool at 15% capacity
+[2025-11-27 10:40:07] [WARNING] jobs.worker: Cache hit for query hash f29b38f1
+[2025-11-27 11:03:48] [WARNING] inference.rag: Embedding generation completed in 5.28s
+[2025-11-27 11:17:09] [WARNING] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-27 11:18:16] [   INFO] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-27 11:51:33] [  DEBUG] jobs.worker: Cache hit for query hash 298f95e1
+[2025-11-27 12:13:38] [  ERROR] embeddings.router: Processing document batch of 176 files
+[2025-11-27 12:23:59] [   INFO] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-27 12:41:39] [  ERROR] watcher.service: Retrying failed embedding request (attempt 3/3)
+[2025-11-27 13:18:57] [  DEBUG] jobs.worker: Retrying failed embedding request (attempt 3/3)
+[2025-11-27 13:29:53] [WARNING] db.unified: Rate limit approaching: 67/100 requests in window
+[2025-11-27 13:47:12] [   INFO] ingestion.pipeline: Embedding generation completed in 0.83s
+[2025-11-27 13:47:41] [WARNING] jobs.worker: Semantic search returned 115 results for query
+[2025-11-27 14:19:53] [  ERROR] inference.rag: Retrying failed embedding request (attempt 3/3)
+[2025-11-27 15:02:15] [   INFO] watcher.service: Index rebuild triggered by schema migration
+[2025-11-27 15:26:55] [   INFO] watcher.service: Memory usage: 2370 MB (threshold: 4096 MB)
+[2025-11-27 17:12:19] [   INFO] db.unified: Job job-2067 completed with status=success
+[2025-11-27 17:39:49] [WARNING] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-27 18:07:47] [   INFO] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-27 18:20:38] [WARNING] embeddings.router: Chunk 6807 indexed successfully
+[2025-11-27 18:59:33] [WARNING] ingestion.pipeline: Processing document batch of 441 files
+[2025-11-27 19:12:10] [   INFO] jobs.worker: Index rebuild triggered by schema migration
+[2025-11-27 20:16:54] [   INFO] jobs.worker: Index rebuild triggered by schema migration
+[2025-11-27 20:40:38] [  DEBUG] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-27 21:20:21] [  DEBUG] jobs.worker: Cache hit for query hash 28fc2782
+[2025-11-27 21:58:08] [   INFO] ingestion.pipeline: Cache hit for query hash 491442df
+[2025-11-27 22:27:15] [  ERROR] jobs.worker: Memory usage: 3252 MB (threshold: 4096 MB)
+[2025-11-27 23:03:24] [   INFO] embeddings.router: Rate limit approaching: 64/100 requests in window
+[2025-11-27 23:07:41] [  DEBUG] jobs.worker: Cache hit for query hash 49182f81
+[2025-11-27 23:33:26] [WARNING] jobs.worker: Semantic search returned 153 results for query
+[2025-11-27 23:40:44] [   INFO] inference.rag: Job job-5208 completed with status=success
+[2025-11-28 00:04:01] [   INFO] jobs.worker: Job job-8490 completed with status=success
+[2025-11-28 00:36:08] [  ERROR] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-28 01:04:25] [WARNING] ingestion.pipeline: Failed to parse document: unsupported format .xyz
+[2025-11-28 02:13:24] [   INFO] ingestion.pipeline: Chunk 3655 indexed successfully
+[2025-11-28 02:13:33] [  DEBUG] ingestion.pipeline: Semantic search returned 96 results for query
+[2025-11-28 02:40:06] [  DEBUG] ingestion.pipeline: Index rebuild triggered by schema migration
+[2025-11-28 03:16:00] [  ERROR] watcher.service: Database connection pool at 93% capacity
+[2025-11-28 03:45:34] [  ERROR] ingestion.pipeline: Rate limit approaching: 72/100 requests in window
+[2025-11-28 03:46:01] [  ERROR] watcher.service: Processing document batch of 6 files
+[2025-11-28 04:06:44] [  ERROR] db.unified: Index rebuild triggered by schema migration
+[2025-11-28 05:07:09] [WARNING] inference.rag: Timeout waiting for model response after 30s
+[2025-11-28 05:19:44] [  ERROR] ingestion.pipeline: Semantic search returned 459 results for query
+[2025-11-28 05:27:54] [  ERROR] jobs.worker: Retrying failed embedding request (attempt 3/3)
+[2025-11-28 05:32:29] [   INFO] db.unified: Database connection pool at 89% capacity
+[2025-11-28 06:15:08] [  DEBUG] jobs.worker: Database connection pool at 94% capacity
+[2025-11-28 06:37:00] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-28 06:54:02] [  DEBUG] embeddings.router: File watcher detected 161 changes
+[2025-11-28 07:09:46] [   INFO] jobs.worker: Index rebuild triggered by schema migration
+[2025-11-28 07:47:23] [  DEBUG] watcher.service: Rate limit approaching: 83/100 requests in window
+[2025-11-28 08:06:13] [WARNING] ingestion.pipeline: File watcher detected 159 changes
+[2025-11-28 08:39:48] [WARNING] db.unified: File watcher detected 255 changes
+[2025-11-28 09:34:03] [  DEBUG] inference.rag: Processing document batch of 86 files
+[2025-11-28 11:13:02] [  ERROR] db.unified: Timeout waiting for model response after 30s
+[2025-11-28 12:31:22] [  DEBUG] db.unified: Rate limit approaching: 64/100 requests in window
+[2025-11-28 12:36:32] [   INFO] inference.rag: Memory usage: 2353 MB (threshold: 4096 MB)
+[2025-11-28 12:42:15] [  ERROR] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-28 13:00:45] [   INFO] watcher.service: Semantic search returned 92 results for query
+[2025-11-28 13:39:08] [  DEBUG] jobs.worker: Timeout waiting for model response after 30s
+[2025-11-28 13:49:11] [  DEBUG] inference.rag: Rate limit approaching: 62/100 requests in window
+[2025-11-28 14:01:42] [   INFO] embeddings.router: Chunk 8201 indexed successfully
+[2025-11-28 14:10:19] [  ERROR] watcher.service: File watcher detected 114 changes
+[2025-11-28 15:17:07] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-28 15:37:01] [   INFO] inference.rag: Job job-9370 completed with status=success
+[2025-11-28 15:59:22] [  ERROR] db.unified: Timeout waiting for model response after 30s
+[2025-11-28 16:21:08] [WARNING] jobs.worker: Database connection pool at 65% capacity
+[2025-11-28 18:19:51] [  DEBUG] watcher.service: Rate limit approaching: 61/100 requests in window
+[2025-11-28 18:40:09] [  ERROR] jobs.worker: Rate limit approaching: 50/100 requests in window
+[2025-11-28 19:42:05] [  ERROR] inference.rag: Retrying failed embedding request (attempt 1/3)
+[2025-11-28 19:53:31] [   INFO] ingestion.pipeline: Embedding generation completed in 6.03s
+[2025-11-28 20:03:16] [  ERROR] db.unified: File watcher detected 19 changes
+[2025-11-28 20:33:00] [   INFO] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-28 20:52:51] [   INFO] ingestion.pipeline: File watcher detected 42 changes
+[2025-11-28 21:01:58] [  DEBUG] embeddings.router: Rate limit approaching: 75/100 requests in window
+[2025-11-28 21:33:29] [   INFO] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-28 22:33:24] [   INFO] embeddings.router: Rate limit approaching: 54/100 requests in window
+[2025-11-28 23:09:30] [   INFO] ingestion.pipeline: Rate limit approaching: 73/100 requests in window
+[2025-11-28 23:20:25] [  DEBUG] db.unified: Processing document batch of 355 files
+[2025-11-28 23:47:07] [WARNING] embeddings.router: Memory usage: 953 MB (threshold: 4096 MB)
+[2025-11-29 00:57:07] [  ERROR] db.unified: Failed to parse document: unsupported format .xyz
+[2025-11-29 01:14:17] [   INFO] db.unified: Database connection pool at 87% capacity
+[2025-11-29 01:18:48] [   INFO] db.unified: Embedding generation completed in 0.84s
+[2025-11-29 01:21:31] [WARNING] embeddings.router: Rate limit approaching: 62/100 requests in window
+[2025-11-29 01:32:35] [  ERROR] watcher.service: Database connection pool at 41% capacity
+[2025-11-29 02:17:34] [   INFO] db.unified: File watcher detected 173 changes
+[2025-11-29 02:17:48] [   INFO] db.unified: Database connection pool at 20% capacity
+[2025-11-29 02:19:25] [   INFO] db.unified: Processing document batch of 497 files
+[2025-11-29 03:11:39] [   INFO] watcher.service: Index rebuild triggered by schema migration
+[2025-11-29 03:13:41] [   INFO] watcher.service: Database connection pool at 33% capacity
+[2025-11-29 03:15:41] [  DEBUG] jobs.worker: Database connection pool at 86% capacity
+[2025-11-29 04:38:16] [WARNING] embeddings.router: Failed to parse document: unsupported format .xyz
+[2025-11-29 04:44:27] [   INFO] db.unified: Failed to parse document: unsupported format .xyz
+[2025-11-29 05:10:44] [   INFO] ingestion.pipeline: Memory usage: 1017 MB (threshold: 4096 MB)
+[2025-11-29 05:25:41] [   INFO] jobs.worker: Chunk 226 indexed successfully
+[2025-11-29 05:49:14] [  DEBUG] inference.rag: Cache hit for query hash db576a7d
+[2025-11-29 06:30:16] [   INFO] watcher.service: Embedding generation completed in 10.51s
+[2025-11-29 06:37:16] [  ERROR] embeddings.router: Processing document batch of 76 files
+[2025-11-29 06:38:43] [  ERROR] watcher.service: Rate limit approaching: 56/100 requests in window
+[2025-11-29 06:45:30] [  DEBUG] db.unified: Database connection pool at 40% capacity
+[2025-11-29 07:12:37] [   INFO] inference.rag: Index rebuild triggered by schema migration
+[2025-11-29 08:05:45] [   INFO] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-29 08:12:44] [   INFO] ingestion.pipeline: Job job-6465 completed with status=success
+[2025-11-29 08:21:40] [   INFO] inference.rag: Retrying failed embedding request (attempt 3/3)
+[2025-11-29 09:23:34] [   INFO] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-29 09:52:08] [   INFO] watcher.service: Timeout waiting for model response after 30s
+[2025-11-29 10:06:00] [   INFO] embeddings.router: Memory usage: 2585 MB (threshold: 4096 MB)
+[2025-11-29 10:32:07] [   INFO] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-29 11:06:44] [   INFO] watcher.service: Cache hit for query hash e17184bc
+[2025-11-29 12:26:50] [WARNING] inference.rag: Database connection pool at 44% capacity
+[2025-11-29 13:47:12] [WARNING] embeddings.router: Embedding generation completed in 10.84s
+[2025-11-29 14:29:14] [   INFO] jobs.worker: Rate limit approaching: 89/100 requests in window
+[2025-11-29 14:44:21] [   INFO] embeddings.router: Timeout waiting for model response after 30s
+[2025-11-29 15:20:06] [  DEBUG] db.unified: Processing document batch of 485 files
+[2025-11-29 15:46:43] [  DEBUG] ingestion.pipeline: Timeout waiting for model response after 30s
+[2025-11-29 15:51:19] [   INFO] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-29 16:00:04] [WARNING] db.unified: File watcher detected 99 changes
+[2025-11-29 16:05:49] [   INFO] inference.rag: Memory usage: 2223 MB (threshold: 4096 MB)
+[2025-11-29 17:46:49] [   INFO] jobs.worker: Database connection pool at 40% capacity
+[2025-11-29 17:55:56] [   INFO] embeddings.router: Retrying failed embedding request (attempt 1/3)
+[2025-11-29 19:17:56] [   INFO] inference.rag: Processing document batch of 64 files
+[2025-11-29 19:36:22] [   INFO] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-29 19:45:51] [  ERROR] inference.rag: Rate limit approaching: 53/100 requests in window
+[2025-11-29 20:29:12] [  DEBUG] ingestion.pipeline: Database connection pool at 36% capacity
+[2025-11-29 21:12:00] [  DEBUG] inference.rag: Memory usage: 2327 MB (threshold: 4096 MB)
+[2025-11-29 21:26:38] [  DEBUG] inference.rag: Timeout waiting for model response after 30s
+[2025-11-29 21:40:07] [  DEBUG] jobs.worker: Job job-5303 completed with status=success
+[2025-11-29 22:00:47] [WARNING] db.unified: Job job-2296 completed with status=success
+[2025-11-29 22:36:28] [  ERROR] ingestion.pipeline: Job job-4783 completed with status=success
+[2025-11-29 23:08:34] [WARNING] jobs.worker: Database connection pool at 38% capacity
+[2025-11-29 23:16:06] [  ERROR] inference.rag: Rate limit approaching: 93/100 requests in window
+[2025-11-29 23:36:04] [WARNING] embeddings.router: Index rebuild triggered by schema migration
+[2025-11-30 00:17:49] [  DEBUG] watcher.service: Database connection pool at 63% capacity
+[2025-11-30 00:20:47] [   INFO] db.unified: Chunk 4611 indexed successfully
+[2025-11-30 00:23:12] [  ERROR] jobs.worker: Failed to parse document: unsupported format .xyz
+[2025-11-30 00:29:19] [   INFO] db.unified: Semantic search returned 255 results for query
+[2025-11-30 01:25:15] [WARNING] db.unified: Semantic search returned 31 results for query
+[2025-11-30 01:59:13] [  DEBUG] embeddings.router: File watcher detected 137 changes
+[2025-11-30 02:08:43] [WARNING] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-30 02:59:42] [  DEBUG] inference.rag: Embedding generation completed in 12.25s
+[2025-11-30 03:42:54] [WARNING] embeddings.router: File watcher detected 291 changes
+[2025-11-30 03:45:41] [   INFO] watcher.service: Processing document batch of 2 files
+[2025-11-30 03:52:46] [  DEBUG] inference.rag: Embedding generation completed in 4.11s
+[2025-11-30 03:53:45] [   INFO] jobs.worker: Rate limit approaching: 54/100 requests in window
+[2025-11-30 04:33:56] [WARNING] embeddings.router: Retrying failed embedding request (attempt 1/3)
+[2025-11-30 04:48:56] [WARNING] watcher.service: Timeout waiting for model response after 30s
+[2025-11-30 05:48:09] [   INFO] ingestion.pipeline: Processing document batch of 140 files
+[2025-11-30 05:50:10] [   INFO] db.unified: Timeout waiting for model response after 30s
+[2025-11-30 06:03:58] [WARNING] jobs.worker: File watcher detected 129 changes
+[2025-11-30 06:22:45] [   INFO] ingestion.pipeline: Processing document batch of 233 files
+[2025-11-30 06:46:01] [   INFO] db.unified: Cache hit for query hash e44fea3b
+[2025-11-30 06:55:49] [   INFO] ingestion.pipeline: Cache hit for query hash 1f50893f
+[2025-11-30 07:11:11] [   INFO] watcher.service: File watcher detected 112 changes
+[2025-11-30 07:41:34] [  ERROR] inference.rag: Cache hit for query hash 4e2545f8
+[2025-11-30 08:32:35] [   INFO] db.unified: Cache hit for query hash a9078e86
+[2025-11-30 10:23:46] [  ERROR] jobs.worker: Semantic search returned 436 results for query
+[2025-11-30 10:25:10] [WARNING] inference.rag: File watcher detected 13 changes
+[2025-11-30 10:27:39] [   INFO] db.unified: Job job-5933 completed with status=success
+[2025-11-30 10:47:55] [   INFO] inference.rag: Cache hit for query hash 71f6278d
+[2025-11-30 11:33:29] [  DEBUG] ingestion.pipeline: Rate limit approaching: 86/100 requests in window
+[2025-11-30 11:46:21] [  DEBUG] jobs.worker: Processing document batch of 244 files
+[2025-11-30 12:42:18] [  ERROR] jobs.worker: Cache hit for query hash 97af4fb3
+[2025-11-30 12:52:57] [WARNING] watcher.service: Retrying failed embedding request (attempt 2/3)
+[2025-11-30 13:08:44] [   INFO] inference.rag: Processing document batch of 204 files
+[2025-11-30 13:55:20] [  ERROR] db.unified: Semantic search returned 181 results for query
+[2025-11-30 14:00:32] [   INFO] ingestion.pipeline: Job job-5565 completed with status=success
+[2025-11-30 14:14:46] [  DEBUG] watcher.service: Rate limit approaching: 50/100 requests in window
+[2025-11-30 15:21:59] [  ERROR] db.unified: Chunk 3447 indexed successfully
+[2025-11-30 15:25:38] [  ERROR] embeddings.router: Cache hit for query hash 97275a23
+[2025-11-30 15:33:50] [   INFO] ingestion.pipeline: Semantic search returned 193 results for query
+[2025-11-30 16:10:59] [   INFO] embeddings.router: Memory usage: 1598 MB (threshold: 4096 MB)
+[2025-11-30 16:28:49] [  DEBUG] watcher.service: Semantic search returned 149 results for query
+[2025-11-30 16:49:32] [   INFO] db.unified: Timeout waiting for model response after 30s
+[2025-11-30 17:00:53] [WARNING] db.unified: Processing document batch of 306 files
+[2025-11-30 17:06:57] [WARNING] ingestion.pipeline: Job job-9604 completed with status=success
+[2025-11-30 17:13:14] [   INFO] inference.rag: Index rebuild triggered by schema migration
+[2025-11-30 17:24:34] [  ERROR] embeddings.router: Job job-4029 completed with status=success
+[2025-11-30 18:21:37] [   INFO] embeddings.router: Processing document batch of 21 files
+[2025-11-30 18:32:59] [   INFO] jobs.worker: Cache hit for query hash bf822969
+[2025-11-30 18:42:57] [   INFO] jobs.worker: Processing document batch of 321 files
+[2025-11-30 18:51:04] [   INFO] embeddings.router: Database connection pool at 94% capacity
+[2025-11-30 19:31:28] [  DEBUG] inference.rag: Rate limit approaching: 79/100 requests in window
+[2025-11-30 20:21:53] [  ERROR] jobs.worker: Cache hit for query hash 8ebda540
+[2025-11-30 20:22:53] [   INFO] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-11-30 21:23:51] [   INFO] inference.rag: Failed to parse document: unsupported format .xyz
+[2025-11-30 21:59:14] [   INFO] embeddings.router: Job job-2566 completed with status=success
+[2025-11-30 22:00:08] [  ERROR] jobs.worker: File watcher detected 269 changes
+[2025-11-30 22:13:31] [WARNING] watcher.service: Memory usage: 2695 MB (threshold: 4096 MB)
+[2025-11-30 22:14:37] [   INFO] embeddings.router: Chunk 3913 indexed successfully
+[2025-11-30 22:19:11] [WARNING] inference.rag: Timeout waiting for model response after 30s
+[2025-11-30 22:23:12] [WARNING] watcher.service: Rate limit approaching: 79/100 requests in window
+[2025-11-30 22:24:05] [   INFO] embeddings.router: Processing document batch of 40 files
+[2025-11-30 23:01:09] [WARNING] watcher.service: Rate limit approaching: 98/100 requests in window
+[2025-11-30 23:16:44] [  DEBUG] db.unified: Processing document batch of 195 files
+[2025-12-01 00:53:10] [WARNING] db.unified: Timeout waiting for model response after 30s
+[2025-12-01 01:06:37] [  ERROR] inference.rag: Embedding generation completed in 9.45s
+[2025-12-01 01:07:30] [   INFO] ingestion.pipeline: Memory usage: 636 MB (threshold: 4096 MB)
+[2025-12-01 02:41:55] [   INFO] embeddings.router: Rate limit approaching: 98/100 requests in window
+[2025-12-01 03:16:08] [WARNING] inference.rag: Database connection pool at 49% capacity
+[2025-12-01 03:47:17] [   INFO] ingestion.pipeline: Retrying failed embedding request (attempt 1/3)
+[2025-12-01 04:35:18] [  DEBUG] ingestion.pipeline: Semantic search returned 392 results for query
+[2025-12-01 04:57:29] [   INFO] jobs.worker: Rate limit approaching: 94/100 requests in window
+[2025-12-01 05:21:13] [   INFO] jobs.worker: Memory usage: 1970 MB (threshold: 4096 MB)
+[2025-12-01 05:37:55] [   INFO] watcher.service: Memory usage: 3458 MB (threshold: 4096 MB)
+[2025-12-01 05:51:06] [   INFO] db.unified: Job job-6050 completed with status=success
+[2025-12-01 07:07:58] [WARNING] ingestion.pipeline: Job job-3274 completed with status=success
+[2025-12-01 07:08:56] [   INFO] jobs.worker: Retrying failed embedding request (attempt 1/3)
+[2025-12-01 07:45:40] [   INFO] db.unified: Processing document batch of 278 files

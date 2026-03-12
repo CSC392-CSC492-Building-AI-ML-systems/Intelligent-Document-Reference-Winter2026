@@ -1,2 +1,1 @@
 """FastAPI backend package (stubs)."""
-

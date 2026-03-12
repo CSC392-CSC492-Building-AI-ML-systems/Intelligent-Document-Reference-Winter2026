@@ -1,0 +1,8 @@
+Document Search for Debian
+==========================
+Configuration files are in /etc/app/conf.d/
+Logs are written to /var/log/docsearch/
+Data is stored in /var/lib/docsearch/
+
+To start: systemctl start docsearch-api
+To enable on boot: systemctl enable docsearch-api

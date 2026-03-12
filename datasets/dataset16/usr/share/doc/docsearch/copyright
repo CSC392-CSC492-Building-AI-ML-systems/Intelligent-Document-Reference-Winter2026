@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: document-search
+Upstream-Contact: dev@example.com
+Source: https://github.com/example/doc-search
+
+Files: *
+Copyright: 2025 Example Corp
+License: MIT

@@ -1,0 +1,15 @@
+[Unit]
+Description=Document Search Background Worker
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=docsearch
+Group=docsearch
+WorkingDirectory=/opt/docsearch
+ExecStart=/opt/docsearch/venv/bin/python -m jobs.worker
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

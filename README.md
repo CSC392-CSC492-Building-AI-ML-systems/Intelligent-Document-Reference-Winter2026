@@ -1,144 +1,106 @@
-# Local-first Intelligent Document Reference — Architecture
+# Intelligent Document Reference
 
-## Final Directory Structure
+Local-first RAG system: ingest documents, embed with OpenAI/Voyage, and query them with citations. FastAPI backend + React/Vite frontend, SQLite with sqlite-vec for vector search.
 
-```
-├── app.py
-├── README.md
-├── pyproject.toml
-├── .env.example
-├── config/
-│   ├── settings.py
-│   ├── models.yaml
-│   └── paths.yaml
-├── core/
-│   ├── bootstrap.py
-│   ├── wiring.py
-│   ├── lifecycle.py
-│   └── context.py
-├── model_clients/
-│   ├── base.py
-│   ├── openai_client.py
-│   ├── google_client.py
-│   ├── ollama_client.py
-│   ├── registry.py
-│   └── errors.py
-├── embeddings/
-│   ├── base.py
-│   ├── router.py
-│   └── embedder.py
-├── inference/
-│   ├── retriever.py
-│   ├── rag.py
-│   ├── citation.py
-│   ├── router.py
-│   └── responder.py
-├── backend/
-│   ├── main.py
-│   ├── api/
-│   │   ├── routes_chat.py
-│   │   ├── routes_files.py
-│   │   ├── routes_jobs.py
-│   │   └── routes_settings.py
-│   ├── deps.py
-│   └── schemas.py
-├── ingestion/
-│   ├── extractors/
-│   ├── chunking/
-│   ├── pipeline.py
-│   └── indexer.py
-├── db/
-│   ├── metadata.py
-│   ├── vectorstore.py
-│   ├── settings_store.py
-│   ├── schema.sql
-│   └── migrations/
-├── watcher/
-│   ├── watcher.py
-│   ├── debounce.py
-│   └── events.py
-├── jobs/
-│   ├── queue.py
-│   ├── scheduler.py
-│   ├── worker.py
-│   └── state.py
-├── ui/
-│   ├── web/
-│   │   ├── frontend/
-│   │   │   └── components/
-│   │   │       └── SettingsPanel.tsx
-│   │   └── static/
-│   └── widget/
-│       └── launcher.py
-├── mcp/
-│   ├── server.py
-│   └── tools.py
-├── evaluation/
-│   ├── datasets/
-│   ├── queries.yaml
-│   ├── accuracy.py
-│   └── benchmarks.py
-├── scripts/
-│   ├── preprocess.py
-│   ├── reindex.py
-│   └── dev_bootstrap.py
-└── tests/
-    ├── conftest.py
-    ├── fixtures/
-    │   ├── corpus/
-    │   └── expected/
-    ├── unit/
-    │   ├── model_clients/
-    │   ├── embeddings/
-    │   ├── inference/
-    │   ├── ingestion/
-    │   ├── db/
-    │   └── core/
-    ├── integration/
-    └── e2e/
+## Prerequisites
+
+- **Python 3.11+** — [python.org](https://www.python.org/downloads/)
+- **Node.js 18+** — [nodejs.org](https://nodejs.org/)
+- **uv** (recommended) — [docs.astral.sh/uv](https://docs.astral.sh/uv/)
+
+## Quick Start
+
+```bash
+# One-command setup + launch
+python3 app.py --setup --webui
 ```
 
-### `config/`
-Configuration management: settings loading, model definitions, and path configurations.
+This creates `.venv`, installs Python deps (uv if available, pip fallback), installs npm packages, builds the frontend, and starts the server at **http://127.0.0.1:8000**.
 
-### `core/`
-Application core: dependency injection context, bootstrap logic, wiring, and lifecycle management.
+After the first setup, just run:
 
-### `model_clients/`
-Provider-agnostic model client abstractions: base interfaces, provider implementations (OpenAI, Google, Ollama), and a registry for client selection.
+```bash
+python3 app.py --webui
+# or with uv:
+uv run app.py --webui
+```
 
-### `embeddings/`
-Embedding facade layer: router for selecting embedding clients and high-level embedding API.
+## Manual Setup
 
-### `inference/`
-Inference and retrieval layer: RAG orchestration, retrieval, citation formatting, and response generation.
+```bash
+uv sync                         # Python deps
+cd ui && npm install && cd ..   # Frontend deps
+cd ui && npm run build && cd .. # Build frontend
+```
 
-### `backend/`
-FastAPI backend: REST API routes for chat, files, jobs, and settings management.
+Then launch with `uv run app.py --webui` or `.venv/bin/python app.py --webui`.
 
-### `ingestion/`
-Document ingestion pipeline: extractors, chunking algorithms, and indexing orchestration.
+## Development
 
-### `db/`
-Database layer: metadata storage, vector store, settings persistence, and schema definitions.
+```bash
+python3 app.py --dev
+```
 
-### `watcher/`
-Filesystem monitoring: file watcher, event debouncing, and normalized event types.
+Runs uvicorn with `--reload` on `:8000` and the Vite dev server on `:5173`. Open **http://localhost:5173**.
 
-### `jobs/`
-Job processing: queue abstraction, scheduler, async workers, and job state management.
+## Benchmarks
 
-### `ui/`
-User interfaces: web frontend components and widget launcher.
+```bash
+python3 app.py --benchmark                              # defaults
+python3 app.py --benchmark --skip-indexing              # skip re-indexing
+python3 app.py --benchmark --benchmark-config my.yaml
+python3 app.py --benchmark --benchmark-runs 1 --no-graphs --benchmark-output results/
+```
 
-### `mcp/`
-MCP server: Model Context Protocol server exposing retrieval and Q&A tools.
+## Configuration
 
-### `evaluation/`
-Evaluation harness: accuracy testing, benchmarks, and evaluation datasets.
+Create a `.env` file in the project root:
 
-### `scripts/`
-Utility scripts: preprocessing, reindexing, and developer bootstrap helpers.
+| Variable | Default | Description |
+|---|---|---|
+| `OPENAI_API_KEY` | — | OpenAI API key (embeddings + inference) |
+| `VOYAGE_API_KEY` | — | Voyage AI key (embeddings) |
+| `GEMINI_API_KEY` | — | Google Gemini key |
+| `OLLAMA_URL` | `http://localhost:11434` | Ollama endpoint for local models |
+| `EMBEDDING_DIMENSION` | `3072` | Vector dimension (must match model) |
+| `OCR_ENABLED` | `true` | Enable Tesseract OCR for images |
 
-### `tests/`
-Test suite: unit tests, integration tests, end-to-end tests, and test fixtures.
+YAML configs in `config/`: `models.yaml` (provider model IDs), `paths.yaml` (watch/exclude dirs), `file_indexing.yaml` (inclusion/exclusion rules, auto-managed by Settings UI).
+
+## CLI Reference
+
+```
+python3 app.py [OPTIONS]
+
+--setup               Install deps + build frontend
+--webui               Launch server (auto-builds if needed)
+--dev                 Dev mode: backend (hot-reload) + Vite HMR
+--host HOST           Bind address (default: 127.0.0.1)
+--port PORT           Bind port (default: 8000)
+--benchmark           Run evaluation suite
+--benchmark-config F  Benchmark YAML config
+--benchmark-dataset D Override dataset path
+--benchmark-output O  Override output directory
+--benchmark-runs N    Override runs per query
+--no-graphs           Skip graph generation
+--skip-indexing       Query existing index only
+```
+
+## Testing
+
+```bash
+uv sync --group dev   # install test deps
+pytest                # all tests
+pytest tests/unit/    # unit only
+pytest tests/e2e/     # end-to-end
+```
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| `ModuleNotFoundError` | Use `.venv/bin/python app.py --webui` or `uv run app.py --webui` |
+| Port 8000 in use | `python3 app.py --webui --port 8080` |
+| Frontend not loading | `cd ui && npm run build` |
+| Folder picker unavailable | See [docs/TKINTER_SETUP.md](docs/TKINTER_SETUP.md) |
+| Stale venv | `rm -rf .venv && python3 app.py --setup` |

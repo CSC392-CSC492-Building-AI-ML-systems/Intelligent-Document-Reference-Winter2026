@@ -1,2 +1,1 @@
 """Embedding facade and router."""
-

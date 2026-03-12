@@ -1,0 +1,12 @@
+Glossary of Terms
+=================
+RAG – Retrieval-Augmented Generation
+LLM – Large Language Model
+OCR – Optical Character Recognition
+Embedding – A dense vector representation of text
+Chunking – Splitting documents into smaller segments
+BM25 – A probabilistic ranking function used in information retrieval
+HNSW – Hierarchical Navigable Small World (approximate nearest neighbor index)
+Cosine Similarity – A measure of similarity between two non-zero vectors
+TF-IDF – Term Frequency–Inverse Document Frequency
+FAISS – Facebook AI Similarity Search library

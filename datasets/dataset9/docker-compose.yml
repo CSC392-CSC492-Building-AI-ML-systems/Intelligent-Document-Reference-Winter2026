@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://user:pass@db:5432/docs
+      - EMBEDDING_MODEL=voyage-3
+      - LOG_LEVEL=INFO
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - data:/app/data
+
+  worker:
+    build: .
+    command: python -m jobs.worker
+    environment:
+      - DATABASE_URL=postgresql://user:pass@db:5432/docs
+      - WORKER_CONCURRENCY=4
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:16
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=docs
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  data:
+  pgdata:

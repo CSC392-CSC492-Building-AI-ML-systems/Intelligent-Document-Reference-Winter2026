@@ -1,2 +1,1 @@
 """Inference and retrieval facades."""
-

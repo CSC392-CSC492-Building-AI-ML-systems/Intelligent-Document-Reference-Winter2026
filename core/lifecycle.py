@@ -1,7 +1,9 @@
 """Lifecycle manager: startup/shutdown and signal handling (stub)."""
+
 import signal
 import threading
 import time
+
 
 class LifecycleManager:
     def __init__(self, ctx):
@@ -23,4 +25,3 @@ class LifecycleManager:
     def shutdown(self):
         # TODO: gracefully stop workers, watcher, DB, etc.
         pass
-

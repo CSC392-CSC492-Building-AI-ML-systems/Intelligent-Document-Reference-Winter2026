@@ -1,0 +1,114 @@
+2025-09-01T00:23:00Z [INFO] Request processed successfully
+2025-09-01T00:28:00Z [ERROR] Database connection recycled
+2025-09-01T00:32:00Z [ERROR] Rate limit warning: approaching threshold
+2025-09-01T01:12:00Z [ERROR] Database connection recycled
+2025-09-01T01:17:00Z [INFO] Failed to process document: timeout
+2025-09-01T01:39:00Z [WARN] Failed to process document: timeout
+2025-09-01T02:00:00Z [WARN] Database connection recycled
+2025-09-01T03:05:00Z [INFO] Health check passed
+2025-09-01T03:18:00Z [INFO] Failed to process document: timeout
+2025-09-01T03:22:00Z [INFO] Embedding batch completed
+2025-09-01T03:47:00Z [INFO] Index optimization triggered
+2025-09-01T03:54:00Z [INFO] Cache miss for document lookup
+2025-09-01T03:59:00Z [INFO] Failed to process document: timeout
+2025-09-01T04:04:00Z [INFO] Index optimization triggered
+2025-09-01T04:18:00Z [INFO] Index optimization triggered
+2025-09-01T04:25:00Z [INFO] Cache miss for document lookup
+2025-09-01T04:38:00Z [INFO] Request processed successfully
+2025-09-01T04:42:00Z [INFO] Database connection recycled
+2025-09-01T05:05:00Z [INFO] Embedding batch completed
+2025-09-01T05:30:00Z [INFO] Failed to process document: timeout
+2025-09-01T05:56:00Z [INFO] Database connection recycled
+2025-09-01T05:59:00Z [INFO] Index optimization triggered
+2025-09-01T06:07:00Z [INFO] Failed to process document: timeout
+2025-09-01T06:10:00Z [INFO] Cache miss for document lookup
+2025-09-01T06:27:00Z [INFO] Index optimization triggered
+2025-09-01T07:13:00Z [INFO] Health check passed
+2025-09-01T08:00:00Z [INFO] Database connection recycled
+2025-09-01T08:07:00Z [ERROR] Request processed successfully
+2025-09-01T08:17:00Z [INFO] Request processed successfully
+2025-09-01T08:20:00Z [INFO] Database connection recycled
+2025-09-01T08:31:00Z [INFO] Database connection recycled
+2025-09-01T08:36:00Z [WARN] Database connection recycled
+2025-09-01T08:40:00Z [INFO] Rate limit warning: approaching threshold
+2025-09-01T08:44:00Z [INFO] Index optimization triggered
+2025-09-01T08:44:00Z [INFO] Request processed successfully
+2025-09-01T09:05:00Z [ERROR] Rate limit warning: approaching threshold
+2025-09-01T09:14:00Z [INFO] Request processed successfully
+2025-09-01T09:23:00Z [INFO] Database connection recycled
+2025-09-01T09:30:00Z [INFO] Failed to process document: timeout
+2025-09-01T10:01:00Z [INFO] Index optimization triggered
+2025-09-01T10:09:00Z [INFO] Rate limit warning: approaching threshold
+2025-09-01T10:12:00Z [INFO] Index optimization triggered
+2025-09-01T10:25:00Z [INFO] Embedding batch completed
+2025-09-01T10:25:00Z [INFO] Health check passed
+2025-09-01T10:31:00Z [ERROR] Index optimization triggered
+2025-09-01T10:31:00Z [WARN] Failed to process document: timeout
+2025-09-01T10:59:00Z [INFO] Database connection recycled
+2025-09-01T11:02:00Z [INFO] Failed to process document: timeout
+2025-09-01T11:39:00Z [INFO] Failed to process document: timeout
+2025-09-01T11:56:00Z [ERROR] Embedding batch completed
+2025-09-01T11:59:00Z [INFO] Embedding batch completed
+2025-09-01T11:59:00Z [INFO] Request processed successfully
+2025-09-01T12:14:00Z [INFO] Failed to process document: timeout
+2025-09-01T12:36:00Z [WARN] Health check passed
+2025-09-01T12:38:00Z [INFO] Rate limit warning: approaching threshold
+2025-09-01T13:01:00Z [INFO] Index optimization triggered
+2025-09-01T13:09:00Z [ERROR] Embedding batch completed
+2025-09-01T13:17:00Z [INFO] Embedding batch completed
+2025-09-01T13:36:00Z [INFO] Failed to process document: timeout
+2025-09-01T14:07:00Z [INFO] Cache miss for document lookup
+2025-09-01T14:10:00Z [WARN] Embedding batch completed
+2025-09-01T15:03:00Z [INFO] Database connection recycled
+2025-09-01T15:04:00Z [ERROR] Embedding batch completed
+2025-09-01T15:05:00Z [WARN] Health check passed
+2025-09-01T15:07:00Z [WARN] Health check passed
+2025-09-01T15:32:00Z [WARN] Database connection recycled
+2025-09-01T15:42:00Z [INFO] Cache miss for document lookup
+2025-09-01T15:43:00Z [INFO] Index optimization triggered
+2025-09-01T15:46:00Z [INFO] Embedding batch completed
+2025-09-01T15:46:00Z [INFO] Health check passed
+2025-09-01T15:56:00Z [INFO] Health check passed
+2025-09-01T16:05:00Z [ERROR] Failed to process document: timeout
+2025-09-01T16:05:00Z [INFO] Cache miss for document lookup
+2025-09-01T16:11:00Z [INFO] Embedding batch completed
+2025-09-01T16:20:00Z [WARN] Request processed successfully
+2025-09-01T16:51:00Z [INFO] Request processed successfully
+2025-09-01T16:57:00Z [INFO] Embedding batch completed
+2025-09-01T17:21:00Z [INFO] Database connection recycled
+2025-09-01T17:23:00Z [INFO] Database connection recycled
+2025-09-01T17:30:00Z [INFO] Embedding batch completed
+2025-09-01T17:40:00Z [INFO] Request processed successfully
+2025-09-01T17:42:00Z [WARN] Health check passed
+2025-09-01T17:46:00Z [INFO] Health check passed
+2025-09-01T17:58:00Z [ERROR] Database connection recycled
+2025-09-01T18:08:00Z [INFO] Database connection recycled
+2025-09-01T18:13:00Z [ERROR] Embedding batch completed
+2025-09-01T18:18:00Z [ERROR] Rate limit warning: approaching threshold
+2025-09-01T18:31:00Z [INFO] Rate limit warning: approaching threshold
+2025-09-01T18:42:00Z [INFO] Index optimization triggered
+2025-09-01T18:47:00Z [ERROR] Health check passed
+2025-09-01T19:11:00Z [INFO] Embedding batch completed
+2025-09-01T19:38:00Z [INFO] Cache miss for document lookup
+2025-09-01T19:41:00Z [INFO] Rate limit warning: approaching threshold
+2025-09-01T19:57:00Z [WARN] Index optimization triggered
+2025-09-01T20:03:00Z [ERROR] Cache miss for document lookup
+2025-09-01T20:12:00Z [INFO] Index optimization triggered
+2025-09-01T20:23:00Z [WARN] Rate limit warning: approaching threshold
+2025-09-01T20:42:00Z [ERROR] Database connection recycled
+2025-09-01T20:52:00Z [INFO] Cache miss for document lookup
+2025-09-01T21:07:00Z [INFO] Cache miss for document lookup
+2025-09-01T21:26:00Z [INFO] Rate limit warning: approaching threshold
+2025-09-01T21:31:00Z [ERROR] Rate limit warning: approaching threshold
+2025-09-01T22:08:00Z [INFO] Failed to process document: timeout
+2025-09-01T22:08:00Z [INFO] Health check passed
+2025-09-01T22:08:00Z [INFO] Health check passed
+2025-09-01T22:20:00Z [WARN] Request processed successfully
+2025-09-01T22:24:00Z [INFO] Rate limit warning: approaching threshold
+2025-09-01T22:36:00Z [ERROR] Health check passed
+2025-09-01T22:57:00Z [INFO] Request processed successfully
+2025-09-01T23:40:00Z [ERROR] Database connection recycled
+2025-09-01T23:41:00Z [INFO] Failed to process document: timeout
+2025-09-01T23:46:00Z [ERROR] Cache miss for document lookup
+2025-09-01T23:50:00Z [INFO] Index optimization triggered
+2025-09-01T23:59:00Z [INFO] Database connection recycled

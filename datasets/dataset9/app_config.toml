@@ -1,0 +1,37 @@
+[app]
+name = "intelligent-document-reference"
+version = "1.0.0"
+debug = false
+secret_key = "CHANGE_ME_IN_PRODUCTION"
+
+[server]
+host = "0.0.0.0"
+port = 8000
+workers = 4
+timeout = 120
+
+[embedding]
+provider = "voyage"
+model = "voyage-3"
+dimension = 1024
+batch_size = 32
+cache_embeddings = true
+
+[retrieval]
+top_k = 10
+similarity_threshold = 0.65
+rerank = true
+rerank_model = "cross-encoder"
+
+[storage]
+data_dir = "./data"
+index_dir = "./data/index"
+upload_dir = "./data/uploads"
+max_upload_size = "100MB"
+
+[logging]
+level = "INFO"
+format = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+file = "app.log"
+rotate = true
+max_size = "50MB"

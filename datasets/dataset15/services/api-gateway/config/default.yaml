@@ -1,0 +1,20 @@
+service:
+  name: api-gateway
+  version: 1.0.0
+
+server:
+  port: 8089
+  workers: 4
+
+logging:
+  level: INFO
+  format: json
+
+database:
+  pool_size: 5
+  timeout: 30
+
+monitoring:
+  metrics: true
+  tracing: true
+  health_check_interval: 30s

@@ -1,0 +1,15 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+    document(id: ID!): Document
+    documents(page: Int, limit: Int): DocumentConnection!
+    search(query: String!, topK: Int): SearchResults!
+}
+
+type Mutation {
+    indexDocument(input: IndexInput!): Document!
+    deleteDocument(id: ID!): Boolean!
+}

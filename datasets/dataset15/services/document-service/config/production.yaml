@@ -1,0 +1,11 @@
+server:
+  workers: 8
+
+logging:
+  level: WARNING
+
+database:
+  pool_size: 20
+
+monitoring:
+  alerting: true
