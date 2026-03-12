@@ -102,6 +102,7 @@ interface ChatContextType {
   saveSetting: (key: string, value: any) => Promise<void>;
   pickFolder: () => Promise<{ path: string; status: string } | null>;
   pickFiles: () => Promise<{ paths: string[]; status: string } | null>;
+  openPath: (path: string) => Promise<void>;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -506,6 +507,25 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const openPath = async (path: string) => {
+    const trimmed = path?.trim();
+    if (!trimmed) return;
+    try {
+      const response = await fetch(`${API_BASE_URL}/files/open-path`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: trimmed }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.detail || `Failed to open path (${response.status})`);
+      }
+    } catch (error) {
+      console.error('Failed to open path:', error);
+      throw error;
+    }
+  };
+
   const sendMessage = async (content: string) => {
     const userMessage: Message = {
       id: `msg-${Date.now()}`,
@@ -741,6 +761,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         saveSetting,
         pickFolder,
         pickFiles,
+        openPath,
       }}
     >
       {children}

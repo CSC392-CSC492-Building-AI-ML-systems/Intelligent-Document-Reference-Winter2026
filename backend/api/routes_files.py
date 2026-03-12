@@ -2,11 +2,13 @@
 
 import fnmatch
 import os
+import platform
+import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
 import yaml
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 try:
@@ -307,3 +309,33 @@ async def get_context_files():
             if path_obj.suffix or not path_obj.exists() or path_obj.is_file():
                 filtered.append(f)
     return {"files": filtered}
+
+
+class OpenPathRequest(BaseModel):
+    path: str
+
+
+def _open_path_in_os(path: str) -> None:
+    """Open a file or folder in the system default app / file manager."""
+    resolved = Path(path.strip()).expanduser().resolve()
+    if not resolved.exists():
+        raise HTTPException(status_code=404, detail=f"Path does not exist: {resolved}")
+    system = platform.system()
+    if system == "Darwin":
+        subprocess.run(["open", str(resolved)], check=False)
+    elif system == "Windows":
+        subprocess.run(["explorer", str(resolved)], check=False)
+    else:
+        subprocess.run(["xdg-open", str(resolved)], check=False)
+
+
+@router.post("/open-path")
+async def open_path(request: OpenPathRequest):
+    """Open a file or folder on the local machine (Finder, Explorer, etc.)."""
+    try:
+        _open_path_in_os(request.path)
+        return {"status": "ok"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

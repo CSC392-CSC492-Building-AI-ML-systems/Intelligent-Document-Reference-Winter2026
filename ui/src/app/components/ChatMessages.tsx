@@ -7,7 +7,16 @@ import { format } from 'date-fns';
 import { Button } from '@/app/components/ui/button';
 
 export function ChatMessages() {
-  const { messages, isLoading } = useChatContext();
+  const { messages, isLoading, openPath } = useChatContext();
+
+  const handleOpenPath = useCallback(
+    (path: string) => {
+      if (path && openPath) {
+        openPath(path).catch((err) => console.error('Open path failed:', err));
+      }
+    },
+    [openPath]
+  );
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
   // Capture whether user was near bottom BEFORE the next render so the
@@ -100,14 +109,23 @@ export function ChatMessages() {
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                 </div>
 
-                {/* Citations */}
+                {/* Citations - clickable to open file/folder locally */}
                 {message.role === 'assistant' && message.citations && message.citations.length > 0 && (
                   <div className="space-y-2">
                     <p className="text-xs font-medium text-muted-foreground">Sources:</p>
                     {message.citations.map((citation: Citation, idx: number) => (
                       <div
                         key={idx}
-                        className="flex items-start gap-2 text-xs bg-background rounded-md p-2 border"
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => handleOpenPath(citation.file_path)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            handleOpenPath(citation.file_path);
+                          }
+                        }}
+                        className="flex items-start gap-2 text-xs bg-background rounded-md p-2 border cursor-pointer hover:border-primary/50 hover:bg-muted/50 transition-colors"
                       >
                         <FileText className="h-3.5 w-3.5 mt-0.5 text-blue-500 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
