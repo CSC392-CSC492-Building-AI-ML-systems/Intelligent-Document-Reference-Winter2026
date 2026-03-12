@@ -7,12 +7,13 @@ lives in ingestion; output is final selected chunks ready for vector DB.
 import hashlib
 import logging
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, BinaryIO, Callable, List, Optional, Union
 
-from ingestion.change_detector import ReindexStrategy, determine_strategy
-from ingestion.chunking import chunk_document
+from ingestion.change_detector import ReindexStrategy
+from ingestion.chunking import assert_contiguous, chunk_document
 from ingestion.chunking.density_filter import filter_by_density
 from ingestion.chunking.structural import structural_chunk_document
 from ingestion.config import IngestionConfig
@@ -177,6 +178,9 @@ class PipelineConfig:
     dedup_similarity_threshold: float = 0.95
     embedding_batch_size: int = 32
 
+    # Parallelism
+    max_workers: int = 4
+
     # Logging
     log_chunks_generated: bool = True
     log_final_vector_count: bool = True
@@ -252,6 +256,166 @@ def _modality_for_ext(ext: str) -> str:
     return "text"
 
 
+def _process_single_file(
+    discovered: DiscoveredFile,
+    cfg: PipelineConfig,
+    root: Path,
+    embedder: Optional[Callable[[List[str]], List[List[float]]]],
+    llm_client: Optional[Any],
+    db: Optional[Any],
+) -> tuple[List[dict[str, Any]], List[List[float]], int]:
+    """Process one file: parse → chunk → (embed → dedup → store).
+
+    Returns:
+        (chunks, embeddings, chunks_generated_count)
+    """
+    handler = get_input_handler(
+        str(discovered.path), modality=_modality_for_ext(discovered.extension)
+    )
+    ocr_provider = _get_ocr_provider()
+    parse_config = (
+        replace(cfg.ingestion, ocr_enabled=True) if ocr_provider else cfg.ingestion
+    )
+    document = parse_and_prepare(
+        handler,
+        str(discovered.path),
+        config=parse_config,
+        base_path=root.parent if root.is_dir() else root.parent,
+        ocr_provider=ocr_provider,
+        llm_client=llm_client,
+    )
+    document = preprocess(document)
+
+    from ingestion.models import BlockType, SourceModality
+
+    is_image_doc = document.source_modality == SourceModality.IMAGE or any(
+        b.block_type == BlockType.IMAGE_TEXT for b in document.blocks
+    )
+    min_chars_store = 1 if is_image_doc else cfg.min_chars_store
+    min_tokens_store = 1 if is_image_doc else cfg.min_tokens_store
+    skip_boilerplate = False if is_image_doc else cfg.skip_boilerplate
+
+    if cfg.use_structural_chunking:
+        if cfg.remove_boilerplate:
+            document = _apply_boilerplate_to_document(document)
+        chunks = _structural_chunk_and_filter(document, cfg)
+    else:
+        chunks = chunk_document(
+            document,
+            min_block_chars=cfg.min_block_chars,
+            max_block_chars=cfg.max_block_chars,
+            min_chars_store=min_chars_store,
+            max_chars_store=cfg.max_chars_store,
+            min_tokens_store=min_tokens_store,
+            max_tokens_store=cfg.max_tokens_store,
+            skip_boilerplate=skip_boilerplate,
+            store_block_types=cfg.store_block_types,
+            skip_block_types=cfg.skip_block_types,
+        )
+
+    file_chunks: List[dict[str, Any]] = []
+    file_embs: List[List[float]] = []
+    n_generated = len(chunks)
+
+    if not chunks:
+        return file_chunks, file_embs, n_generated
+
+    if not cfg.embed_after_chunk:
+        for c in chunks:
+            rec = dict(c)
+            rec["file_path"] = str(discovered.path)
+            file_chunks.append(rec)
+        return file_chunks, file_embs, n_generated
+
+    texts = [c["text_content"] for c in chunks]
+    try:
+        embs = (
+            embedder(texts)
+            if embedder
+            else embed_texts_batched(texts, batch_size=cfg.embedding_batch_size)
+        )
+    except RuntimeError as e:
+        logger.warning("Embedding skipped: %s", e)
+        for c in chunks:
+            rec = dict(c)
+            rec["file_path"] = str(discovered.path)
+            file_chunks.append(rec)
+        return file_chunks, file_embs, n_generated
+
+    if len(embs) != len(chunks):
+        for c in chunks:
+            rec = dict(c)
+            rec["file_path"] = str(discovered.path)
+            file_chunks.append(rec)
+        return file_chunks, file_embs, n_generated
+
+    if cfg.dedup_enabled:
+        chunk_list = [
+            {
+                "chunk_id": c["chunk_id"],
+                "chunk_index": i,
+                "start_offset": c["start_offset"],
+                "end_offset": c["end_offset"],
+                "text_content": c["text_content"],
+            }
+            for i, c in enumerate(chunks)
+        ]
+        chunks, embs = remove_near_duplicates_dicts(
+            chunk_list, embs, threshold=cfg.dedup_similarity_threshold
+        )
+
+    for c in chunks:
+        rec = dict(c)
+        rec["file_path"] = str(discovered.path)
+        file_chunks.append(rec)
+    file_embs = list(embs)
+
+    if db and embs:
+        file_hash = (
+            discovered.content_hash
+            or hashlib.sha256(str(discovered.path).encode()).hexdigest()
+        )
+        file_id = db.register_file(
+            str(discovered.path),
+            file_hash,
+            discovered.size_bytes,
+            discovered.modified_timestamp,
+        )
+        version_id = db.create_version(file_id, file_hash)
+        if is_image_doc:
+            logger.info(
+                "Stored %d chunk(s) from image: %s",
+                len(chunks),
+                discovered.path,
+            )
+        store_chunks = [
+            {
+                "chunk_id": c["chunk_id"],
+                "chunk_index": i,
+                "start_offset": c["start_offset"],
+                "end_offset": c["end_offset"],
+                "text_content": c["text_content"],
+            }
+            for i, c in enumerate(chunks)
+        ]
+        try:
+            assert_contiguous(store_chunks)
+        except ValueError as ve:
+            logger.warning(
+                "Chunk contiguity check failed for %s: %s",
+                discovered.path,
+                ve,
+            )
+        db.add_document(file_id, version_id, store_chunks, embs)
+    elif embs and not db:
+        logger.warning(
+            "Chunks for %s were not stored (no database). Check backend context.",
+            discovered.path,
+        )
+
+    return file_chunks, file_embs, n_generated
+
+
 def run(
     input_path: Union[str, Path],
     *,
@@ -262,6 +426,9 @@ def run(
     llm_client: Optional[Any] = None,
 ) -> IngestionOutput:
     """Run the complete ingestion pipeline: input (file or directory) → final chunks → optional embed & store.
+
+    Files are processed concurrently using a thread pool (``max_workers`` in
+    ``PipelineConfig``).  DB writes are serialised via SQLite's internal locking.
 
     Args:
         input_path: File or directory path. If directory, crawls for supported_extensions.
@@ -315,153 +482,52 @@ def run(
     files_processed = 0
     chunks_generated = 0
 
-    for discovered in file_iter:
-        files_processed += 1
-        try:
-            handler = get_input_handler(
-                str(discovered.path), modality=_modality_for_ext(discovered.extension)
-            )
-            ocr_provider = _get_ocr_provider()
-            parse_config = (
-                replace(cfg.ingestion, ocr_enabled=True)
-                if ocr_provider
-                else cfg.ingestion
-            )
-            document = parse_and_prepare(
-                handler,
-                str(discovered.path),
-                config=parse_config,
-                base_path=root.parent if root.is_dir() else root.parent,
-                ocr_provider=ocr_provider,
-                llm_client=llm_client,
-            )
-            document = preprocess(document)
+    workers = min(cfg.max_workers, len(file_iter)) if file_iter else 1
 
-            # Use lower store thresholds for image/OCR docs so short text is kept
-            from ingestion.models import BlockType, SourceModality
-
-            is_image_doc = document.source_modality == SourceModality.IMAGE or any(
-                b.block_type == BlockType.IMAGE_TEXT for b in document.blocks
-            )
-            min_chars_store = 1 if is_image_doc else cfg.min_chars_store
-            min_tokens_store = 1 if is_image_doc else cfg.min_tokens_store
-            skip_boilerplate = False if is_image_doc else cfg.skip_boilerplate
-
-            if cfg.use_structural_chunking:
-                if cfg.remove_boilerplate:
-                    document = _apply_boilerplate_to_document(document)
-                chunks = _structural_chunk_and_filter(document, cfg)
-            else:
-                chunks = chunk_document(
-                    document,
-                    min_block_chars=cfg.min_block_chars,
-                    max_block_chars=cfg.max_block_chars,
-                    min_chars_store=min_chars_store,
-                    max_chars_store=cfg.max_chars_store,
-                    min_tokens_store=min_tokens_store,
-                    max_tokens_store=cfg.max_tokens_store,
-                    skip_boilerplate=skip_boilerplate,
-                    store_block_types=cfg.store_block_types,
-                    skip_block_types=cfg.skip_block_types,
-                )
-
-            chunks_generated += len(chunks)
-            if not chunks:
-                continue
-
-            if not cfg.embed_after_chunk:
-                for c in chunks:
-                    rec = dict(c)
-                    rec["file_path"] = str(discovered.path)
-                    all_chunks.append(rec)
-                continue
-
-            texts = [c["text_content"] for c in chunks]
+    if workers <= 1:
+        # Sequential path — avoids thread overhead for single files
+        for discovered in file_iter:
+            files_processed += 1
             try:
-                embs = (
-                    embedder(texts)
-                    if embedder
-                    else embed_texts_batched(texts, batch_size=cfg.embedding_batch_size)
+                fc, fe, ng = _process_single_file(
+                    discovered, cfg, root, embedder, llm_client, db
                 )
-            except RuntimeError as e:
-                logger.warning("Embedding skipped: %s", e)
-                for c in chunks:
-                    rec = dict(c)
-                    rec["file_path"] = str(discovered.path)
-                    all_chunks.append(rec)
-                continue
-
-            if len(embs) != len(chunks):
-                for c in chunks:
-                    rec = dict(c)
-                    rec["file_path"] = str(discovered.path)
-                    all_chunks.append(rec)
-                continue
-
-            if cfg.dedup_enabled:
-                chunk_list = [
-                    {
-                        "chunk_id": c["chunk_id"],
-                        "chunk_index": i,
-                        "start_offset": c["start_offset"],
-                        "end_offset": c["end_offset"],
-                        "text_content": c["text_content"],
-                    }
-                    for i, c in enumerate(chunks)
-                ]
-                chunks, embs = remove_near_duplicates_dicts(
-                    chunk_list, embs, threshold=cfg.dedup_similarity_threshold
-                )
-            for c in chunks:
-                rec = dict(c)
-                rec["file_path"] = str(discovered.path)
-                all_chunks.append(rec)
-            all_embeddings.extend(embs)
-
-            if db and embs:
-                file_hash = (
-                    discovered.content_hash
-                    or hashlib.sha256(str(discovered.path).encode()).hexdigest()
-                )
-                file_id = db.register_file(
-                    str(discovered.path),
-                    file_hash,
-                    discovered.size_bytes,
-                    discovered.modified_timestamp,
-                )
-                version_id = db.create_version(file_id, file_hash)
-                if is_image_doc:
-                    logger.info(
-                        "Stored %d chunk(s) from image: %s",
-                        len(chunks),
-                        discovered.path,
-                    )
-                store_chunks = [
-                    {
-                        "chunk_id": c["chunk_id"],
-                        "chunk_index": i,
-                        "start_offset": c["start_offset"],
-                        "end_offset": c["end_offset"],
-                        "text_content": c["text_content"],
-                    }
-                    for i, c in enumerate(chunks)
-                ]
-                db.add_document(file_id, version_id, store_chunks, embs)
-            elif embs and not db:
-                logger.warning(
-                    "Chunks for %s were not stored (no database). Check backend context.",
-                    discovered.path,
-                )
-
-        except Exception as e:
-            logger.exception("Failed to process %s: %s", discovered.path, e)
+                all_chunks.extend(fc)
+                all_embeddings.extend(fe)
+                chunks_generated += ng
+            except Exception as e:
+                logger.exception("Failed to process %s: %s", discovered.path, e)
+    else:
+        # Parallel path — process files concurrently
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            future_to_file = {
+                executor.submit(
+                    _process_single_file,
+                    discovered,
+                    cfg,
+                    root,
+                    embedder,
+                    llm_client,
+                    db,
+                ): discovered
+                for discovered in file_iter
+            }
+            for future in as_completed(future_to_file):
+                discovered = future_to_file[future]
+                files_processed += 1
+                try:
+                    fc, fe, ng = future.result()
+                    all_chunks.extend(fc)
+                    all_embeddings.extend(fe)
+                    chunks_generated += ng
+                except Exception as e:
+                    logger.exception("Failed to process %s: %s", discovered.path, e)
 
     if cfg.log_chunks_generated:
         logger.info("Chunks generated: %d", chunks_generated)
     if cfg.log_final_vector_count and all_embeddings:
         logger.info("Final vector count: %d", len(all_embeddings))
 
-    # If we embedded+deduped, all_chunks may have been updated per-file; aggregate is correct
     return IngestionOutput(
         chunks=all_chunks,
         embeddings=all_embeddings,

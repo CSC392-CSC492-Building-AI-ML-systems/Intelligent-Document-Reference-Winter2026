@@ -1,0 +1,19 @@
+type Document {
+    id: ID!
+    name: String!
+    content: String
+    metadata: JSON
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+type DocumentConnection {
+    edges: [DocumentEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type DocumentEdge {
+    node: Document!
+    cursor: String!
+}

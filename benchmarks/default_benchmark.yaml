@@ -1,0 +1,999 @@
+# Default RAG Benchmark Configuration
+# ~100 prompts across 6 categories exercising datasets 0-17
+
+benchmark:
+  name: "RAG Pipeline Benchmark v1"
+  version: "1.0.0"
+  dataset_path: "datasets/"
+  runs_per_query: 3
+  top_k: 5
+
+prompts:
+  # ======================================================================
+  # CATEGORY 1: FILE RETRIEVAL  (~25 prompts)
+  # Query that expects a specific file to be retrieved at rank 1.
+  # ======================================================================
+
+  # --- text files ---
+  - id: fr-001
+    type: file_retrieval
+    query: "What does the project glossary say about BM25 and HNSW?"
+    category: file_retrieval
+    file_type: text
+    folder_size: small
+    expected_file: "datasets/dataset0/glossary.txt"
+
+  - id: fr-002
+    type: file_retrieval
+    query: "Show me the meeting notes from Project Alpha"
+    category: file_retrieval
+    file_type: text
+    folder_size: small
+    expected_file: "datasets/dataset0/meeting_notes.txt"
+
+  - id: fr-003
+    type: file_retrieval
+    query: "What are the Flask requirements and dependencies for the search application?"
+    category: file_retrieval
+    file_type: text
+    folder_size: small
+    expected_file: "datasets/dataset1/requirements.txt"
+
+  - id: fr-004
+    type: file_retrieval
+    query: "Find the catalog of literary works in the collection"
+    category: file_retrieval
+    file_type: text
+    folder_size: medium
+    expected_file: "datasets/dataset8/catalog.txt"
+
+  - id: fr-005
+    type: file_retrieval
+    query: "Show me the adventures of Sherlock Holmes text"
+    category: file_retrieval
+    file_type: text
+    folder_size: medium
+    expected_file: "datasets/dataset8/adventures_of_sherlock_holmes.txt"
+
+  # --- code files ---
+  - id: fr-006
+    type: file_retrieval
+    query: "Where is the BM25 search engine implementation with hybrid vector retrieval?"
+    category: file_retrieval
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/search_engine.py"
+
+  - id: fr-007
+    type: file_retrieval
+    query: "Find the Flask application with search API endpoints"
+    category: file_retrieval
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/app.py"
+
+  - id: fr-008
+    type: file_retrieval
+    query: "Show me the text chunking utility with overlap support"
+    category: file_retrieval
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/utils.py"
+
+  - id: fr-009
+    type: file_retrieval
+    query: "Where is the Dockerfile for Python 3.12 with gunicorn?"
+    category: file_retrieval
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/Dockerfile"
+
+  - id: fr-010
+    type: file_retrieval
+    query: "Find the Docusaurus configuration file with navigation setup"
+    category: file_retrieval
+    file_type: code
+    folder_size: large
+    expected_file: "datasets/dataset14/docusaurus.config.js"
+
+  # --- config files ---
+  - id: fr-011
+    type: file_retrieval
+    query: "Show me the TOML application configuration file"
+    category: file_retrieval
+    file_type: config
+    folder_size: small
+    expected_file: "datasets/dataset9/app_config.toml"
+
+  - id: fr-012
+    type: file_retrieval
+    query: "Find the YAML database configuration"
+    category: file_retrieval
+    file_type: config
+    folder_size: small
+    expected_file: "datasets/dataset9/database.yaml"
+
+  - id: fr-013
+    type: file_retrieval
+    query: "Show me the docker-compose configuration for deployment"
+    category: file_retrieval
+    file_type: config
+    folder_size: small
+    expected_file: "datasets/dataset9/docker-compose.yml"
+
+  - id: fr-014
+    type: file_retrieval
+    query: "Find the legacy INI settings file"
+    category: file_retrieval
+    file_type: config
+    folder_size: small
+    expected_file: "datasets/dataset9/legacy_settings.ini"
+
+  - id: fr-015
+    type: file_retrieval
+    query: "Where is the XML deployment configuration?"
+    category: file_retrieval
+    file_type: config
+    folder_size: small
+    expected_file: "datasets/dataset9/deployment.xml"
+
+  # --- markdown docs ---
+  - id: fr-016
+    type: file_retrieval
+    query: "Show me the system architecture documentation"
+    category: file_retrieval
+    file_type: markdown
+    folder_size: small
+    expected_file: "datasets/dataset10/architecture.md"
+
+  - id: fr-017
+    type: file_retrieval
+    query: "Find the deployment guide documentation"
+    category: file_retrieval
+    file_type: markdown
+    folder_size: small
+    expected_file: "datasets/dataset10/deployment.md"
+
+  - id: fr-018
+    type: file_retrieval
+    query: "Show me the getting started guide with Python and Node.js prerequisites"
+    category: file_retrieval
+    file_type: markdown
+    folder_size: small
+    expected_file: "datasets/dataset10/getting-started.md"
+
+  - id: fr-019
+    type: file_retrieval
+    query: "Where is the troubleshooting guide?"
+    category: file_retrieval
+    file_type: markdown
+    folder_size: small
+    expected_file: "datasets/dataset10/troubleshooting.md"
+
+  - id: fr-020
+    type: file_retrieval
+    query: "Find the FAQ document"
+    category: file_retrieval
+    file_type: markdown
+    folder_size: small
+    expected_file: "datasets/dataset10/faq.md"
+
+  # --- data files ---
+  - id: fr-021
+    type: file_retrieval
+    query: "Show me the server metrics CSV with CPU and memory data"
+    category: file_retrieval
+    file_type: data
+    folder_size: small
+    expected_file: "datasets/dataset11/server_metrics.csv"
+
+  - id: fr-022
+    type: file_retrieval
+    query: "Find the relevance judgments tab-separated file"
+    category: file_retrieval
+    file_type: data
+    folder_size: small
+    expected_file: "datasets/dataset11/relevance_judgments.tsv"
+
+  - id: fr-023
+    type: file_retrieval
+    query: "Where is the team directory JSON?"
+    category: file_retrieval
+    file_type: data
+    folder_size: small
+    expected_file: "datasets/dataset11/team_directory.json"
+
+  # --- log files ---
+  - id: fr-024
+    type: file_retrieval
+    query: "Show me the application error log"
+    category: file_retrieval
+    file_type: log
+    folder_size: small
+    expected_file: "datasets/dataset2/error.log"
+
+  - id: fr-025
+    type: file_retrieval
+    query: "Find the HTTP access log file"
+    category: file_retrieval
+    file_type: log
+    folder_size: small
+    expected_file: "datasets/dataset2/access.log"
+
+  # ======================================================================
+  # CATEGORY 2: SIMPLE QA  (~20 prompts)
+  # Short factual questions answerable from one chunk.
+  # ======================================================================
+
+  - id: qa-001
+    type: qa
+    query: "What is the default chunk size used in the text chunking utility?"
+    category: simple
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/utils.py"
+    expected_answer_keywords: ["512", "chunk", "overlap"]
+    expected_citation_file: "datasets/dataset1/utils.py"
+
+  - id: qa-002
+    type: qa
+    query: "What Python version does the Dockerfile use?"
+    category: simple
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/Dockerfile"
+    expected_answer_keywords: ["3.12", "slim", "gunicorn"]
+    expected_citation_file: "datasets/dataset1/Dockerfile"
+
+  - id: qa-003
+    type: qa
+    query: "What does the glossary say about cosine similarity?"
+    category: simple
+    file_type: text
+    folder_size: small
+    expected_file: "datasets/dataset0/glossary.txt"
+    expected_answer_keywords: ["cosine", "similarity", "vector"]
+    expected_citation_file: "datasets/dataset0/glossary.txt"
+
+  - id: qa-004
+    type: qa
+    query: "What are the API endpoints defined in the Flask search app?"
+    category: simple
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/app.py"
+    expected_answer_keywords: ["search", "index", "health", "api"]
+    expected_citation_file: "datasets/dataset1/app.py"
+
+  - id: qa-005
+    type: qa
+    query: "What hashing algorithm is used for document IDs in the search engine?"
+    category: simple
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/search_engine.py"
+    expected_answer_keywords: ["SHA256", "hash", "doc_id"]
+    expected_citation_file: "datasets/dataset1/search_engine.py"
+
+  - id: qa-006
+    type: qa
+    query: "What are the prerequisites listed in the getting started guide?"
+    category: simple
+    file_type: markdown
+    folder_size: small
+    expected_file: "datasets/dataset10/getting-started.md"
+    expected_answer_keywords: ["Python", "3.11", "Node.js", "18", "SQLite"]
+    expected_citation_file: "datasets/dataset10/getting-started.md"
+
+  - id: qa-007
+    type: qa
+    query: "What is the opening line of Moby Dick?"
+    category: simple
+    file_type: text
+    folder_size: medium
+    expected_file: "datasets/dataset8/moby_dick.txt"
+    expected_answer_keywords: ["Ishmael", "call"]
+    expected_citation_file: "datasets/dataset8/moby_dick.txt"
+
+  - id: qa-008
+    type: qa
+    query: "What Spring Boot version is used in the enterprise Java project?"
+    category: simple
+    file_type: code
+    folder_size: large
+    expected_file: "datasets/dataset13/pom.xml"
+    expected_answer_keywords: ["3.2.0", "Spring", "Boot", "Java", "21"]
+    expected_citation_file: "datasets/dataset13/pom.xml"
+
+  - id: qa-009
+    type: qa
+    query: "What is the overlap size for text chunking in the utility module?"
+    category: simple
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/utils.py"
+    expected_answer_keywords: ["64", "overlap", "char"]
+    expected_citation_file: "datasets/dataset1/utils.py"
+
+  - id: qa-010
+    type: qa
+    query: "What web server does the Dockerfile use for production?"
+    category: simple
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/Dockerfile"
+    expected_answer_keywords: ["gunicorn"]
+    expected_citation_file: "datasets/dataset1/Dockerfile"
+
+  - id: qa-011
+    type: qa
+    query: "What JSON pipeline configuration parameters are specified?"
+    category: simple
+    file_type: config
+    folder_size: small
+    expected_file: "datasets/dataset9/pipeline.json"
+    expected_answer_keywords: ["pipeline", "config"]
+    expected_citation_file: "datasets/dataset9/pipeline.json"
+
+  - id: qa-012
+    type: qa
+    query: "What topics does the README describe about Project Alpha?"
+    category: simple
+    file_type: text
+    folder_size: small
+    expected_file: "datasets/dataset0/readme.txt"
+    expected_answer_keywords: ["NLP", "retrieval", "embedding"]
+    expected_citation_file: "datasets/dataset0/readme.txt"
+
+  - id: qa-013
+    type: qa
+    query: "What Rust crates are defined in the monorepo workspace?"
+    category: simple
+    file_type: code
+    folder_size: large
+    expected_file: "datasets/dataset17/Cargo.toml"
+    expected_answer_keywords: ["crates", "workspace", "members"]
+    expected_citation_file: "datasets/dataset17/Cargo.toml"
+
+  - id: qa-014
+    type: qa
+    query: "What modules are in the Rust core library?"
+    category: simple
+    file_type: code
+    folder_size: large
+    expected_file: "datasets/dataset17/crates/core/src/lib.rs"
+    expected_answer_keywords: ["embedder", "indexer", "parser"]
+    expected_citation_file: "datasets/dataset17/crates/core/src/lib.rs"
+
+  - id: qa-015
+    type: qa
+    query: "What does the dataset5 summary markdown table describe?"
+    category: simple
+    file_type: markdown
+    folder_size: small
+    expected_file: "datasets/dataset5/summary.md"
+    expected_answer_keywords: ["dataset", "file", "type"]
+    expected_citation_file: "datasets/dataset5/summary.md"
+
+  - id: qa-016
+    type: qa
+    query: "What scoring metrics appear in the relevance judgments file?"
+    category: simple
+    file_type: data
+    folder_size: small
+    expected_file: "datasets/dataset11/relevance_judgments.tsv"
+    expected_answer_keywords: ["relevance", "score"]
+    expected_citation_file: "datasets/dataset11/relevance_judgments.tsv"
+
+  - id: qa-017
+    type: qa
+    query: "What columns are in the server metrics CSV?"
+    category: simple
+    file_type: data
+    folder_size: small
+    expected_file: "datasets/dataset11/server_metrics.csv"
+    expected_answer_keywords: ["CPU", "memory", "requests"]
+    expected_citation_file: "datasets/dataset11/server_metrics.csv"
+
+  - id: qa-018
+    type: qa
+    query: "What index of academic papers is listed in the collection?"
+    category: simple
+    file_type: text
+    folder_size: small
+    expected_file: "datasets/dataset6/index.txt"
+    expected_answer_keywords: ["attention", "BERT", "word2vec"]
+    expected_citation_file: "datasets/dataset6/index.txt"
+
+  - id: qa-019
+    type: qa
+    query: "How many microservices are described in the architecture readme?"
+    category: simple
+    file_type: markdown
+    folder_size: large
+    expected_file: "datasets/dataset15/README.md"
+    expected_answer_keywords: ["8", "service", "microservice"]
+    expected_citation_file: "datasets/dataset15/README.md"
+
+  - id: qa-020
+    type: qa
+    query: "What is the stock prices dataset about?"
+    category: simple
+    file_type: data
+    folder_size: small
+    expected_file: "datasets/dataset11/stock_prices.csv"
+    expected_answer_keywords: ["stock", "price"]
+    expected_citation_file: "datasets/dataset11/stock_prices.csv"
+
+  # ======================================================================
+  # CATEGORY 3: MEDIUM QA  (~20 prompts)
+  # Questions requiring synthesis from a single or two chunks.
+  # ======================================================================
+
+  - id: mqa-001
+    type: qa
+    query: "Explain the hybrid retrieval approach used in the search engine, including both BM25 and vector components."
+    category: medium
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/search_engine.py"
+    expected_answer_keywords: ["BM25", "vector", "hybrid", "numpy", "embedding"]
+    expected_citation_file: "datasets/dataset1/search_engine.py"
+
+  - id: mqa-002
+    type: qa
+    query: "Describe the enterprise Java project's domain-driven design structure including the package hierarchy."
+    category: medium
+    file_type: code
+    folder_size: large
+    expected_file: "datasets/dataset13/README.md"
+    expected_answer_keywords: ["domain", "core", "api", "infrastructure", "application"]
+    expected_citation_file: "datasets/dataset13/README.md"
+
+  - id: mqa-003
+    type: qa
+    query: "Summarize the documentation portal's content structure and how it organizes concepts, guides, and tutorials."
+    category: medium
+    file_type: markdown
+    folder_size: large
+    expected_file: "datasets/dataset14/README.md"
+    expected_answer_keywords: ["concepts", "guides", "tutorials", "reference"]
+    expected_citation_file: "datasets/dataset14/README.md"
+
+  - id: mqa-004
+    type: qa
+    query: "What deployment configuration is used for the application? Describe both Docker and Kubernetes aspects."
+    category: medium
+    file_type: config
+    folder_size: small
+    expected_file: "datasets/dataset9/docker-compose.yml"
+    expected_answer_keywords: ["docker", "compose", "container"]
+    expected_citation_file: "datasets/dataset9/docker-compose.yml"
+
+  - id: mqa-005
+    type: qa
+    query: "Describe the system architecture documented in dataset10. What are the main components?"
+    category: medium
+    file_type: markdown
+    folder_size: small
+    expected_file: "datasets/dataset10/architecture.md"
+    expected_answer_keywords: ["architecture", "component", "system"]
+    expected_citation_file: "datasets/dataset10/architecture.md"
+
+  - id: mqa-006
+    type: qa
+    query: "Explain how the Rust monorepo is structured with its crate workspace and frontend integration."
+    category: medium
+    file_type: code
+    folder_size: large
+    expected_file: "datasets/dataset17/README.md"
+    expected_answer_keywords: ["crates", "workspace", "frontend", "services"]
+    expected_citation_file: "datasets/dataset17/README.md"
+
+  - id: mqa-007
+    type: qa
+    query: "What error patterns can be found in the application error log?"
+    category: medium
+    file_type: log
+    folder_size: small
+    expected_file: "datasets/dataset2/error.log"
+    expected_answer_keywords: ["error", "exception"]
+    expected_citation_file: "datasets/dataset2/error.log"
+
+  - id: mqa-008
+    type: qa
+    query: "How does the Linux filesystem simulation organize configuration files under /etc?"
+    category: medium
+    file_type: markdown
+    folder_size: large
+    expected_file: "datasets/dataset16/README.md"
+    expected_answer_keywords: ["etc", "nginx", "systemd", "conf"]
+    expected_citation_file: "datasets/dataset16/README.md"
+
+  - id: mqa-009
+    type: qa
+    query: "Describe the microservices architecture including the relationship between api-gateway, auth-service, and document-service."
+    category: medium
+    file_type: markdown
+    folder_size: large
+    expected_file: "datasets/dataset15/README.md"
+    expected_answer_keywords: ["gateway", "auth", "document", "service"]
+    expected_citation_file: "datasets/dataset15/README.md"
+
+  - id: mqa-010
+    type: qa
+    query: "What are the main technical terms in the glossary related to vector search and embeddings?"
+    category: medium
+    file_type: text
+    folder_size: small
+    expected_file: "datasets/dataset0/glossary.txt"
+    expected_answer_keywords: ["FAISS", "HNSW", "embedding", "vector", "cosine"]
+    expected_citation_file: "datasets/dataset0/glossary.txt"
+
+  - id: mqa-011
+    type: qa
+    query: "What troubleshooting steps are recommended when the system fails to start?"
+    category: medium
+    file_type: markdown
+    folder_size: small
+    expected_file: "datasets/dataset10/troubleshooting.md"
+    expected_answer_keywords: ["troubleshoot", "error", "fix"]
+    expected_citation_file: "datasets/dataset10/troubleshooting.md"
+
+  - id: mqa-012
+    type: qa
+    query: "What is the function of the text normalization step in the search pipeline utilities?"
+    category: medium
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/utils.py"
+    expected_answer_keywords: ["normalization", "text", "chunk"]
+    expected_citation_file: "datasets/dataset1/utils.py"
+
+  - id: mqa-013
+    type: qa
+    query: "Explain the overall ingestion workflow described in the dataset documentation."
+    category: medium
+    file_type: markdown
+    folder_size: large
+    expected_file: "datasets/dataset14/README.md"
+    expected_answer_keywords: ["ingestion", "parse", "chunk", "embed"]
+
+  - id: mqa-014
+    type: qa
+    query: "How does the team directory organize personnel information?"
+    category: medium
+    file_type: data
+    folder_size: small
+    expected_file: "datasets/dataset11/team_directory.json"
+    expected_answer_keywords: ["team", "name", "role"]
+    expected_citation_file: "datasets/dataset11/team_directory.json"
+
+  - id: mqa-015
+    type: qa
+    query: "What infrastructure components are defined in the Kubernetes deployment manifests?"
+    category: medium
+    file_type: config
+    folder_size: large
+    expected_file: "datasets/dataset15/README.md"
+    expected_answer_keywords: ["kubernetes", "deployment", "service"]
+
+  - id: mqa-016
+    type: qa
+    query: "What configuration options are available in the TOML application config?"
+    category: medium
+    file_type: config
+    folder_size: small
+    expected_file: "datasets/dataset9/app_config.toml"
+    expected_answer_keywords: ["config", "setting"]
+    expected_citation_file: "datasets/dataset9/app_config.toml"
+
+  - id: mqa-017
+    type: qa
+    query: "What testing patterns are used in the enterprise Java project?"
+    category: medium
+    file_type: code
+    folder_size: large
+    expected_file: "datasets/dataset13/README.md"
+    expected_answer_keywords: ["test", "unit", "integration"]
+
+  - id: mqa-018
+    type: qa
+    query: "What does the batch indexing tutorial explain about processing large collections?"
+    category: medium
+    file_type: markdown
+    folder_size: large
+    expected_file: "datasets/dataset14/docs/Tutorials/intermediate/batch-indexing.md"
+    expected_answer_keywords: ["batch", "index", "process"]
+
+  - id: mqa-019
+    type: qa
+    query: "What are the main server error codes logged in the access log?"
+    category: medium
+    file_type: log
+    folder_size: small
+    expected_file: "datasets/dataset2/access.log"
+    expected_answer_keywords: ["200", "404", "500", "GET", "POST"]
+    expected_citation_file: "datasets/dataset2/access.log"
+
+  - id: mqa-020
+    type: qa
+    query: "How does the evaluation pipeline tutorial describe measuring retrieval quality?"
+    category: medium
+    file_type: markdown
+    folder_size: large
+    expected_file: "datasets/dataset14/docs/Tutorials/intermediate/evaluation-pipeline.md"
+    expected_answer_keywords: ["evaluation", "retrieval", "quality", "metric"]
+
+  # ======================================================================
+  # CATEGORY 4: COMPARATIVE  (~15 prompts)
+  # Questions requiring information from multiple files.
+  # ======================================================================
+
+  - id: cmp-001
+    type: comparative
+    query: "Compare the Flask app.py routes with the search_engine.py implementation. How do they connect?"
+    category: comparative
+    file_type: code
+    folder_size: small
+    expected_files:
+      - "datasets/dataset1/app.py"
+      - "datasets/dataset1/search_engine.py"
+    expected_answer_keywords: ["Flask", "route", "search", "BM25", "vector"]
+
+  - id: cmp-002
+    type: comparative
+    query: "Compare the YAML and TOML configuration formats used in the config dataset."
+    category: comparative
+    file_type: config
+    folder_size: small
+    expected_files:
+      - "datasets/dataset9/database.yaml"
+      - "datasets/dataset9/app_config.toml"
+    expected_answer_keywords: ["YAML", "TOML", "config"]
+
+  - id: cmp-003
+    type: comparative
+    query: "What is the difference between the access log and error log contents?"
+    category: comparative
+    file_type: log
+    folder_size: small
+    expected_files:
+      - "datasets/dataset2/access.log"
+      - "datasets/dataset2/error.log"
+    expected_answer_keywords: ["access", "error", "log", "HTTP"]
+
+  - id: cmp-004
+    type: comparative
+    query: "Compare the architecture documentation with the deployment guide. How do they relate?"
+    category: comparative
+    file_type: markdown
+    folder_size: small
+    expected_files:
+      - "datasets/dataset10/architecture.md"
+      - "datasets/dataset10/deployment.md"
+    expected_answer_keywords: ["architecture", "deployment", "system"]
+
+  - id: cmp-005
+    type: comparative
+    query: "Compare how the glossary defines RAG versus how the readme describes the project's NLP approach."
+    category: comparative
+    file_type: text
+    folder_size: small
+    expected_files:
+      - "datasets/dataset0/glossary.txt"
+      - "datasets/dataset0/readme.txt"
+    expected_answer_keywords: ["RAG", "NLP", "retrieval", "embedding"]
+
+  - id: cmp-006
+    type: comparative
+    query: "Compare the Docker compose configuration with the legacy INI settings. What different aspects do they configure?"
+    category: comparative
+    file_type: config
+    folder_size: small
+    expected_files:
+      - "datasets/dataset9/docker-compose.yml"
+      - "datasets/dataset9/legacy_settings.ini"
+    expected_answer_keywords: ["docker", "container", "settings", "legacy"]
+
+  - id: cmp-007
+    type: comparative
+    query: "How do the server metrics CSV and stock prices CSV differ in structure and data types?"
+    category: comparative
+    file_type: data
+    folder_size: small
+    expected_files:
+      - "datasets/dataset11/server_metrics.csv"
+      - "datasets/dataset11/stock_prices.csv"
+    expected_answer_keywords: ["CSV", "metric", "stock", "timestamp"]
+
+  - id: cmp-008
+    type: comparative
+    query: "Compare the getting started guide and the FAQ. What common topics do they cover?"
+    category: comparative
+    file_type: markdown
+    folder_size: small
+    expected_files:
+      - "datasets/dataset10/getting-started.md"
+      - "datasets/dataset10/faq.md"
+    expected_answer_keywords: ["getting started", "FAQ", "setup"]
+
+  - id: cmp-009
+    type: comparative
+    query: "How does the Rust monorepo's Cargo.toml workspace setup compare to the Java project's pom.xml?"
+    category: comparative
+    file_type: code
+    folder_size: large
+    expected_files:
+      - "datasets/dataset17/Cargo.toml"
+      - "datasets/dataset13/pom.xml"
+    expected_answer_keywords: ["workspace", "crates", "Maven", "Spring"]
+
+  - id: cmp-010
+    type: comparative
+    query: "Compare the two literary classics: what are the opening themes of Moby Dick versus Pride and Prejudice?"
+    category: comparative
+    file_type: text
+    folder_size: medium
+    expected_files:
+      - "datasets/dataset8/moby_dick.txt"
+      - "datasets/dataset8/pride_and_prejudice.txt"
+    expected_answer_keywords: ["Ishmael", "truth", "universally"]
+
+  - id: cmp-011
+    type: comparative
+    query: "Compare the microservices README with the enterprise Java README. How do their architectures differ?"
+    category: comparative
+    file_type: markdown
+    folder_size: large
+    expected_files:
+      - "datasets/dataset15/README.md"
+      - "datasets/dataset13/README.md"
+    expected_answer_keywords: ["microservice", "enterprise", "service", "domain"]
+
+  - id: cmp-012
+    type: comparative
+    query: "How is the Dockerfile related to the requirements.txt in the search application?"
+    category: comparative
+    file_type: code
+    folder_size: small
+    expected_files:
+      - "datasets/dataset1/Dockerfile"
+      - "datasets/dataset1/requirements.txt"
+    expected_answer_keywords: ["Docker", "requirements", "pip", "install"]
+
+  - id: cmp-013
+    type: comparative
+    query: "Compare the XML deployment config with the YAML database config. What different systems do they target?"
+    category: comparative
+    file_type: config
+    folder_size: small
+    expected_files:
+      - "datasets/dataset9/deployment.xml"
+      - "datasets/dataset9/database.yaml"
+    expected_answer_keywords: ["XML", "YAML", "deployment", "database"]
+
+  - id: cmp-014
+    type: comparative
+    query: "Compare the Makefile in the Rust monorepo with the Makefile in dataset7's Python project."
+    category: comparative
+    file_type: code
+    folder_size: large
+    expected_files:
+      - "datasets/dataset17/Makefile"
+      - "datasets/dataset7/Makefile"
+    expected_answer_keywords: ["make", "build", "target"]
+
+  - id: cmp-015
+    type: comparative
+    query: "Compare troubleshooting steps with deployment instructions. What failures does each address?"
+    category: comparative
+    file_type: markdown
+    folder_size: small
+    expected_files:
+      - "datasets/dataset10/troubleshooting.md"
+      - "datasets/dataset10/deployment.md"
+    expected_answer_keywords: ["troubleshoot", "deploy", "error", "fix"]
+
+  # ======================================================================
+  # CATEGORY 5: CODE UNDERSTANDING  (~10 prompts)
+  # Deeper questions about code logic and structure.
+  # ======================================================================
+
+  - id: cu-001
+    type: qa
+    query: "Explain the search ranking algorithm in search_engine.py. How are BM25 scores combined with vector similarity?"
+    category: code_understanding
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/search_engine.py"
+    expected_answer_keywords: ["BM25", "vector", "score", "rank", "hybrid"]
+    expected_citation_file: "datasets/dataset1/search_engine.py"
+
+  - id: cu-002
+    type: qa
+    query: "What design patterns are used in the Flask app's route handler implementation?"
+    category: code_understanding
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/app.py"
+    expected_answer_keywords: ["route", "decorator", "Flask", "API"]
+    expected_citation_file: "datasets/dataset1/app.py"
+
+  - id: cu-003
+    type: qa
+    query: "How does the text chunking function handle edge cases like very short or empty text?"
+    category: code_understanding
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/utils.py"
+    expected_answer_keywords: ["chunk", "text", "size", "overlap"]
+    expected_citation_file: "datasets/dataset1/utils.py"
+
+  - id: cu-004
+    type: qa
+    query: "What is the purpose of the core domain layer versus the application layer in the enterprise Java project?"
+    category: code_understanding
+    file_type: code
+    folder_size: large
+    expected_file: "datasets/dataset13/README.md"
+    expected_answer_keywords: ["domain", "entity", "application", "service", "command", "query"]
+    expected_citation_file: "datasets/dataset13/README.md"
+
+  - id: cu-005
+    type: qa
+    query: "How does the Rust indexer module process documents for embedding generation?"
+    category: code_understanding
+    file_type: code
+    folder_size: large
+    expected_file: "datasets/dataset17/crates/core/src/indexer.rs"
+    expected_answer_keywords: ["index", "document", "embed"]
+    expected_citation_file: "datasets/dataset17/crates/core/src/indexer.rs"
+
+  - id: cu-006
+    type: qa
+    query: "What CSS styling approach is used in the search frontend?"
+    category: code_understanding
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/styles.css"
+    expected_answer_keywords: ["style", "CSS", "layout"]
+    expected_citation_file: "datasets/dataset1/styles.css"
+
+  - id: cu-007
+    type: qa
+    query: "How is the HTML search form structured in the frontend index page?"
+    category: code_understanding
+    file_type: code
+    folder_size: small
+    expected_file: "datasets/dataset1/index.html"
+    expected_answer_keywords: ["form", "input", "search", "HTML"]
+    expected_citation_file: "datasets/dataset1/index.html"
+
+  - id: cu-008
+    type: qa
+    query: "What TypeScript components are defined in the Rust monorepo's frontend?"
+    category: code_understanding
+    file_type: code
+    folder_size: large
+    expected_file: "datasets/dataset17/frontend/src/App.tsx"
+    expected_answer_keywords: ["App", "component", "React"]
+    expected_citation_file: "datasets/dataset17/frontend/src/App.tsx"
+
+  - id: cu-009
+    type: qa
+    query: "How is the Docusaurus sidebar configuration structured?"
+    category: code_understanding
+    file_type: code
+    folder_size: large
+    expected_file: "datasets/dataset14/sidebar.json"
+    expected_answer_keywords: ["sidebar", "items", "category"]
+    expected_citation_file: "datasets/dataset14/sidebar.json"
+
+  - id: cu-010
+    type: qa
+    query: "What GraphQL resolvers and types are defined in the enterprise Java API?"
+    category: code_understanding
+    file_type: code
+    folder_size: large
+    expected_file: "datasets/dataset13/README.md"
+    expected_answer_keywords: ["GraphQL", "resolver", "type", "query"]
+
+  # ======================================================================
+  # CATEGORY 6: IMAGE / OCR  (~10 prompts)
+  # Questions requiring OCR or image-related content.
+  # ======================================================================
+
+  - id: ocr-001
+    type: qa
+    query: "What file types and sizes are present in the mixed images dataset?"
+    category: image_ocr
+    file_type: image
+    folder_size: small
+    expected_file: "datasets/dataset4/README.txt"
+    expected_answer_keywords: ["image", "OCR", "jpg", "png"]
+    expected_citation_file: "datasets/dataset4/README.txt"
+
+  - id: ocr-002
+    type: qa
+    query: "What is the purpose of the document scan image in the test collection?"
+    category: image_ocr
+    file_type: image
+    folder_size: small
+    expected_file: "datasets/dataset4/README.txt"
+    expected_answer_keywords: ["document", "scan", "OCR"]
+
+  - id: ocr-003
+    type: qa
+    query: "What does the dataset5 notes file say about checking OCR?"
+    category: image_ocr
+    file_type: text
+    folder_size: small
+    expected_file: "datasets/dataset5/notes.txt"
+    expected_answer_keywords: ["OCR", "pipeline", "check"]
+    expected_citation_file: "datasets/dataset5/notes.txt"
+
+  - id: ocr-004
+    type: file_retrieval
+    query: "Find the document scan image for OCR testing"
+    category: image_ocr
+    file_type: image
+    folder_size: small
+    expected_file: "datasets/dataset4/document_scan.jpg"
+
+  - id: ocr-005
+    type: file_retrieval
+    query: "Find the test photo used for OCR in the smoke test dataset"
+    category: image_ocr
+    file_type: image
+    folder_size: small
+    expected_file: "datasets/dataset5/photo.jpg"
+
+  - id: ocr-006
+    type: qa
+    query: "What does the shipping cargo manifest FAQ PDF cover?"
+    category: image_ocr
+    file_type: pdf
+    folder_size: small
+    expected_file: "datasets/dataset4/FAQ_Sea_Cargo_Manifest_and_Transhipment_Regulations_2.0 (1) (1).pdf"
+    expected_answer_keywords: ["cargo", "manifest", "shipping", "regulation"]
+
+  - id: ocr-007
+    type: qa
+    query: "Describe the contents of the NIST cybersecurity framework PDF."
+    category: image_ocr
+    file_type: pdf
+    folder_size: medium
+    expected_file: "datasets/dataset3/nist_cybersecurity_framework.pdf"
+    expected_answer_keywords: ["NIST", "cybersecurity", "framework", "security"]
+    expected_citation_file: "datasets/dataset3/nist_cybersecurity_framework.pdf"
+
+  - id: ocr-008
+    type: qa
+    query: "What is described in the deep learning Nature review paper?"
+    category: image_ocr
+    file_type: pdf
+    folder_size: medium
+    expected_file: "datasets/dataset3/deep_learning_nature.pdf"
+    expected_answer_keywords: ["deep", "learning", "neural", "network"]
+    expected_citation_file: "datasets/dataset3/deep_learning_nature.pdf"
+
+  - id: ocr-009
+    type: qa
+    query: "What rights are declared in the Universal Declaration of Human Rights PDF?"
+    category: image_ocr
+    file_type: pdf
+    folder_size: medium
+    expected_file: "datasets/dataset3/un_declaration_human_rights.pdf"
+    expected_answer_keywords: ["human", "rights", "declaration", "freedom"]
+    expected_citation_file: "datasets/dataset3/un_declaration_human_rights.pdf"
+
+  - id: ocr-010
+    type: qa
+    query: "What is the dataset summary for the mixed format smoke test?"
+    category: image_ocr
+    file_type: markdown
+    folder_size: small
+    expected_file: "datasets/dataset5/summary.md"
+    expected_answer_keywords: ["dataset", "file", "test"]
+    expected_citation_file: "datasets/dataset5/summary.md"

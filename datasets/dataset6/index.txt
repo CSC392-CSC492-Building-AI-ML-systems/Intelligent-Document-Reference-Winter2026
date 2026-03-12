@@ -1,0 +1,7 @@
+Academic Papers Index
+=====================
+1. Attention Is All You Need (Vaswani et al., 2017) – Transformer architecture
+2. BERT (Devlin et al., 2019) – Bidirectional encoder representations
+3. GPT-2 (Radford et al., 2019) – Language models as unsupervised learners
+4. ResNet (He et al., 2015) – Deep residual learning for image recognition
+5. Word2Vec (Mikolov et al., 2013) – Efficient word vector estimation

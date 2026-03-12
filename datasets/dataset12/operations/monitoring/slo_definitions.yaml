@@ -1,0 +1,19 @@
+# slo_definitions.yaml
+version: "1.0"
+metadata:
+  name: slo_definitions
+  environment: production
+  last_updated: "2025-11-01"
+
+settings:
+  enabled: true
+  interval: 60s
+  retention: 30d
+
+targets:
+  - name: api
+    endpoint: /health
+    timeout: 5s
+  - name: worker
+    endpoint: /status
+    timeout: 10s

@@ -1,0 +1,64 @@
+{
+  "pipeline": {
+    "name": "document-ingestion-v2",
+    "version": "2.1.0",
+    "stages": [
+      {
+        "name": "parse",
+        "type": "parser",
+        "config": {
+          "formats": [
+            "pdf",
+            "docx",
+            "txt",
+            "html",
+            "md"
+          ]
+        }
+      },
+      {
+        "name": "clean",
+        "type": "preprocessor",
+        "config": {
+          "remove_boilerplate": true,
+          "normalize_unicode": true
+        }
+      },
+      {
+        "name": "chunk",
+        "type": "chunker",
+        "config": {
+          "strategy": "semantic",
+          "max_tokens": 512,
+          "overlap": 64
+        }
+      },
+      {
+        "name": "embed",
+        "type": "embedder",
+        "config": {
+          "model": "voyage-3",
+          "batch_size": 32,
+          "dimension": 1024
+        }
+      },
+      {
+        "name": "index",
+        "type": "indexer",
+        "config": {
+          "backend": "sqlite-vec",
+          "distance": "cosine"
+        }
+      }
+    ],
+    "error_handling": {
+      "retry_count": 3,
+      "retry_delay": 5,
+      "dead_letter_queue": true
+    },
+    "monitoring": {
+      "metrics_enabled": true,
+      "log_level": "INFO"
+    }
+  }
+}

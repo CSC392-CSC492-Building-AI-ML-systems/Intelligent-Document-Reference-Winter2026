@@ -1,0 +1,30 @@
+databases:
+  primary:
+    host: db-primary.internal
+    port: 5432
+    name: documents
+    pool:
+      min_size: 5
+      max_size: 20
+      timeout: 30
+    ssl:
+      enabled: true
+      ca_cert: /etc/ssl/certs/db-ca.pem
+
+  replica:
+    host: db-replica.internal
+    port: 5432
+    name: documents
+    pool:
+      min_size: 2
+      max_size: 10
+
+  cache:
+    host: redis.internal
+    port: 6379
+    db: 0
+    ttl: 3600
+
+migrations:
+  directory: ./db/migrations
+  auto_migrate: false

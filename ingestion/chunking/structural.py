@@ -99,11 +99,12 @@ def structural_chunk_document(
         page = block.metadata.page_number
         bt = estimate_tokens(content)
 
+        # Prepend overlap context from previous chunk without affecting offsets.
+        # overlap_tail is duplicate text already counted in doc_offset, so we
+        # must NOT advance doc_offset or change chunk_start for it.
         if overlap_tail:
-            acc = [overlap_tail]
-            acc_tokens = estimate_tokens(overlap_tail)
-            chunk_start = doc_offset
-            doc_offset += len(overlap_tail) + 2
+            acc = [overlap_tail] + acc
+            acc_tokens += estimate_tokens(overlap_tail)
             overlap_tail = ""
 
         if block.block_type == BlockType.HEADING and acc and acc_tokens >= min_tokens:
@@ -121,6 +122,7 @@ def structural_chunk_document(
                 )
                 acc = []
                 acc_tokens = 0
+                chunk_start = doc_offset
             for para in content.split("\n\n"):
                 pt = estimate_tokens(para)
                 if acc_tokens + pt <= max_tokens:
@@ -132,9 +134,9 @@ def structural_chunk_document(
                         overlap_tail = flush(
                             text, chunk_start, doc_offset, section, page
                         )
+                        chunk_start = doc_offset
                     acc = [para]
                     acc_tokens = pt
-                    chunk_start = doc_offset
                 doc_offset += len(para) + 2
             last_section = section
             last_page = page
@@ -152,6 +154,11 @@ def structural_chunk_document(
         doc_offset += len(content) + 2
         last_section = section
         last_page = page
+
+    # Prepend any remaining overlap context before the final flush
+    if overlap_tail:
+        acc = [overlap_tail] + acc
+        overlap_tail = ""
 
     if acc:
         text = "\n\n".join(acc)

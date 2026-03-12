@@ -1,0 +1,22 @@
+{
+  "guides": [
+    "getting-started",
+    "advanced",
+    "integrations"
+  ],
+  "reference": [
+    "api",
+    "cli",
+    "sdk"
+  ],
+  "concepts": [
+    "architecture",
+    "retrieval",
+    "ingestion"
+  ],
+  "tutorials": [
+    "beginner",
+    "intermediate",
+    "advanced"
+  ]
+}

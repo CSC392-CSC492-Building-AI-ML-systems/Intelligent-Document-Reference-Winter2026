@@ -2,12 +2,17 @@
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING, Optional, Union
 
 if TYPE_CHECKING:
     from PIL import Image
 
 from ingestion.ocr import OCRProvider, OCRResult
+
+logger = logging.getLogger(__name__)
+
+_tesseract_warned = False
 
 
 class TesseractOCRProvider(OCRProvider):
@@ -46,10 +51,28 @@ class TesseractOCRProvider(OCRProvider):
         else:
             pil_image = image
 
-        text = pytesseract.image_to_string(pil_image, lang=self._lang)
-        data = pytesseract.image_to_data(
-            pil_image, lang=self._lang, output_type=pytesseract.Output.DICT
-        )
+        try:
+            text = pytesseract.image_to_string(pil_image, lang=self._lang)
+        except pytesseract.TesseractNotFoundError:
+            global _tesseract_warned
+            if not _tesseract_warned:
+                logger.warning(
+                    "Tesseract binary not found — skipping OCR for image files. "
+                    "Install Tesseract to enable OCR: https://github.com/tesseract-ocr/tesseract"
+                )
+                _tesseract_warned = True
+            return OCRResult(
+                text="",
+                confidence=0.0,
+                source_location=source_location,
+                extraction_method="ocr",
+            )
+        try:
+            data = pytesseract.image_to_data(
+                pil_image, lang=self._lang, output_type=pytesseract.Output.DICT
+            )
+        except Exception:
+            data = {}
 
         confidence: Optional[float] = None
         confs = [int(c) for c in data.get("conf", []) if c != "-1"]

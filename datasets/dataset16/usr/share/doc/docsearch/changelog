@@ -1,0 +1,8 @@
+document-search (1.0.0) stable; urgency=low
+
+  * Initial release
+  * PDF, DOCX, TXT, MD ingestion
+  * Vector search with sqlite-vec
+  * REST API and web UI
+
+ -- Dev Team <dev@example.com>  Mon, 01 Nov 2025 12:00:00 +0000

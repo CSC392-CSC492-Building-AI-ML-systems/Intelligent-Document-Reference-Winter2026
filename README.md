@@ -19,6 +19,15 @@ This will:
 - Build the frontend
 - Launch the web UI
 
+
+For Benchmarking
+
+```bash
+python app.py --benchmark                          # run with defaults
+python app.py --benchmark --skip-indexing           # skip re-indexing
+python app.py --benchmark --benchmark-config my.yaml --no-graphs
+python app.py --benchmark --benchmark-runs 1 --benchmark-output results/
+```
 ### Option 2: Manual Setup
 
 If you prefer to set up manually, see the [Installation](#installation) section below.

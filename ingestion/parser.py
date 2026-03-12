@@ -369,12 +369,18 @@ def _pdf_block_type(_blk: dict) -> BlockType:
 def _extract_blocks_from_page(
     page: Any, page_num: int
 ) -> tuple[int, list[ContentBlock]]:
+    """Extract text and image blocks from a PDF page, sorted by reading order (y, x)."""
     blocks: list[ContentBlock] = []
     try:
         text_dict = page.get_text("dict", sort=True)
     except Exception:
         return (page_num, blocks)
+
+    # --- text blocks ---
     for blk in text_dict.get("blocks", []):
+        if blk.get("type", 0) == 1:
+            # Image block reported by PyMuPDF "dict" mode – handled below
+            continue
         lines = [
             "".join(s.get("text", "") for s in line.get("spans", []))
             for line in blk.get("lines", [])
@@ -395,6 +401,69 @@ def _extract_blocks_from_page(
                 ),
             )
         )
+
+    # --- embedded image blocks ---
+    try:
+        images = page.get_images(full=True)
+    except Exception:
+        images = []
+
+    doc = page.parent
+    for img_info in images:
+        xref = img_info[0]
+        try:
+            img_rects = page.get_image_rects(xref)
+            bbox_rect = img_rects[0] if img_rects else None
+        except Exception:
+            bbox_rect = None
+
+        bbox_tuple = None
+        if bbox_rect is not None:
+            try:
+                bbox_tuple = (
+                    float(bbox_rect.x0),
+                    float(bbox_rect.y0),
+                    float(bbox_rect.x1),
+                    float(bbox_rect.y1),
+                )
+            except Exception:
+                pass
+
+        # Extract raw image bytes
+        try:
+            img_data = doc.extract_image(xref)
+            img_bytes = img_data.get("image", b"") if img_data else b""
+        except Exception:
+            img_bytes = b""
+
+        if not img_bytes:
+            continue
+
+        # Store a placeholder block; actual OCR/VLM runs later in PDFInput.parse()
+        blocks.append(
+            ContentBlock(
+                content="",  # filled in by OCR/VLM pass
+                block_type=BlockType.IMAGE_TEXT,
+                source_modality=SourceModality.PDF,
+                metadata=BlockMetadata(
+                    page_number=page_num,
+                    bbox=bbox_tuple,
+                    image_id=f"page{page_num}_xref{xref}",
+                    extraction_method=ExtractionMethod.NATIVE,  # updated after OCR/VLM
+                ),
+            )
+        )
+        # Stash raw bytes on the block object so parse() can process them
+        blocks[-1]._image_bytes = img_bytes  # type: ignore[attr-defined]
+
+    # Sort all blocks by top-left position for reading order (y, then x)
+    def _sort_key(b: ContentBlock) -> tuple[float, float]:
+        bb = b.metadata.bbox
+        if bb and len(bb) >= 4:
+            return (bb[1], bb[0])
+        return (0.0, 0.0)
+
+    blocks.sort(key=_sort_key)
     return (page_num, blocks)
 
 
@@ -415,6 +484,8 @@ class PDFInput(InputDocument):
         src = InputDocument._resolve_source(source)
         ocr_enabled = config and getattr(config, "ocr_enabled", False)
         max_workers = getattr(config, "max_workers", 4) if config else 4
+        use_vision = config and getattr(config, "use_vision_for_images", True)
+        has_describe = llm_client and getattr(llm_client, "describe_image", None)
         doc = (
             fitz.open(str(src.path))
             if src.path
@@ -426,13 +497,21 @@ class PDFInput(InputDocument):
             for i, page in enumerate(doc):
                 page_num = i + 1
                 _, block_list = _extract_blocks_from_page(page, page_num)
-                native_len = sum(len(b.content) for b in block_list)
+                native_len = sum(
+                    len(b.content)
+                    for b in block_list
+                    if b.block_type != BlockType.IMAGE_TEXT
+                )
                 if ocr_enabled and ocr_provider and native_len < 50:
+                    # Page has almost no native text — OCR the whole page
                     pix = page.get_pixmap(dpi=150)
                     pages_to_ocr.append((page_num, pix.tobytes("png")))
+                    # Drop image placeholders for this page; the whole page is OCRed
                     page_results[page_num] = []
                 else:
                     page_results[page_num] = block_list
+
+            # --- Whole-page OCR for text-sparse pages ---
             if pages_to_ocr and ocr_provider:
 
                 def ocr_one(item: tuple[int, bytes]) -> tuple[int, list[ContentBlock]]:
@@ -463,9 +542,62 @@ class PDFInput(InputDocument):
                     ):
                         pnum, blks = fut.result()
                         page_results[pnum] = blks
-            blocks = []
+
+            # --- Embedded image OCR/VLM for pages with native text ---
+            blocks: list[ContentBlock] = []
             for pnum in sorted(page_results.keys()):
-                blocks.extend(page_results[pnum])
+                for blk in page_results[pnum]:
+                    img_bytes = getattr(blk, "_image_bytes", None)
+                    if blk.block_type == BlockType.IMAGE_TEXT and img_bytes:
+                        text = None
+                        # Try VLM first
+                        if use_vision and has_describe and callable(has_describe):
+                            try:
+                                text = llm_client.describe_image(img_bytes)
+                            except Exception as e:
+                                logger.debug(
+                                    "VLM describe_image failed for %s: %s",
+                                    blk.metadata.image_id,
+                                    e,
+                                )
+                        # Fall back to OCR
+                        if not text and ocr_enabled and ocr_provider:
+                            try:
+                                r = ocr_provider.extract_text(
+                                    img_bytes,
+                                    source_location=blk.metadata.image_id,
+                                )
+                                text = r.text.strip() if r.text else None
+                            except Exception as e:
+                                logger.debug(
+                                    "OCR failed for %s: %s",
+                                    blk.metadata.image_id,
+                                    e,
+                                )
+                        if text:
+                            method = (
+                                ExtractionMethod.LLM_ASSISTED
+                                if use_vision and has_describe
+                                else ExtractionMethod.OCR
+                            )
+                            blocks.append(
+                                ContentBlock(
+                                    content=text,
+                                    block_type=BlockType.IMAGE_TEXT,
+                                    source_modality=SourceModality.PDF,
+                                    metadata=BlockMetadata(
+                                        page_number=blk.metadata.page_number,
+                                        bbox=blk.metadata.bbox,
+                                        image_id=blk.metadata.image_id,
+                                        extraction_method=method,
+                                    ),
+                                )
+                            )
+                        # Skip images that produced no text
+                    else:
+                        if blk.content:
+                            blocks.append(blk)
+
             min_chars = getattr(config, "pdf_min_block_chars", 500) if config else 500
             max_chars = getattr(config, "pdf_max_block_chars", 2500) if config else 2500
             blocks = _merge_small_pdf_blocks(blocks, min_chars, max_chars)

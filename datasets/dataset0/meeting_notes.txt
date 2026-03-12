@@ -1,0 +1,17 @@
+Meeting Notes – 2025-12-01
+Attendees: Alice, Bob, Charlie, Diana
+
+1. Status Update
+   - Ingestion pipeline v2 is feature-complete
+   - Embedding quality improved after switching to voyage-3
+   - OCR module needs more testing with scanned documents
+
+2. Action Items
+   - Alice: benchmark retrieval on dataset3 by Friday
+   - Bob: integrate new chunking strategy
+   - Charlie: set up CI for nightly evaluation runs
+   - Diana: prepare demo for stakeholder review
+
+3. Open Questions
+   - Should we support XLSX ingestion in v2.1?
+   - How do we handle duplicate documents across datasets?

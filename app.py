@@ -240,6 +240,49 @@ def setup_environment():
     print("=" * 60)
 
 
+def _run_benchmark(args) -> None:
+    """Load benchmark config, bootstrap the app, and run the evaluation suite."""
+    import asyncio
+
+    import yaml
+
+    from benchmarks.models import BenchmarkConfig
+    from benchmarks.runner import BenchmarkRunner
+    from core.bootstrap import bootstrap
+
+    config_path = args.benchmark_config or str(
+        Path(__file__).parent / "benchmarks" / "default_benchmark.yaml"
+    )
+
+    with open(config_path, "r", encoding="utf-8") as f:
+        raw = yaml.safe_load(f)
+
+    config = BenchmarkConfig.from_dict(raw)
+
+    # CLI overrides
+    if args.benchmark_dataset:
+        config.dataset_path = args.benchmark_dataset
+    if args.benchmark_output:
+        config.output_dir = args.benchmark_output
+    if args.benchmark_runs is not None:
+        config.runs_per_query = args.benchmark_runs
+    if args.no_graphs:
+        config.no_graphs = True
+    if args.skip_indexing:
+        config.skip_indexing = True
+
+    print(f"Benchmarking with {len(config.prompts)} prompts from {config_path}")
+    print(f"  Dataset:   {config.dataset_path}")
+    print(f"  Output:    {config.output_dir}")
+    print(f"  Runs/query:{config.runs_per_query}")
+    print(f"  Skip idx:  {config.skip_indexing}")
+    print()
+
+    ctx = bootstrap()
+    runner = BenchmarkRunner(config, ctx)
+    asyncio.run(runner.run())
+
+
 def main():
     parser = argparse.ArgumentParser(description="Local RAG Application")
     parser.add_argument(
@@ -267,6 +310,45 @@ def main():
         action="store_true",
         help="Development mode: run backend with hot-reload and frontend dev server (backend on --port, UI on 5173)",
     )
+    parser.add_argument(
+        "--benchmark",
+        action="store_true",
+        help="Run the benchmark evaluation suite (bypasses all UI).",
+    )
+    parser.add_argument(
+        "--benchmark-config",
+        type=str,
+        default=None,
+        help="Path to benchmark YAML config (default: benchmarks/default_benchmark.yaml).",
+    )
+    parser.add_argument(
+        "--benchmark-dataset",
+        type=str,
+        default=None,
+        help="Override the dataset path in the benchmark config.",
+    )
+    parser.add_argument(
+        "--benchmark-output",
+        type=str,
+        default=None,
+        help="Override the output directory for benchmark results.",
+    )
+    parser.add_argument(
+        "--benchmark-runs",
+        type=int,
+        default=None,
+        help="Override the number of runs per query.",
+    )
+    parser.add_argument(
+        "--no-graphs",
+        action="store_true",
+        help="Skip graph generation during benchmarking.",
+    )
+    parser.add_argument(
+        "--skip-indexing",
+        action="store_true",
+        help="Skip dataset indexing and run queries against existing index.",
+    )
 
     args = parser.parse_args()
 
@@ -278,6 +360,10 @@ def main():
 
     if args.dev:
         _run_dev_mode(host=args.host, port=args.port)
+        return
+
+    if args.benchmark:
+        _run_benchmark(args)
         return
 
     if args.webui:

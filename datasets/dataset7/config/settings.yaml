@@ -1,0 +1,18 @@
+app:
+  name: document-search
+  version: 1.0.0
+  debug: false
+
+database:
+  path: ./data/index.db
+  pool_size: 5
+
+embedding:
+  model: voyage-3
+  dimension: 1024
+  batch_size: 32
+
+retrieval:
+  top_k: 10
+  similarity_threshold: 0.7
+  rerank: true

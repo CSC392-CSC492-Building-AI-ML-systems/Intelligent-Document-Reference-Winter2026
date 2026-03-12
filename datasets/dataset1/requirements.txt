@@ -1,0 +1,4 @@
+flask==3.0.0
+numpy>=1.24
+uvicorn
+gunicorn

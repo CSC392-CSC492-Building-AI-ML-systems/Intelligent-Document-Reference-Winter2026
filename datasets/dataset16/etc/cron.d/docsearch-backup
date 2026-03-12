@@ -1,0 +1,1 @@
+0 2 * * * root /opt/docsearch/scripts/backup.sh

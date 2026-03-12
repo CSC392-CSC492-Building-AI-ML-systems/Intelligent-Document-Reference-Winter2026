@@ -1,0 +1,6 @@
+Quick Notes
+===========
+- Review the sample PDF for formatting quality
+- Check if OCR correctly extracts the photo caption
+- Update the pipeline configuration for this mixed dataset
+- Run evaluation benchmarks against this folder

@@ -1,0 +1,19 @@
+type Search {
+    id: ID!
+    name: String!
+    content: String
+    metadata: JSON
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+type SearchConnection {
+    edges: [SearchEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type SearchEdge {
+    node: Search!
+    cursor: String!
+}

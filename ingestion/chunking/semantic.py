@@ -29,6 +29,66 @@ class CandidateChunk:
     end_offset: int
 
 
+def _split_large_text(text: str, max_chars: int) -> List[str]:
+    """Split text exceeding *max_chars* into smaller segments.
+
+    Prefers paragraph boundaries (``\\n\\n``), then sentence boundaries,
+    then hard-splits at *max_chars* as a last resort.
+    """
+    if len(text) <= max_chars:
+        return [text]
+
+    # 1. Split at paragraph boundaries
+    paragraphs = text.split("\n\n")
+    segments: List[str] = []
+    current: List[str] = []
+    current_len = 0
+
+    for para in paragraphs:
+        added_len = len(para) + (2 if current else 0)
+        if current_len + added_len > max_chars and current:
+            segments.append("\n\n".join(current))
+            current = [para]
+            current_len = len(para)
+        else:
+            current.append(para)
+            current_len += added_len
+    if current:
+        segments.append("\n\n".join(current))
+
+    # 2. Split oversized segments at sentence boundaries
+    refined: List[str] = []
+    for seg in segments:
+        if len(seg) <= max_chars:
+            refined.append(seg)
+            continue
+        sentences = re.split(r"(?<=[.!?])\s+", seg)
+        cur: List[str] = []
+        cur_len = 0
+        for sent in sentences:
+            added = len(sent) + (1 if cur else 0)
+            if cur_len + added > max_chars and cur:
+                refined.append(" ".join(cur))
+                cur = [sent]
+                cur_len = len(sent)
+            else:
+                cur.append(sent)
+                cur_len += added
+        if cur:
+            refined.append(" ".join(cur))
+
+    # 3. Hard-split anything still oversized
+    result: List[str] = []
+    for seg in refined:
+        while len(seg) > max_chars:
+            result.append(seg[:max_chars])
+            seg = seg[max_chars:]
+        if seg:
+            result.append(seg)
+
+    return result
+
+
 def _merge_blocks_into_chunks(
     blocks: List[ContentBlock],
     min_chars: int = 0,
@@ -36,6 +96,7 @@ def _merge_blocks_into_chunks(
 ) -> List[CandidateChunk]:
     """Merge consecutive blocks into candidate chunks within size bounds.
 
+    - Large single blocks are split at paragraph / sentence boundaries first.
     - Code blocks and tables are kept as single chunks (not merged with neighbors).
     - Other blocks are merged until total length is in [min_chars, max_chars] or
       a non-mergeable block is hit.
@@ -50,25 +111,52 @@ def _merge_blocks_into_chunks(
     while i < len(blocks):
         block = blocks[i]
         content = block.content
-        n_tokens = block.metadata.token_estimate or estimate_tokens(content)
         start = offset
-        offset += len(content) + (1 if content and not content.endswith("\n") else 0)
 
-        # Standalone: code, table — one block = one chunk
+        # Standalone: code, table — one block = one chunk (split if oversized)
         if block.block_type in (BlockType.CODE_BLOCK, BlockType.TABLE):
-            end = start + len(content)
-            candidates.append(
-                CandidateChunk(
-                    text=content,
-                    block_types=(block.block_type,),
-                    token_estimate=n_tokens,
-                    start_offset=start,
-                    end_offset=end,
-                )
+            segments = (
+                _split_large_text(content, max_chars)
+                if len(content) > max_chars
+                else [content]
             )
-            offset = end + 2  # \n\n before next block
+            for seg in segments:
+                seg_start = offset
+                seg_end = offset + len(seg)
+                candidates.append(
+                    CandidateChunk(
+                        text=seg,
+                        block_types=(block.block_type,),
+                        token_estimate=estimate_tokens(seg),
+                        start_offset=seg_start,
+                        end_offset=seg_end,
+                    )
+                )
+                offset = seg_end + 2
             i += 1
             continue
+
+        # If a single text block exceeds max_chars, split it first
+        if len(content) > max_chars:
+            segments = _split_large_text(content, max_chars)
+            for seg in segments:
+                seg_start = offset
+                seg_end = offset + len(seg)
+                candidates.append(
+                    CandidateChunk(
+                        text=seg,
+                        block_types=(block.block_type,),
+                        token_estimate=estimate_tokens(seg),
+                        start_offset=seg_start,
+                        end_offset=seg_end,
+                    )
+                )
+                offset = seg_end + 2
+            i += 1
+            continue
+
+        # Advance offset past this block's content
+        offset += len(content) + (1 if content and not content.endswith("\n") else 0)
 
         # Merge consecutive text-like blocks up to max_chars
         parts: List[str] = [content]
