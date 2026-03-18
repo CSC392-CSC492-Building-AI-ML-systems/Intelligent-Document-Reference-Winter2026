@@ -189,4 +189,145 @@
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
+
+  .assistant-canvas {
+    background-image:
+      linear-gradient(160deg, color-mix(in oklab, var(--card) 94%, #f4f8ff 6%), var(--card));
+  }
+
+  .markdown-canvas {
+    color: var(--color-foreground);
+    line-height: 1.7;
+    font-family: Georgia, Cambria, "Times New Roman", serif;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .markdown-canvas * {
+    min-width: 0;
+  }
+
+  .markdown-canvas > :first-child {
+    margin-top: 0;
+  }
+
+  .markdown-canvas > :last-child {
+    margin-bottom: 0;
+  }
+
+  .markdown-canvas p {
+    margin: 0.5rem 0;
+  }
+
+  .markdown-canvas h1,
+  .markdown-canvas h2,
+  .markdown-canvas h3 {
+    font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
+    letter-spacing: 0.01em;
+    margin-top: 0.9rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .markdown-canvas h1 {
+    font-size: 1.35rem;
+  }
+
+  .markdown-canvas h2 {
+    font-size: 1.15rem;
+  }
+
+  .markdown-canvas h3 {
+    font-size: 1.03rem;
+  }
+
+  .markdown-canvas ul,
+  .markdown-canvas ol {
+    margin: 0.55rem 0 0.55rem 1.2rem;
+    padding-left: 0.2rem;
+  }
+
+  .markdown-canvas ul {
+    list-style-type: disc;
+  }
+
+  .markdown-canvas ol {
+    list-style-type: decimal;
+  }
+
+  .markdown-canvas li + li {
+    margin-top: 0.18rem;
+  }
+
+  .markdown-canvas blockquote {
+    margin: 0.7rem 0;
+    padding: 0.35rem 0.7rem;
+    border-left: 3px solid color-mix(in oklab, var(--color-primary) 35%, transparent);
+    background: color-mix(in oklab, var(--color-secondary) 45%, transparent);
+    border-radius: 0.45rem;
+  }
+
+  .markdown-canvas pre {
+    overflow-x: auto;
+    max-width: 100%;
+    margin: 0.65rem 0;
+    padding: 0.7rem 0.85rem;
+    border-radius: 0.7rem;
+    border: 1px solid var(--color-border);
+    background: color-mix(in oklab, var(--color-muted) 60%, #f8fafc 40%);
+    font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .markdown-canvas code {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .markdown-canvas .inline-code {
+    padding: 0.08rem 0.34rem;
+    border-radius: 0.35rem;
+    border: 1px solid color-mix(in oklab, var(--color-border) 80%, transparent);
+    background: color-mix(in oklab, var(--color-muted) 55%, transparent);
+    font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-size: 0.82em;
+  }
+
+  .markdown-canvas table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.7rem 0;
+    font-size: 0.9em;
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+
+  .markdown-canvas th,
+  .markdown-canvas td {
+    border: 1px solid var(--color-border);
+    text-align: left;
+    padding: 0.38rem 0.45rem;
+    vertical-align: top;
+  }
+
+  .markdown-canvas thead th {
+    background: color-mix(in oklab, var(--color-secondary) 65%, transparent);
+    font-weight: 600;
+  }
+
+  .markdown-canvas a {
+    color: color-mix(in oklab, var(--color-primary) 75%, #0b6fa4 25%);
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+
+  .markdown-canvas hr {
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    margin: 0.95rem 0;
+  }
 }

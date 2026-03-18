@@ -69,6 +69,38 @@ class FakeDB:
         return FAKE_CHUNKS[:limit]
 
 
+class FakeHybridDB:
+    """Returns vector and lexical results to test hybrid ranking."""
+
+    def search_with_metadata(self, query_vector, limit=5, file_id=None, file_ids=None):
+        return [
+            {
+                "id": 101,
+                "text_content": "General project notes unrelated to images.",
+                "file_path": "/docs/notes.md",
+                "distance": 0.01,
+            },
+            {
+                "id": 102,
+                "text_content": "A chart image with sales trends and labels.",
+                "file_path": "/docs/chart.png",
+                "distance": 0.20,
+            },
+        ][:limit]
+
+    def search_text_with_metadata(
+        self, query_text, limit=5, file_id=None, file_ids=None
+    ):
+        return [
+            {
+                "id": 102,
+                "text_content": "A chart image with sales trends and labels.",
+                "file_path": "/docs/chart.png",
+                "lexical_score": 8,
+            }
+        ][:limit]
+
+
 # ── Tests ────────────────────────────────────────────────────────────────────
 
 
@@ -85,6 +117,18 @@ class TestRetriever:
         retriever = Retriever(db=FakeDB(), embedding_client=FakeEmbeddingClient())
         results = await retriever.retrieve("Who created Python?", top_k=2)
         assert len(results) == 2
+
+    @pytest.mark.asyncio
+    async def test_retrieve_hybrid_boosts_file_target_query(self):
+        retriever = Retriever(db=FakeHybridDB(), embedding_client=FakeEmbeddingClient())
+        results = await retriever.retrieve(
+            "what is chart.png about?",
+            top_k=1,
+            file_ids=[1, 2],
+            selected_file_paths=["/docs/chart.png", "/docs/notes.md"],
+        )
+        assert len(results) == 1
+        assert results[0]["file_path"] == "/docs/chart.png"
 
 
 class TestRAGProcessor:
@@ -120,6 +164,58 @@ class TestCitations:
 
     def test_empty_chunks(self):
         assert format_citations([]) == []
+
+    def test_noise_query_lowers_display_confidence(self):
+        citations = format_citations(FAKE_CHUNKS, query="random rubbish asdf")
+        assert len(citations) >= 1
+        assert citations[0]["relevance_score"] < 0.35
+
+    def test_low_evidence_query_caps_confidence(self):
+        weak_chunks = [
+            {
+                "id": 10,
+                "file_path": "/docs/unrelated_alpha.md",
+                "text_content": "alpha beta gamma delta",
+                "distance": 0.34,
+                "hybrid_score": 0.08,
+            },
+            {
+                "id": 11,
+                "file_path": "/docs/unrelated_beta.md",
+                "text_content": "lorem ipsum dolor sit amet",
+                "distance": 0.36,
+                "hybrid_score": 0.07,
+            },
+        ]
+        citations = format_citations(weak_chunks, query="what is quantum donkey")
+        assert len(citations) >= 1
+        assert max(c["relevance_score"] for c in citations) < 0.35
+
+    def test_high_quality_match_can_reach_high_confidence(self):
+        strong_chunks = [
+            {
+                "id": 20,
+                "file_path": "/docs/python_guide.md",
+                "text_content": "Python uses indentation for blocks and has dynamic typing.",
+                "distance": 0.03,
+                "hybrid_score": 0.16,
+                "lexical_score": 6,
+            },
+            {
+                "id": 21,
+                "file_path": "/docs/other.md",
+                "text_content": "Misc notes.",
+                "distance": 0.45,
+                "hybrid_score": 0.03,
+            },
+        ]
+        citations = format_citations(
+            strong_chunks,
+            query="Explain Python indentation and dynamic typing",
+        )
+        assert len(citations) >= 1
+        assert citations[0]["file_path"] == "/docs/python_guide.md"
+        assert citations[0]["relevance_score"] > 0.85
 
 
 class TestResponder:

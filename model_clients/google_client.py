@@ -54,11 +54,19 @@ class GoogleEmbeddingClient(EmbeddingClient):
         if not texts:
             return []
 
-        result = self.client.models.embed_content(
-            model=self.model,
-            contents=texts,
-        )
-        return [e.values for e in result.embeddings]
+        # Google API allows at most 100 requests per batch
+        max_batch_size = 100
+        all_embeddings: List[List[float]] = []
+
+        for i in range(0, len(texts), max_batch_size):
+            batch = texts[i : i + max_batch_size]
+            result = self.client.models.embed_content(
+                model=self.model,
+                contents=batch,
+            )
+            all_embeddings.extend(e.values for e in result.embeddings)
+
+        return all_embeddings
 
 
 class GoogleInferenceClient(InferenceClient):

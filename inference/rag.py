@@ -9,17 +9,19 @@ class RAGProcessor:
         self.client = inference_client
 
     def build_prompt(self, query: str, chunks: List[Dict[str, Any]]) -> str:
-        """Build a retrieval-augmented prompt with source attributions."""
+        """Build a retrieval-augmented prompt for markdown-only output."""
         context_str = ""
         for c in chunks:
             context_str += (
-                f"\n[SOURCE: {c['file_path']}]\n" f"CONTENT: {c['text_content']}\n"
+                f"\n[SOURCE: {c['file_path']}]\nCONTENT: {c['text_content']}\n"
             )
 
         return (
             "You are a professional assistant. Use the context below to answer "
-            "accurately.\nEvery claim MUST cite its source path in brackets, "
-            "e.g., (Source: /docs/notes.pdf).\n\n"
+            "accurately and concisely.\n"
+            "Return markdown only (headings, bullet lists, tables where helpful).\n"
+            "Do not append source markers in the answer text.\n"
+            "Do not include absolute or relative source file paths in the answer body.\n"
             f"CONTEXT:\n{context_str}\n\n"
             f"USER QUESTION: {query}\nANSWER:"
         )
