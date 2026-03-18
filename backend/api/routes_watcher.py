@@ -240,16 +240,35 @@ async def add_watch_path(req: WatchPathRequest):
 
     registry.add_watch_path(clean_path, clean_excluded)
 
-    # Persist to YAML inclusion so the path survives POST /watcher/sync and appears in the UI
+    # If it is a single file, also seed watched_files so it gets scheduled
+    if os.path.isfile(clean_path):
+        try:
+            registry.upsert_file(clean_path, os.stat(clean_path).st_mtime)
+        except OSError:
+            pass
+
+    # Persist to YAML inclusion — files go to inclusion.files, dirs to inclusion.directories
     config = load_file_indexing_config()
     inclusion = config.setdefault("inclusion", {"files": [], "directories": []})
-    dirs = list(inclusion.get("directories", []))
-    normalized = {os.path.abspath(os.path.expanduser(p)).rstrip(os.sep) for p in dirs}
-    if clean_path not in normalized:
-        dirs.append(clean_path)
-        inclusion["directories"] = dirs
-        config["inclusion"] = inclusion
-        save_file_indexing_config(config)
+
+    if os.path.isfile(clean_path):
+        files_list = list(inclusion.get("files", []))
+        normalized = {os.path.abspath(os.path.expanduser(p)) for p in files_list}
+        if clean_path not in normalized:
+            files_list.append(clean_path)
+            inclusion["files"] = files_list
+            config["inclusion"] = inclusion
+            save_file_indexing_config(config)
+    else:
+        dirs = list(inclusion.get("directories", []))
+        normalized = {
+            os.path.abspath(os.path.expanduser(p)).rstrip(os.sep) for p in dirs
+        }
+        if clean_path not in normalized:
+            dirs.append(clean_path)
+            inclusion["directories"] = dirs
+            config["inclusion"] = inclusion
+            save_file_indexing_config(config)
 
     updated_paths = registry.get_watch_paths()
     return {"status": "added", "active_paths": updated_paths}
@@ -269,13 +288,29 @@ async def get_watch_paths():
 async def remove_watch_path_by_path(
     path: str = Query(..., description="Path to stop watching")
 ):
-    """Remove a path from the watcher (sets is_active=0). Uses query param so DELETE works reliably."""
+    """Remove a path from the watcher (sets is_active=0) and purge indexed data."""
     raw = os.path.abspath(os.path.expanduser(path))
     clean_path = raw.rstrip(os.sep) if raw else raw
     registry.remove_watch_path(clean_path)
-    # Remove from YAML inclusion so it does not reappear after refresh or next sync
+
+    # Purge indexed data from local_search.db so stale content is not returned
+    try:
+        from db.unified import UnifiedDatabase
+
+        unified_db_path = str(_PROJECT_ROOT / "local_search.db")
+        unified_db = UnifiedDatabase(db_path=unified_db_path)
+        if os.path.isdir(clean_path) or not os.path.exists(clean_path):
+            unified_db.remove_files_under_directory(clean_path)
+        else:
+            unified_db.remove_file(clean_path)
+    except Exception:
+        pass
+
+    # Remove from YAML inclusion (check both directories and files lists)
     config = load_file_indexing_config()
     inclusion = config.get("inclusion") or {}
+    changed = False
+
     dirs = list(inclusion.get("directories", []))
     normalized_dirs = [
         os.path.abspath(os.path.expanduser(p)).rstrip(os.sep) for p in dirs
@@ -283,6 +318,18 @@ async def remove_watch_path_by_path(
     if clean_path in normalized_dirs:
         dirs = [p for p, n in zip(dirs, normalized_dirs) if n != clean_path]
         inclusion["directories"] = dirs
+        changed = True
+
+    files_list = list(inclusion.get("files", []))
+    normalized_files = [os.path.abspath(os.path.expanduser(p)) for p in files_list]
+    if clean_path in normalized_files:
+        files_list = [
+            p for p, n in zip(files_list, normalized_files) if n != clean_path
+        ]
+        inclusion["files"] = files_list
+        changed = True
+
+    if changed:
         config["inclusion"] = inclusion
         save_file_indexing_config(config)
     return {"status": "removed", "active_paths": registry.get_watch_paths()}
@@ -294,10 +341,21 @@ async def sync_watch_paths(req: SyncPathsRequest):
     Sync monitor_config with the inclusion list from the UI (YAML stores full paths).
     - Any path in monitor_config that is NOT in req.paths (normalized) gets is_active=0.
     - Any path in req.paths gets added/updated with is_active=1.
+    Individual files persisted in ``inclusion.files`` (YAML) are always preserved
+    so that a directory-only sync does not accidentally deactivate single-file entries.
     All paths are normalized (abspath, no trailing sep) for comparison.
     """
     raw = [p.strip() for p in (req.paths or []) if p and p.strip()]
     inclusion_set = {os.path.abspath(os.path.expanduser(p)).rstrip(os.sep) for p in raw}
+
+    # Also include individual files from YAML so they are never deactivated
+    config = load_file_indexing_config()
+    yaml_files = config.get("inclusion", {}).get("files", []) or []
+    for f in yaml_files:
+        fp = os.path.abspath(os.path.expanduser(f.strip())).rstrip(os.sep)
+        if fp:
+            inclusion_set.add(fp)
+
     all_db_paths = registry.get_all_monitor_paths()
     for db_path in all_db_paths:
         normalized_db = db_path.rstrip(os.sep)
@@ -306,4 +364,9 @@ async def sync_watch_paths(req: SyncPathsRequest):
     for p in raw:
         full_path = os.path.abspath(os.path.expanduser(p))
         registry.add_watch_path(full_path, [])
+    # Ensure individual files from YAML are also active in monitor_config
+    for f in yaml_files:
+        fp = os.path.abspath(os.path.expanduser(f.strip()))
+        if fp and os.path.isfile(fp):
+            registry.add_watch_path(fp, [])
     return {"status": "synced", "active_paths": registry.get_watch_paths()}

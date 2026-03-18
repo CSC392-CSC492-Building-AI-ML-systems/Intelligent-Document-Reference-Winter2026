@@ -1,409 +1,106 @@
-# Local-first Intelligent Document Reference — Architecture
+# Intelligent Document Reference
 
-A local-first RAG (Retrieval-Augmented Generation) system with an intelligent document reference interface.
+Local-first RAG system: ingest documents, embed with OpenAI/Voyage, and query them with citations. FastAPI backend + React/Vite frontend, SQLite with sqlite-vec for vector search.
+
+## Prerequisites
+
+- **Python 3.11+** — [python.org](https://www.python.org/downloads/)
+- **Node.js 18+** — [nodejs.org](https://nodejs.org/)
+- **uv** (recommended) — [docs.astral.sh/uv](https://docs.astral.sh/uv/)
 
 ## Quick Start
 
-### Option 1: Automated Setup (Recommended)
-
-The easiest way to get started is using the automated setup:
-
 ```bash
+# One-command setup + launch
 python3 app.py --setup --webui
 ```
 
-This will:
-- Create a Python virtual environment
-- Install all Python dependencies
-- Install Node.js dependencies
-- Build the frontend
-- Launch the web UI
+This creates `.venv`, installs Python deps (uv if available, pip fallback), installs npm packages, builds the frontend, and starts the server at **http://127.0.0.1:8000**.
 
-
-For Benchmarking
+After the first setup, just run:
 
 ```bash
-python app.py --benchmark                          # run with defaults
-python app.py --benchmark --skip-indexing           # skip re-indexing
-python app.py --benchmark --benchmark-config my.yaml --no-graphs
-python app.py --benchmark --benchmark-runs 1 --benchmark-output results/
-```
-### Option 2: Manual Setup
-
-If you prefer to set up manually, see the [Installation](#installation) section below.
-
-## Installation
-
-### Prerequisites
-
-- **Python 3.11 or higher** - [Download Python](https://www.python.org/downloads/)
-- **Node.js 18+ and npm** - [Download Node.js](https://nodejs.org/)
-- **Git** (optional, for cloning the repository)
-
-**Folder picker (Browse in Settings):** The native folder picker needs a Python built with Tcl/Tk (tkinter). If you see "Folder picker not available", see [Using the folder picker (tkinter)](docs/TKINTER_SETUP.md) to install Python with tkinter and recreate the virtual environment.
-
-### Automated Setup
-
-Run the setup script to automatically configure everything:
-
-```bash
-python3 app.py --setup
+python3 app.py --webui
+# or with uv:
+uv run app.py --webui
 ```
 
-This will:
-1. Check for required tools (Python, Node.js, npm)
-2. Create a Python virtual environment (`.venv`)
-3. Install Python dependencies (using uv if available, otherwise pip)
-4. Install Node.js dependencies in the `ui/` directory
-5. Build the frontend application
-
-After setup, launch the application using the **virtual environment's Python** (dependencies like `uvicorn` are installed there):
+## Manual Setup
 
 ```bash
-.venv/bin/python app.py --webui
+uv sync                         # Python deps
+cd ui && npm install && cd ..   # Frontend deps
+cd ui && npm run build && cd .. # Build frontend
 ```
 
-On Windows: `.venv\Scripts\python app.py --webui`
+Then launch with `uv run app.py --webui` or `.venv/bin/python app.py --webui`.
 
-### Manual Setup
+## Development
 
-#### 1. Python Environment Setup
-
-Create and activate a virtual environment:
-
-**On Linux/macOS:**
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+python3 app.py --dev
 ```
 
-**On Windows:**
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
+Runs uvicorn with `--reload` on `:8000` and the Vite dev server on `:5173`. Open **http://localhost:5173**.
 
-#### 2. Install Python Dependencies
-
-**Using uv (recommended):**
-```bash
-uv sync
-```
-
-**Using pip:**
-```bash
-pip install .
-```
-
-#### 3. Install Node.js Dependencies
+## Benchmarks
 
 ```bash
-cd ui
-npm install
-cd ..
-```
-
-#### 4. Build Frontend
-
-```bash
-cd ui
-npm run build
-cd ..
-```
-
-## Running the Application
-
-### Launch Web UI
-
-After setup, launch the web interface using the virtual environment’s Python (so dependencies like `uvicorn` are found):
-
-**macOS/Linux:**
-```bash
-.venv/bin/python app.py --webui
-```
-
-**Windows:**
-```bash
-.venv\Scripts\python app.py --webui
-```
-
-**Using uv:** If you use [uv](https://github.com/astral-sh/uv), you can run without activating the venv (e.g. `uv run app.py --webui`); uv handles the environment.
-
-The application will be available at `http://127.0.0.1:8000`
-
-### Custom Host/Port
-
-You can specify a custom host and port:
-
-```bash
-.venv/bin/python app.py --webui --host 0.0.0.0 --port 8080
-```
-
-### Command Line Options
-
-```bash
-python3 app.py [OPTIONS]
-
-Options:
-  --setup          Set up the environment (install dependencies, build frontend)
-  --webui          Launch the web UI with backend server
-  --dev            Development mode: backend (hot-reload) + frontend dev server (backend on --port, UI on 5173)
-  --host HOST      Host to bind the server to (default: 127.0.0.1)
-  --port PORT      Port to bind the server to (default: 8000)
-  -h, --help       Show help message
+python3 app.py --benchmark                              # defaults
+python3 app.py --benchmark --skip-indexing              # skip re-indexing
+python3 app.py --benchmark --benchmark-config my.yaml
+python3 app.py --benchmark --benchmark-runs 1 --no-graphs --benchmark-output results/
 ```
 
 ## Configuration
 
-### Environment Variables
+Create a `.env` file in the project root:
 
-Create a `.env` file in the project root (you can copy from `.env.example` if it exists) to configure:
+| Variable | Default | Description |
+|---|---|---|
+| `OPENAI_API_KEY` | — | OpenAI API key (embeddings + inference) |
+| `VOYAGE_API_KEY` | — | Voyage AI key (embeddings) |
+| `GEMINI_API_KEY` | — | Google Gemini key |
+| `OLLAMA_URL` | `http://localhost:11434` | Ollama endpoint for local models |
+| `EMBEDDING_DIMENSION` | `3072` | Vector dimension (must match model) |
+| `OCR_ENABLED` | `true` | Enable Tesseract OCR for images |
 
-- `DATABASE_URL`: Database connection string (default: `sqlite:///./data/metadata.db`)
-- `VECTOR_DB_PATH`: Path to vector database (default: `./data/vectorstore`)
-- `OLLAMA_URL`: Ollama API URL (default: `http://localhost:11434`)
-- `DOCUMENT_PATH`: Path to documents directory for file indexing (default: current directory)
+YAML configs in `config/`: `models.yaml` (provider model IDs), `paths.yaml` (watch/exclude dirs), `file_indexing.yaml` (inclusion/exclusion rules, auto-managed by Settings UI).
 
-### API Configuration
+## CLI Reference
 
-The backend API runs on `http://127.0.0.1:8000` by default. You can change the host and port using command-line arguments.
+```
+python3 app.py [OPTIONS]
+
+--setup               Install deps + build frontend
+--webui               Launch server (auto-builds if needed)
+--dev                 Dev mode: backend (hot-reload) + Vite HMR
+--host HOST           Bind address (default: 127.0.0.1)
+--port PORT           Bind port (default: 8000)
+--benchmark           Run evaluation suite
+--benchmark-config F  Benchmark YAML config
+--benchmark-dataset D Override dataset path
+--benchmark-output O  Override output directory
+--benchmark-runs N    Override runs per query
+--no-graphs           Skip graph generation
+--skip-indexing       Query existing index only
+```
+
+## Testing
+
+```bash
+uv sync --group dev   # install test deps
+pytest                # all tests
+pytest tests/unit/    # unit only
+pytest tests/e2e/     # end-to-end
+```
 
 ## Troubleshooting
 
-### Python Virtual Environment Issues
-
-If you encounter issues with the virtual environment:
-
-```bash
-# Remove and recreate the virtual environment
-rm -rf .venv
-python3 app.py --setup
-```
-
-### Node.js Dependencies Issues
-
-If frontend dependencies fail to install:
-
-```bash
-cd ui
-rm -rf node_modules package-lock.json
-npm install
-npm run build
-cd ..
-```
-
-### Port Already in Use
-
-If port 8000 is already in use, specify a different port:
-
-```bash
-.venv/bin/python app.py --webui --port 8080
-```
-
-### Frontend Not Loading
-
-If the frontend doesn't load:
-1. Check that the frontend is built: `ls ui/dist`
-2. Rebuild if needed: `cd ui && npm run build && cd ..`
-3. Check browser console for errors
-
-## Development
-
-### Running in Development Mode
-
-Use the **`--dev`** flag to run both the backend (with hot-reload) and the frontend dev server in one go. The backend runs on the usual port (default 8000), the UI on port 5173, and the frontend is configured to talk to the backend.
-
-**macOS/Linux:**
-```bash
-.venv/bin/python app.py --dev
-```
-
-**Windows:**
-```bash
-.venv\Scripts\python app.py --dev
-```
-
-Open http://localhost:5173 for the UI; API is at http://127.0.0.1:8000. Press Ctrl+C to stop both processes. You don’t need to run `npm run build` while using `--dev`; the dev server picks up frontend and backend changes automatically.
-
-If you prefer to run them separately (e.g. in two terminals), run the backend with:
-
-```bash
-.venv/bin/python -m uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
-```
-
-and in another terminal:
-
-```bash
-cd ui && npm run dev
-```
-
-Set `VITE_API_BASE_URL=http://localhost:8000` in the environment if the frontend needs to point at the backend.
-
-### Testing the inclusion folder (watcher)
-
-1. **Start the app** (from project root). For production-style single server:
-   ```bash
-   .venv/bin/python app.py --webui
-   ```
-   For development with hot-reload, use `--dev` (see [Running in Development Mode](#running-in-development-mode)).
-
-2. **In the browser**: Open the app (e.g. http://127.0.0.1:8000 or http://localhost:5173), go to **Settings** → **File Indexing**.
-
-3. **Set the inclusion folder**: In "Inclusion folder path", enter an absolute path to a real folder (e.g. `/Users/you/Intelligent-Document-Reference-Winter2026` or `C:\path\to\project` on Windows). Click **Set inclusion folder**. You should see a success message.
-
-4. **Verify via API** (optional):
-   ```bash
-   curl -s http://localhost:8000/watcher/path
-   ```
-   You should see `active_paths` containing your path. To test POST directly:
-   ```bash
-   curl -s -X POST http://localhost:8000/watcher/path \
-     -H "Content-Type: application/json" \
-     -d '{"path":"/tmp/test_watch_folder","excluded_files":[]}'
-   ```
-   Use a path that exists on your machine; the backend returns 400 if the path does not exist.
-
-### Project Structure
-
-## Final Directory Structure
-
-```
-├── app.py
-├── README.md
-├── pyproject.toml
-├── .env.example
-├── config/
-│   ├── settings.py
-│   ├── models.yaml
-│   └── paths.yaml
-├── core/
-│   ├── bootstrap.py
-│   ├── wiring.py
-│   ├── lifecycle.py
-│   └── context.py
-├── model_clients/
-│   ├── base.py
-│   ├── openai_client.py
-│   ├── google_client.py
-│   ├── ollama_client.py
-│   ├── registry.py
-│   └── errors.py
-├── embeddings/
-│   ├── base.py
-│   ├── router.py
-│   └── embedder.py
-├── inference/
-│   ├── retriever.py
-│   ├── rag.py
-│   ├── citation.py
-│   ├── router.py
-│   └── responder.py
-├── backend/
-│   ├── main.py
-│   ├── api/
-│   │   ├── routes_chat.py
-│   │   ├── routes_files.py
-│   │   ├── routes_jobs.py
-│   │   └── routes_settings.py
-│   ├── deps.py
-│   └── schemas.py
-├── ingestion/
-│   ├── extractors/
-│   ├── chunking/
-│   ├── pipeline.py
-│   └── indexer.py
-├── db/
-│   ├── metadata.py
-│   ├── vectorstore.py
-│   ├── settings_store.py
-│   ├── schema.sql
-│   └── migrations/
-├── watcher/
-│   ├── watcher.py
-│   ├── debounce.py
-│   └── events.py
-├── jobs/
-│   ├── queue.py
-│   ├── scheduler.py
-│   ├── worker.py
-│   └── state.py
-├── ui/
-│   ├── web/
-│   │   ├── frontend/
-│   │   │   └── components/
-│   │   │       └── SettingsPanel.tsx
-│   │   └── static/
-│   └── widget/
-│       └── launcher.py
-├── mcp/
-│   ├── server.py
-│   └── tools.py
-├── evaluation/
-│   ├── datasets/
-│   ├── queries.yaml
-│   ├── accuracy.py
-│   └── benchmarks.py
-├── scripts/
-│   ├── preprocess.py
-│   ├── reindex.py
-│   └── dev_bootstrap.py
-└── tests/
-    ├── conftest.py
-    ├── fixtures/
-    │   ├── corpus/
-    │   └── expected/
-    ├── unit/
-    │   ├── model_clients/
-    │   ├── embeddings/
-    │   ├── inference/
-    │   ├── ingestion/
-    │   ├── db/
-    │   └── core/
-    ├── integration/
-    └── e2e/
-```
-
-### `config/`
-Configuration management: settings loading, model definitions, and path configurations.
-
-### `core/`
-Application core: dependency injection context, bootstrap logic, wiring, and lifecycle management.
-
-### `model_clients/`
-Provider-agnostic model client abstractions: base interfaces, provider implementations (OpenAI, Google, Ollama), and a registry for client selection.
-
-### `embeddings/`
-Embedding facade layer: router for selecting embedding clients and high-level embedding API.
-
-### `inference/`
-Inference and retrieval layer: RAG orchestration, retrieval, citation formatting, and response generation.
-
-### `backend/`
-FastAPI backend: REST API routes for chat, files, jobs, and settings management.
-
-### `ingestion/`
-Document ingestion pipeline: extractors, chunking algorithms, and indexing orchestration.
-
-### `db/`
-Database layer: metadata storage, vector store, settings persistence, and schema definitions.
-
-### `watcher/`
-Filesystem monitoring: file watcher, event debouncing, and normalized event types.
-
-### `jobs/`
-Job processing: queue abstraction, scheduler, async workers, and job state management.
-
-### `ui/`
-User interfaces: web frontend components and widget launcher.
-
-### `mcp/`
-MCP server: Model Context Protocol server exposing retrieval and Q&A tools.
-
-### `evaluation/`
-Evaluation harness: accuracy testing, benchmarks, and evaluation datasets.
-
-### `scripts/`
-Utility scripts: preprocessing, reindexing, and developer bootstrap helpers.
-
-### `tests/`
-Test suite: unit tests, integration tests, end-to-end tests, and test fixtures.
+| Problem | Fix |
+|---|---|
+| `ModuleNotFoundError` | Use `.venv/bin/python app.py --webui` or `uv run app.py --webui` |
+| Port 8000 in use | `python3 app.py --webui --port 8080` |
+| Frontend not loading | `cd ui && npm run build` |
+| Folder picker unavailable | See [docs/TKINTER_SETUP.md](docs/TKINTER_SETUP.md) |
+| Stale venv | `rm -rf .venv && python3 app.py --setup` |

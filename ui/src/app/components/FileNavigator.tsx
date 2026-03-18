@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useChatContext, FileNode } from '@/app/contexts/ChatContext';
 import { Checkbox } from '@/app/components/ui/checkbox';
-import { ChevronLeft, ChevronRight, File, Folder } from 'lucide-react';
+import { ChevronLeft, ChevronRight, File, Folder, Ban, Loader2, CheckCircle2, RefreshCw, AlertCircle } from 'lucide-react';
 import { cn } from '@/app/components/ui/utils';
 
 interface FileNavigatorProps {
@@ -9,7 +9,7 @@ interface FileNavigatorProps {
 }
 
 function getAllLeafFiles(node: FileNode): string[] {
-  if (node.type === 'file') return [node.path];
+  if (node.type === 'file') return node.status === 'unsupported' ? [] : [node.path];
   if (!node.children) return [];
   return node.children.flatMap(getAllLeafFiles);
 }
@@ -26,6 +26,7 @@ function getAllPaths(node: FileNode): string[] {
 
 interface StackEntry {
   name: string;
+  path: string;
   items: FileNode[];
 }
 
@@ -40,12 +41,30 @@ export function FileNavigator({ type }: FileNavigatorProps) {
     toggleExcludedFile,
   } = useChatContext();
 
-  const [stack, setStack] = useState<StackEntry[]>([{ name: 'Files', items: fileTree }]);
+  const [stack, setStack] = useState<StackEntry[]>([{ name: 'Files', path: '', items: fileTree }]);
   const [animKey, setAnimKey] = useState(0);
   const [direction, setDirection] = useState<'forward' | 'back'>('forward');
 
+  // When fileTree refreshes (e.g. status polling), rebuild the stack
+  // preserving the current navigation depth instead of resetting to root.
   useEffect(() => {
-    setStack([{ name: 'Files', items: fileTree }]);
+    setStack((prev) => {
+      const newStack: StackEntry[] = [{ name: 'Files', path: '', items: fileTree }];
+      let currentItems = fileTree;
+      for (let i = 1; i < prev.length; i++) {
+        const prevPath = prev[i].path;
+        const match = currentItems.find(
+          (n) => n.type === 'folder' && n.path === prevPath,
+        );
+        if (match && match.children) {
+          newStack.push({ name: match.name, path: match.path, items: match.children });
+          currentItems = match.children;
+        } else {
+          break;
+        }
+      }
+      return newStack;
+    });
   }, [fileTree]);
 
   const current = stack[stack.length - 1];
@@ -53,7 +72,7 @@ export function FileNavigator({ type }: FileNavigatorProps) {
   const enterFolder = (node: FileNode) => {
     setDirection('forward');
     setAnimKey((k) => k + 1);
-    setStack((prev) => [...prev, { name: node.name, items: node.children ?? [] }]);
+    setStack((prev) => [...prev, { name: node.name, path: node.path, items: node.children ?? [] }]);
   };
 
   const goBack = () => {
@@ -169,19 +188,58 @@ export function FileNavigator({ type }: FileNavigatorProps) {
                 <div
                   key={node.id}
                   className={cn(
-                    'flex items-center gap-2 py-1.5 px-2 rounded-md hover:bg-accent cursor-pointer'
+                    'flex items-center gap-2 py-1.5 px-2 rounded-md',
+                    node.status === 'unsupported'
+                      ? 'opacity-50 cursor-not-allowed'
+                      : 'hover:bg-accent cursor-pointer'
                   )}
-                  onClick={() => handleToggle(node.path)}
+                  onClick={() => {
+                    if (node.status !== 'unsupported') handleToggle(node.path);
+                  }}
                 >
                   <Checkbox
                     id={node.id}
                     checked={isChecked(node.path)}
-                    onCheckedChange={() => handleToggle(node.path)}
+                    onCheckedChange={() => {
+                      if (node.status !== 'unsupported') handleToggle(node.path);
+                    }}
                     className="h-4 w-4 cursor-pointer shrink-0"
+                    disabled={node.status === 'unsupported'}
                     onClick={(e) => e.stopPropagation()}
                   />
-                  <File className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <span className="text-sm truncate">{node.name}</span>
+                  <File className={cn(
+                    'h-4 w-4 shrink-0',
+                    node.status === 'unsupported' ? 'text-muted-foreground/50' : 'text-muted-foreground'
+                  )} />
+                  <span className={cn(
+                    'text-sm truncate flex-1',
+                    node.status === 'unsupported' && 'text-muted-foreground line-through'
+                  )}>{node.name}</span>
+                  {/* Status indicator */}
+                  {node.status === 'indexed' && (
+                    <span title="Indexed &amp; available" className="shrink-0 flex items-center">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                    </span>
+                  )}
+                  {node.status === 'pending' && (
+                    <span title="Indexing…" className="shrink-0 flex items-center">
+                      <Loader2 className="h-3.5 w-3.5 text-amber-500 animate-spin" />
+                    </span>
+                  )}
+                  {node.status === 'unsupported' && (
+                    <span title="Unsupported file type" className="shrink-0 flex items-center">
+                      <Ban className="h-3.5 w-3.5 text-muted-foreground/60" />
+                    </span>
+                  )}
+                  {(node.status === 'failed' || node.status === 'outdated') && (
+                    <span title={node.status === 'failed' ? 'Indexing failed' : 'Re-indexing…'} className="shrink-0 flex items-center">
+                      {node.status === 'outdated' ? (
+                        <RefreshCw className="h-3.5 w-3.5 text-blue-500 animate-spin" />
+                      ) : (
+                        <AlertCircle className="h-3.5 w-3.5 text-red-500" />
+                      )}
+                    </span>
+                  )}
                 </div>
               )
             )

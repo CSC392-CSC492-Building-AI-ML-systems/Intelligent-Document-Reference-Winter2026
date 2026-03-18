@@ -150,15 +150,6 @@ export function SettingsPage() {
       });
 
       if (success) {
-        try {
-          await syncWatcherPaths(directoriesToSave);
-        } catch (err) {
-          console.warn('Watcher sync failed:', err);
-          toast.warning(`Configuration saved. Watcher sync failed: ${err instanceof Error ? err.message : err}`);
-        }
-      }
-
-      if (success) {
         toast.success('File indexing configuration saved successfully!');
       } else {
         toast.error('Failed to save file indexing configuration.');

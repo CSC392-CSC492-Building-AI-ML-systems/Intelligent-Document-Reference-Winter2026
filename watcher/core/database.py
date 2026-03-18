@@ -1,5 +1,4 @@
 import sqlite3
-from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 
@@ -19,14 +18,6 @@ class FileRegistry:
                 )
             """)
             cursor.execute("""
-                CREATE TABLE IF NOT EXISTS processing_queue (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    file_path TEXT NOT NULL,
-                    event_type TEXT NOT NULL,
-                    timestamp REAL
-                )
-            """)
-            cursor.execute("""
                 CREATE TABLE IF NOT EXISTS monitor_config (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     path TEXT UNIQUE NOT NULL,
@@ -36,67 +27,9 @@ class FileRegistry:
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 )
             """)
+            # Drop legacy processing_queue if it exists (replaced by jobs table)
+            cursor.execute("DROP TABLE IF EXISTS processing_queue")
             conn.commit()
-
-    def add_event(self, path: str, event_type: str):
-        """Add a file event to the processing queue. If event exists, update it."""
-        with sqlite3.connect(self.db_path) as conn:
-            cursor = conn.cursor()
-
-            # Check for existing event for this file
-            cursor.execute(
-                """
-                SELECT id FROM processing_queue
-                WHERE file_path = ?
-            """,
-                (path,),
-            )
-            existing = cursor.fetchone()
-
-            if existing:
-                # Update timestamp
-                cursor.execute(
-                    """
-                    UPDATE processing_queue
-                    SET timestamp = ?, event_type = ?
-                    WHERE id = ?
-                """,
-                    (datetime.now().timestamp(), event_type, existing[0]),
-                )
-            else:
-                # Insert new event
-                cursor.execute(
-                    """
-                    INSERT INTO processing_queue (file_path, event_type, timestamp)
-                    VALUES (?, ?, ?)
-                """,
-                    (path, event_type, datetime.now().timestamp()),
-                )
-
-            conn.commit()
-
-    def pop_next_event(self) -> Optional[Dict[str, Any]]:
-        """Fetch and REMOVE the next event (FIFO)."""
-        with sqlite3.connect(self.db_path) as conn:
-            conn.row_factory = sqlite3.Row
-            cursor = conn.cursor()
-
-            # Select oldest event
-            cursor.execute("""
-                SELECT * FROM processing_queue
-                ORDER BY timestamp ASC
-                LIMIT 1
-            """)
-            row = cursor.fetchone()
-
-            if row:
-                # DELETE execution happens here - strictly simulating 'popping' from queue
-                cursor.execute(
-                    "DELETE FROM processing_queue WHERE id = ?", (row["id"],)
-                )
-                conn.commit()
-                return dict(row)
-            return None
 
     def upsert_file(self, path: str, last_modified: float):
         with sqlite3.connect(self.db_path) as conn:
@@ -157,10 +90,19 @@ class FileRegistry:
             return [row[0] for row in cursor.fetchall()]
 
     def remove_watch_path(self, path: str):
+        """Deactivate a monitor_config entry and remove associated watched_files."""
+        import os
+
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute(
                 "UPDATE monitor_config SET is_active = 0 WHERE path = ?", (path,)
+            )
+            # Also clean watched_files under this path (directory prefix or exact)
+            prefix = path.rstrip(os.sep) + os.sep
+            cursor.execute(
+                "DELETE FROM watched_files WHERE path LIKE ? OR path = ?",
+                (prefix + "%", path),
             )
             conn.commit()
 

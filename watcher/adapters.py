@@ -22,29 +22,34 @@ class BaseWatcher(ABC):
 
 
 class WatchdogHandler(FileSystemEventHandler):
-    def __init__(self, callback, excluded_files=None):
+    def __init__(self, callback, excluded_files=None, target_file=None):
         self.callback = callback
         self.excluded_files = set(excluded_files) if excluded_files else set()
+        self.target_file = target_file
 
-    def _is_excluded(self, path):
+    def _should_ignore(self, path):
         import os
 
-        return os.path.abspath(path) in self.excluded_files
+        if os.path.abspath(path) in self.excluded_files:
+            return True
+        if self.target_file and os.path.abspath(path) != self.target_file:
+            return True
+        return False
 
     def on_modified(self, event):
-        if not event.is_directory and not self._is_excluded(event.src_path):
+        if not event.is_directory and not self._should_ignore(event.src_path):
             self.callback(event.src_path, "modified")
 
     def on_created(self, event):
-        if not event.is_directory and not self._is_excluded(event.src_path):
+        if not event.is_directory and not self._should_ignore(event.src_path):
             self.callback(event.src_path, "created")
 
     def on_deleted(self, event):
-        if not event.is_directory and not self._is_excluded(event.src_path):
+        if not event.is_directory and not self._should_ignore(event.src_path):
             self.callback(event.src_path, "deleted")
 
     def on_moved(self, event):
-        if not event.is_directory and not self._is_excluded(event.src_path):
+        if not event.is_directory and not self._should_ignore(event.src_path):
             self.callback(event.src_path, "moved", dest_path=event.dest_path)
 
 
@@ -73,10 +78,23 @@ class CrossPlatformWatcher(BaseWatcher):
             self.logger.warning(f"Path does not exist: {path}")
             return
 
-        handler = WatchdogHandler(self.callback, excluded_files=excluded_files)
-        # recursive=True is default requirement
-        self.logger.info(f"Scheduling watcher for: {path}")
-        watch = self.observer.schedule(handler, path, recursive=True)
+        # For single files, set target_file so only events for that file are processed
+        target = os.path.abspath(path) if os.path.isfile(path) else None
+        handler = WatchdogHandler(
+            self.callback, excluded_files=excluded_files, target_file=target
+        )
+
+        # watchdog requires a directory; for single files, watch the parent
+        if os.path.isfile(path):
+            watch_dir = os.path.dirname(path)
+            self.logger.info(
+                f"Scheduling watcher for file {path} (watching parent dir)"
+            )
+            watch = self.observer.schedule(handler, watch_dir, recursive=False)
+        else:
+            self.logger.info(f"Scheduling watcher for: {path}")
+            watch = self.observer.schedule(handler, path, recursive=True)
+
         self._watched_paths[path] = watch
 
     def unschedule_watch(self, path: str):

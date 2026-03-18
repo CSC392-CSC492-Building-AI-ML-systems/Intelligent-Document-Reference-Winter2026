@@ -20,7 +20,7 @@ class QueryRequest(BaseModel):
     query: str
     model: Optional[str] = None
     mode: Optional[str] = "retrieval"
-    selected_files: Optional[List[str]] = []
+    selected_files: Optional[List[str]] = None
     temperature: Optional[float] = 0.7
     context_size: Optional[int] = 4096
     top_k: Optional[int] = 5
@@ -84,6 +84,7 @@ async def query(request: QueryRequest, ctx: AppContext = Depends(get_context)):
         result = await responder.respond(
             query=request.query,
             top_k=request.top_k or 5,
+            selected_files=request.selected_files,
         )
         processing_time_ms = round((time.monotonic() - start_time) * 1000)
     except Exception:

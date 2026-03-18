@@ -46,3 +46,5 @@ jobs:
     - name: Run unit tests (excluding API key tests)
       run: uv run pytest tests/unit/ -v --ignore=tests/unit/test_openai_vlm_client.py --ignore=tests/unit/test_voyage_client.py
 
+    - name: Run e2e tests
+      run: uv run pytest tests/e2e/ -v

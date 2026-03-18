@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 
 export type MessageRole = 'user' | 'assistant';
 
@@ -33,6 +33,7 @@ export interface FileNode {
   type: 'file' | 'folder';
   path: string;
   selected?: boolean;
+  status?: 'indexed' | 'pending' | 'unsupported' | 'failed' | 'outdated';
   children?: FileNode[];
 }
 
@@ -140,6 +141,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<string>('');
 
+  // Track whether saved context files were loaded from backend (non-empty)
+  const hadSavedContextRef = useRef(false);
+  // Track whether initial auto-selection has been applied
+  const initialSelectionDoneRef = useRef(false);
   // Check pipeline readiness from backend
   const checkPipelineStatus = async () => {
     try {
@@ -155,15 +160,52 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Load files and context from backend on mount
+  // Load files and context from backend on mount.
+  // loadContextFiles runs first so hadSavedContextRef is set before the
+  // file-tree auto-select effect triggers.
   useEffect(() => {
-    loadFiles();
-    loadContextFiles();
+    const init = async () => {
+      await loadContextFiles();
+      await loadFiles();
+    };
+    init();
     loadFileIndexingConfig();
     loadWatcherPath();
     loadUserRoot();
     checkPipelineStatus();
     loadSettings();
+  }, []);
+
+  // Auto-select all leaf files when the file tree first loads and no saved
+  // context was found. Runs at most once (initial load only).
+  // Unsupported files are excluded from auto-selection.
+  useEffect(() => {
+    if (
+      fileTree.length > 0 &&
+      !hadSavedContextRef.current &&
+      !initialSelectionDoneRef.current
+    ) {
+      const collectLeaves = (nodes: FileNode[]): string[] =>
+        nodes.flatMap((n) =>
+          n.type === 'file'
+            ? n.status === 'unsupported' ? [] : [n.path]
+            : collectLeaves(n.children ?? [])
+        );
+      const allLeaves = collectLeaves(fileTree);
+      if (allLeaves.length > 0) {
+        setSelectedFiles(allLeaves);
+      }
+      initialSelectionDoneRef.current = true;
+    }
+  }, [fileTree]);
+
+  // Periodically refresh the file tree to pick up status changes
+  // (e.g. pending → indexed) while indexing is in progress.
+  useEffect(() => {
+    const interval = setInterval(() => {
+      loadFiles();
+    }, 10_000);
+    return () => clearInterval(interval);
   }, []);
 
   const loadContextFiles = async () => {
@@ -173,7 +215,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       if (data.files && Array.isArray(data.files)) {
         // Only set files, filter out directories
         const filesOnly = data.files.filter((path: string) => !path.endsWith('/'));
-        setSelectedFiles(filesOnly);
+        if (filesOnly.length > 0) {
+          hadSavedContextRef.current = true;
+          setSelectedFiles(filesOnly);
+        }
+        // If filesOnly is empty, don't overwrite — let the auto-select
+        // effect populate selectedFiles from the file tree instead.
       }
     } catch (error) {
       console.error('Failed to load context files:', error);

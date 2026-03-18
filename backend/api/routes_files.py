@@ -1,6 +1,7 @@
 """File metadata endpoints."""
 
 import fnmatch
+import logging
 import os
 import platform
 import subprocess
@@ -9,7 +10,11 @@ from typing import Any, Dict, List, Optional, Set
 
 import yaml
 from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
+
+from backend.deps import get_context
+from core.context import AppContext
 
 try:
     from watcher.core.database import FileRegistry
@@ -18,6 +23,8 @@ except ImportError:
 
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
     from watcher.core.database import FileRegistry
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/files", tags=["files"])
 
@@ -44,22 +51,124 @@ def _paths_to_full_paths(paths: list, base: Optional[Path] = None) -> list:
     return [_to_full_path(x, base) for x in (paths or [])]
 
 
-def _sync_watcher_to_inclusion_directories(directories: List[str]) -> None:
-    """Sync monitor_config so only these directories are active (same logic as POST /watcher/sync)."""
+def _sync_watcher_to_inclusion(
+    directories: List[str],
+    files: List[str],
+    scheduler: Optional[Any] = None,
+) -> None:
+    """Sync monitor_config and watched_files to match inclusion.directories + inclusion.files.
+
+    When a path is removed from the inclusion list, also purge its data from
+    local_search.db (files, chunks, vectors) so stale content is no longer
+    returned during retrieval.
+
+    When *scheduler* is provided (from AppContext), immediately enqueue indexing
+    jobs for newly-added files so indexing starts without waiting for the
+    background reconciliation loop.
+    """
     db_path = PROJECT_ROOT / "file_registry.db"
     if not db_path.exists():
         return
     registry = FileRegistry(db_path=str(db_path))
-    raw = [p.strip() for p in (directories or []) if p and p.strip()]
-    inclusion_set = {os.path.abspath(os.path.expanduser(p)).rstrip(os.sep) for p in raw}
-    all_db_paths = registry.get_all_monitor_paths()
-    for db_path in all_db_paths:
-        normalized_db = db_path.rstrip(os.sep)
-        if normalized_db not in inclusion_set:
-            registry.remove_watch_path(db_path)
-    for p in raw:
+
+    raw_dirs = [p.strip() for p in (directories or []) if p and p.strip()]
+    raw_files = [p.strip() for p in (files or []) if p and p.strip()]
+
+    dir_set = {os.path.abspath(os.path.expanduser(p)).rstrip(os.sep) for p in raw_dirs}
+    file_set = {os.path.abspath(os.path.expanduser(p)) for p in raw_files}
+    all_inclusion = dir_set | file_set
+
+    # Collect paths being removed so we can purge from unified DB
+    removed_paths: List[str] = []
+    for existing in registry.get_all_monitor_paths():
+        if existing.rstrip(os.sep) not in all_inclusion:
+            removed_paths.append(existing)
+            registry.remove_watch_path(existing)
+
+    # Purge removed paths from local_search.db (files + chunks + vectors)
+    if removed_paths:
+        try:
+            from db.unified import UnifiedDatabase
+
+            unified_db_path = str(PROJECT_ROOT / "local_search.db")
+            unified_db = UnifiedDatabase(db_path=unified_db_path)
+            for rp in removed_paths:
+                norm = rp.rstrip(os.sep)
+                if os.path.isdir(norm) or not os.path.exists(norm):
+                    unified_db.remove_files_under_directory(norm)
+                else:
+                    unified_db.remove_file(norm)
+        except Exception as exc:
+            logger.warning("Failed to purge removed paths from unified DB: %s", exc)
+
+    # Track which monitor_config paths are still ACTIVE after removals.
+    # New paths (not in this set) will have indexing jobs scheduled immediately.
+    # Use get_watch_paths() (active only) so that re-added paths (previously
+    # deactivated) are correctly identified as new and scheduled for indexing.
+    existing_paths = {d["path"].rstrip(os.sep) for d in registry.get_watch_paths()}
+
+    # Ensure directories are active in monitor_config and schedule indexing
+    from ingestion.pipeline import PipelineConfig
+
+    sup_exts = set(PipelineConfig().supported_extensions)
+
+    for p in raw_dirs:
         full_path = os.path.abspath(os.path.expanduser(p))
         registry.add_watch_path(full_path, [])
+        # If this directory is newly added, immediately schedule its files
+        if scheduler and full_path.rstrip(os.sep) not in existing_paths:
+            _schedule_directory(full_path, registry, scheduler, sup_exts)
+
+    # Ensure individual files are active in monitor_config AND watched_files
+    for p in raw_files:
+        full_path = os.path.abspath(os.path.expanduser(p))
+        path_obj = Path(full_path)
+        if path_obj.is_file():
+            registry.add_watch_path(full_path, [])
+            registry.upsert_file(full_path, path_obj.stat().st_mtime)
+            # Immediately schedule indexing for newly-added files
+            if scheduler and full_path not in existing_paths:
+                ext = path_obj.suffix.lower()
+                if ext in sup_exts:
+                    try:
+                        scheduler.schedule(full_path, source="ui")
+                        logger.info("Scheduled indexing for file: %s", full_path)
+                    except Exception as exc:
+                        logger.warning("Failed to schedule %s: %s", full_path, exc)
+
+
+def _schedule_directory(
+    dir_path: str,
+    registry: FileRegistry,
+    scheduler: Any,
+    supported_extensions: Set[str],
+) -> None:
+    """Walk a directory and schedule an indexing job for each supported file."""
+    for root, _dirs, filenames in os.walk(dir_path):
+        for name in filenames:
+            if name.startswith("."):
+                continue
+            ext = os.path.splitext(name)[1].lower()
+            if ext not in supported_extensions:
+                continue
+            fp = os.path.join(root, name)
+            try:
+                registry.upsert_file(fp, os.stat(fp).st_mtime)
+                scheduler.schedule(fp, source="ui")
+            except Exception as exc:
+                logger.warning("Failed to schedule %s: %s", fp, exc)
+
+
+def _sync_watcher_to_inclusion_directories(directories: List[str]) -> None:
+    """Backwards-compatible wrapper — syncs directories and reads files from YAML.
+
+    Reads ``inclusion.files`` from the persisted config so that individual
+    files are not accidentally deactivated when only directories are passed.
+    """
+    config = load_file_indexing_config()
+    inclusion = config.get("inclusion", {})
+    files = inclusion.get("files", []) or []
+    _sync_watcher_to_inclusion(directories, files)
 
 
 def load_file_indexing_config() -> Dict[str, Any]:
@@ -130,8 +239,16 @@ def build_file_tree(
     excluded_dirs: Optional[Set[str]] = None,
     excluded_files: Optional[Set[str]] = None,
     exclusion_patterns: Optional[List[str]] = None,
+    file_statuses: Optional[Dict[str, str]] = None,
+    supported_extensions: Optional[Set[str]] = None,
 ) -> list:
-    """Recursively build file tree structure with absolute paths, filtering exclusions."""
+    """Recursively build file tree structure with absolute paths, filtering exclusions.
+
+    Each file node receives a ``status`` field:
+    - ``indexed``  – file has been successfully embedded and is searchable.
+    - ``pending``  – file is queued / being indexed.
+    - ``unsupported`` – file extension is not handled by the ingestion pipeline.
+    """
     full_path = Path(path)
     if not full_path.exists():
         return []
@@ -139,6 +256,8 @@ def build_file_tree(
     excl_dirs = excluded_dirs or set()
     excl_files = excluded_files or set()
     excl_patterns = exclusion_patterns or []
+    statuses = file_statuses or {}
+    sup_exts = supported_extensions or set()
 
     nodes = []
     try:
@@ -155,7 +274,7 @@ def build_file_tree(
             ):
                 continue
 
-            node = {
+            node: Dict[str, Any] = {
                 "id": abs_path.replace(os.sep, "_"),
                 "name": item.name,
                 "type": "folder" if is_dir else "file",
@@ -169,9 +288,20 @@ def build_file_tree(
                     excl_dirs,
                     excl_files,
                     excl_patterns,
+                    statuses,
+                    sup_exts,
                 )
                 if children:
                     node["children"] = children
+            else:
+                # Determine file status for the UI
+                ext = item.suffix.lower()
+                if sup_exts and ext not in sup_exts:
+                    node["status"] = "unsupported"
+                elif abs_path in statuses:
+                    node["status"] = statuses[abs_path]
+                else:
+                    node["status"] = "pending"
 
             nodes.append(node)
     except PermissionError:
@@ -205,6 +335,21 @@ async def list_files():
     }
     exclusion_patterns: List[str] = exclusion_cfg.get("patterns", []) or []
 
+    # Load file statuses from the unified DB and supported extensions
+    file_statuses: Dict[str, str] = {}
+    try:
+        from db.unified import UnifiedDatabase
+
+        unified_db_path = str(PROJECT_ROOT / "local_search.db")
+        unified_db = UnifiedDatabase(db_path=unified_db_path)
+        file_statuses = unified_db.get_all_file_statuses()
+    except Exception:
+        pass
+
+    from ingestion.pipeline import PipelineConfig
+
+    supported_extensions: Set[str] = set(PipelineConfig().supported_extensions)
+
     all_nodes = []
 
     # Directory trees
@@ -212,7 +357,13 @@ async def list_files():
         if not dir_path or not Path(dir_path).exists():
             continue
         tree = build_file_tree(
-            dir_path, dir_path, excluded_dirs, excluded_files, exclusion_patterns
+            dir_path,
+            dir_path,
+            excluded_dirs,
+            excluded_files,
+            exclusion_patterns,
+            file_statuses,
+            supported_extensions,
         )
         if tree:
             resolved = str(Path(dir_path).resolve())
@@ -238,12 +389,22 @@ async def list_files():
             abs_path, p.name, False, excluded_dirs, excluded_files, exclusion_patterns
         ):
             continue
+
+        ext = p.suffix.lower()
+        if supported_extensions and ext not in supported_extensions:
+            status = "unsupported"
+        elif abs_path in file_statuses:
+            status = file_statuses[abs_path]
+        else:
+            status = "pending"
+
         all_nodes.append(
             {
                 "id": abs_path.replace(os.sep, "_"),
                 "name": p.name,
                 "type": "file",
                 "path": abs_path,
+                "status": status,
             }
         )
 
@@ -257,7 +418,10 @@ async def get_file_indexing_config():
 
 
 @router.post("/indexing")
-async def update_file_indexing_config(update: FileIndexingUpdate):
+async def update_file_indexing_config(
+    update: FileIndexingUpdate,
+    ctx: AppContext = Depends(get_context),
+):
     """Update file indexing configuration."""
     config = load_file_indexing_config()
 
@@ -286,9 +450,13 @@ async def update_file_indexing_config(update: FileIndexingUpdate):
         config["context"] = {"files": _paths_to_full_paths(filtered_files)}
 
     save_file_indexing_config(config)
-    # Sync monitor_config with the inclusion list we just saved (so is_active matches YAML)
-    _sync_watcher_to_inclusion_directories(
-        config.get("inclusion", {}).get("directories", [])
+    # Sync monitor_config (and watched_files for individual files) with the saved inclusion list.
+    # Pass the scheduler so new files are enqueued for indexing immediately.
+    inclusion = config.get("inclusion", {})
+    _sync_watcher_to_inclusion(
+        inclusion.get("directories", []),
+        inclusion.get("files", []),
+        scheduler=getattr(ctx, "scheduler", None),
     )
     return {"status": "ok", "config": config}
 

@@ -256,9 +256,20 @@ class UnifiedDatabase:
             conn.close()
 
     def search_with_metadata(
-        self, query_vector: List[float], limit: int = 5, file_id: Optional[int] = None
+        self,
+        query_vector: List[float],
+        limit: int = 5,
+        file_id: Optional[int] = None,
+        file_ids: Optional[List[int]] = None,
     ):
-        """Joins chunks with files to provide the 'file_path' required for citations."""
+        """Joins chunks with files to provide the 'file_path' required for citations.
+
+        Args:
+            query_vector: Embedding vector for the query.
+            limit: Maximum number of results to return.
+            file_id: Single file-level filter (legacy, use *file_ids* for multi-file).
+            file_ids: List of file IDs to restrict the search to.
+        """
         conn = self._get_conn()
         try:
             query_blob = sqlite_vec.serialize_float32(query_vector)
@@ -271,8 +282,12 @@ class UnifiedDatabase:
                 JOIN files f ON c.file_id = f.id
                 WHERE v.embedding MATCH ? AND k = ?
             """
-            params = [query_blob, query_blob, limit]
-            if file_id:
+            params: list = [query_blob, query_blob, limit]
+            if file_ids:
+                placeholders = ",".join("?" for _ in file_ids)
+                sql += f" AND c.file_id IN ({placeholders})"
+                params.extend(file_ids)
+            elif file_id:
                 sql += " AND c.file_id = ?"
                 params.append(file_id)
 
@@ -326,6 +341,18 @@ class UnifiedDatabase:
         finally:
             conn.close()
 
+    def mark_file_indexed(self, file_id: int) -> None:
+        """Set file status to 'indexed' and update last_indexed_at timestamp."""
+        conn = self._get_conn()
+        try:
+            conn.execute(
+                "UPDATE files SET status = 'indexed', last_indexed_at = CURRENT_TIMESTAMP WHERE id = ?",
+                (file_id,),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+
     def update_file_metadata(self, file_path: str, modified: float) -> None:
         """
         Updates only the metadata (last_modified_timestamp) for a file.
@@ -338,5 +365,79 @@ class UnifiedDatabase:
                 (modified, file_path),
             )
             conn.commit()
+        finally:
+            conn.close()
+
+    def get_all_file_statuses(self) -> Dict[str, str]:
+        """Return a mapping of file path -> status for every tracked file.
+
+        Status values: 'indexed', 'pending', 'failed', 'outdated'.
+        """
+        conn = self._get_conn()
+        try:
+            rows = conn.execute("SELECT path, status FROM files").fetchall()
+            return {row["path"]: row["status"] for row in rows}
+        finally:
+            conn.close()
+
+    def remove_files_under_directory(self, directory_path: str) -> int:
+        """Remove all indexed files whose path starts with *directory_path*.
+
+        Deletes vectors first (required before CASCADE on files), then files.
+
+        Returns:
+            Number of files removed.
+        """
+        # Ensure trailing separator for prefix match
+        prefix = directory_path.rstrip(os.sep) + os.sep
+        conn = self._get_conn()
+        try:
+            # Delete vectors for all chunks under this directory
+            conn.execute(
+                """
+                DELETE FROM vec_items
+                WHERE rowid IN (
+                    SELECT c.id FROM chunks c
+                    JOIN files f ON c.file_id = f.id
+                    WHERE f.path LIKE ? OR f.path = ?
+                )
+                """,
+                (prefix + "%", directory_path),
+            )
+            cursor = conn.execute(
+                "DELETE FROM files WHERE path LIKE ? OR path = ?",
+                (prefix + "%", directory_path),
+            )
+            removed = cursor.rowcount
+            conn.commit()
+            return removed
+        finally:
+            conn.close()
+
+    def get_file_ids_for_paths(self, file_paths: List[str]) -> List[int]:
+        """Return file IDs for the given paths (exact match or prefix for directories).
+
+        Paths ending with os.sep are treated as directory prefixes.
+        """
+        if not file_paths:
+            return []
+        conn = self._get_conn()
+        try:
+            ids: List[int] = []
+            for fp in file_paths:
+                if os.path.isdir(fp):
+                    prefix = fp.rstrip(os.sep) + os.sep
+                    rows = conn.execute(
+                        "SELECT id FROM files WHERE path LIKE ?",
+                        (prefix + "%",),
+                    ).fetchall()
+                    ids.extend(row["id"] for row in rows)
+                else:
+                    row = conn.execute(
+                        "SELECT id FROM files WHERE path = ?", (fp,)
+                    ).fetchone()
+                    if row:
+                        ids.append(row["id"])
+            return ids
         finally:
             conn.close()

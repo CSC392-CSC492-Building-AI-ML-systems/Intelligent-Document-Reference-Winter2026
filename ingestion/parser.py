@@ -234,12 +234,12 @@ class ImageInput(InputDocument):
         if use_vision and has_describe and callable(has_describe):
             text = None
             path_str = str(src.path) if src.path else None
+            image_input: Union[str, bytes] = (
+                path_str if path_str else (src.stream.read() if src.stream else b"")
+            )
+            if hasattr(src.stream, "seek"):
+                src.stream.seek(0)
             try:
-                image_input: Union[str, bytes] = (
-                    path_str if path_str else (src.stream.read() if src.stream else b"")
-                )
-                if hasattr(src.stream, "seek"):
-                    src.stream.seek(0)
                 text = llm_client.describe_image(image_input)
             except Exception as e:
                 logger.warning(
@@ -248,11 +248,23 @@ class ImageInput(InputDocument):
                     e,
                 )
                 text = None
-            if text:
+            if not (text or "").strip():
+                try:
+                    if hasattr(src.stream, "seek"):
+                        src.stream.seek(0)
+                    text = llm_client.describe_image(
+                        image_input,
+                        prompt="What is in this image? Reply in one short sentence for document search.",
+                    )
+                except Exception as e:
+                    logger.debug(
+                        "VLM fallback describe failed for %s: %s", src.identifier, e
+                    )
+            if (text or "").strip():
                 logger.debug("Vision LLM described image %s", src.identifier)
                 blocks.append(
                     ContentBlock(
-                        content=text,
+                        content=(text or "").strip(),
                         block_type=BlockType.IMAGE_TEXT,
                         source_modality=SourceModality.IMAGE,
                         metadata=BlockMetadata(
@@ -547,42 +559,80 @@ class PDFInput(InputDocument):
             blocks: list[ContentBlock] = []
             for pnum in sorted(page_results.keys()):
                 for blk in page_results[pnum]:
-                    img_bytes = getattr(blk, "_image_bytes", None)
-                    if blk.block_type == BlockType.IMAGE_TEXT and img_bytes:
-                        text = None
-                        # Try VLM first
-                        if use_vision and has_describe and callable(has_describe):
-                            try:
-                                text = llm_client.describe_image(img_bytes)
-                            except Exception as e:
-                                logger.debug(
-                                    "VLM describe_image failed for %s: %s",
-                                    blk.metadata.image_id,
-                                    e,
-                                )
-                        # Fall back to OCR
-                        if not text and ocr_enabled and ocr_provider:
-                            try:
-                                r = ocr_provider.extract_text(
-                                    img_bytes,
-                                    source_location=blk.metadata.image_id,
-                                )
-                                text = r.text.strip() if r.text else None
-                            except Exception as e:
-                                logger.debug(
-                                    "OCR failed for %s: %s",
-                                    blk.metadata.image_id,
-                                    e,
-                                )
-                        if text:
+                    try:
+                        img_bytes = getattr(blk, "_image_bytes", None)
+                        if blk.block_type == BlockType.IMAGE_TEXT and img_bytes:
+                            text = None
+                            # Try VLM first (detailed description for search)
+                            if use_vision and has_describe and callable(has_describe):
+                                try:
+                                    text = llm_client.describe_image(img_bytes)
+                                except Exception as e:
+                                    logger.debug(
+                                        "VLM describe_image failed for %s: %s",
+                                        blk.metadata.image_id,
+                                        e,
+                                    )
+                            # Fall back to OCR
+                            if not text and ocr_enabled and ocr_provider:
+                                try:
+                                    r = ocr_provider.extract_text(
+                                        img_bytes,
+                                        source_location=blk.metadata.image_id,
+                                    )
+                                    text = r.text.strip() if r.text else None
+                                except Exception as e:
+                                    logger.debug(
+                                        "OCR failed for %s: %s",
+                                        blk.metadata.image_id,
+                                        e,
+                                    )
+                            # If still no context, retry VLM with a simpler prompt (often gets a response when default returns empty)
+                            if (
+                                not (text or "").strip()
+                                and use_vision
+                                and has_describe
+                                and callable(has_describe)
+                            ):
+                                try:
+                                    fallback = llm_client.describe_image(
+                                        img_bytes,
+                                        prompt="What is in this image? Reply in one short sentence for document search.",
+                                    )
+                                    text = (fallback or "").strip()
+                                except Exception as e:
+                                    logger.debug(
+                                        "VLM fallback describe failed for %s: %s",
+                                        blk.metadata.image_id,
+                                        e,
+                                    )
                             method = (
                                 ExtractionMethod.LLM_ASSISTED
-                                if use_vision and has_describe
-                                else ExtractionMethod.OCR
+                                if text and use_vision and has_describe
+                                else (
+                                    ExtractionMethod.OCR
+                                    if text
+                                    else ExtractionMethod.NATIVE
+                                )
                             )
+                            # Always chunk: use description/OCR text, or minimal placeholder only when all description attempts failed
+                            content = (text or "").strip()
+                            if not content:
+                                pnum_val = blk.metadata.page_number or 0
+                                content = f"[Embedded image on page {pnum_val}]"
+                                logger.debug(
+                                    "Embedded image %s: no description (VLM/OCR); using placeholder",
+                                    blk.metadata.image_id,
+                                )
+                            else:
+                                logger.info(
+                                    "Embedded image %s described (%d chars)",
+                                    blk.metadata.image_id,
+                                    len(content),
+                                )
                             blocks.append(
                                 ContentBlock(
-                                    content=text,
+                                    content=content,
                                     block_type=BlockType.IMAGE_TEXT,
                                     source_modality=SourceModality.PDF,
                                     metadata=BlockMetadata(
@@ -593,9 +643,17 @@ class PDFInput(InputDocument):
                                     ),
                                 )
                             )
-                        # Skip images that produced no text
-                    else:
-                        if blk.content:
+                        else:
+                            if blk.content:
+                                blocks.append(blk)
+                    except Exception as e:
+                        logger.warning(
+                            "Skipping block (page %s) due to error: %s",
+                            pnum,
+                            e,
+                            exc_info=False,
+                        )
+                        if blk.block_type != BlockType.IMAGE_TEXT and blk.content:
                             blocks.append(blk)
 
             min_chars = getattr(config, "pdf_min_block_chars", 500) if config else 500

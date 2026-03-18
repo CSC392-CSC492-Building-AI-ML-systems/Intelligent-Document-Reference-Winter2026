@@ -66,6 +66,15 @@ class FileTrackingService:
     def _scan_and_index(
         self, path: str, excluded_files: Optional[List[str]] = None
     ) -> None:
+        if os.path.isfile(path):
+            # Individual file entry in monitor_config — seed watched_files and schedule directly
+            logger.info("Registering individual file: %s", path)
+            try:
+                self.db.upsert_file(path, os.stat(path).st_mtime)
+                self._schedule(path)
+            except OSError:
+                logger.warning("Could not stat individual file: %s", path)
+            return
         logger.info("Scanning directory: %s", path)
         for _, info in self.scanner.scan_directory(path, excluded_files=excluded_files):
             self.db.upsert_file(info["path"], info["mtime"])
@@ -120,6 +129,26 @@ class FileTrackingService:
             excluded = cfg.get("excluded_files", [])
             self.watcher.schedule_watch(path, excluded)
             self._scan_and_index(path, excluded)
+
+        # Polling fallback for individual files: watchdog's parent-dir watch
+        # on macOS (FSEvents) can silently miss file-level modifications.
+        # Compare current mtime against watched_files and re-schedule when
+        # a change is detected.
+        for path in desired & actual:
+            if not os.path.isfile(path):
+                continue
+            try:
+                current_mtime = os.stat(path).st_mtime
+                state = self.db.get_file_state(path)
+                if state is None:
+                    # File missing from watched_files — re-seed it
+                    self.db.upsert_file(path, current_mtime)
+                    self._schedule(path)
+                elif current_mtime != state["last_modified"]:
+                    self.db.upsert_file(path, current_mtime)
+                    self._schedule(path)
+            except OSError:
+                pass
 
         self.watch_configs = new_configs
 
