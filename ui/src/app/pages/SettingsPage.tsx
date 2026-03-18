@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useBeforeUnload, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useChatContext } from '@/app/contexts/ChatContext';
 import { ExclusionConfigDialog } from '@/app/components/ExclusionConfigDialog';
 import { Button } from '@/app/components/ui/button';
@@ -13,40 +13,6 @@ import { Slider } from '@/app/components/ui/slider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { ArrowLeft, Moon, Sun, Save, X, FolderOpen, FilePlus } from 'lucide-react';
 import { toast } from 'sonner';
-
-type SettingsTab = 'general' | 'models' | 'indexing' | 'advanced';
-
-interface IndexingSnapshot {
-  indexedFiles: string[];
-  indexedDirectories: string[];
-  excludedFiles: string[];
-  excludedDirectories: string[];
-  exclusionPatterns: string[];
-}
-
-function normalizeList(items: string[]): string[] {
-  return Array.from(new Set(items.map((item) => item.trim()).filter(Boolean))).sort();
-}
-
-function createIndexingSnapshot(
-  indexedFiles: string[],
-  indexedDirectories: string[],
-  excludedFiles: string[],
-  excludedDirectories: string[],
-  exclusionPatterns: string[]
-): IndexingSnapshot {
-  return {
-    indexedFiles: normalizeList(indexedFiles),
-    indexedDirectories: normalizeList(indexedDirectories),
-    excludedFiles: normalizeList(excludedFiles),
-    excludedDirectories: normalizeList(excludedDirectories),
-    exclusionPatterns: normalizeList(exclusionPatterns),
-  };
-}
-
-function snapshotsEqual(a: IndexingSnapshot, b: IndexingSnapshot): boolean {
-  return JSON.stringify(a) === JSON.stringify(b);
-}
 
 export function SettingsPage() {
   const navigate = useNavigate();
@@ -67,6 +33,7 @@ export function SettingsPage() {
     setDarkMode,
     userInfo,
     setUserInfo,
+    syncWatcherPaths,
     indexedFiles,
     indexedDirectories,
     toggleIndexedFile,
@@ -89,78 +56,6 @@ export function SettingsPage() {
   const [isBrowsing, setIsBrowsing] = useState(false);
   const [isBrowsingExclusion, setIsBrowsingExclusion] = useState(false);
   const [isBrowsingFiles, setIsBrowsingFiles] = useState(false);
-  const [activeTab, setActiveTab] = useState<SettingsTab>('general');
-
-  const currentSnapshot = useMemo(
-    () =>
-      createIndexingSnapshot(
-        indexedFiles,
-        indexedDirectories,
-        excludedFiles,
-        excludedDirectories,
-        exclusionPatterns
-      ),
-    [indexedFiles, indexedDirectories, excludedFiles, excludedDirectories, exclusionPatterns]
-  );
-
-  const [savedSnapshot, setSavedSnapshot] = useState<IndexingSnapshot>(currentSnapshot);
-
-  const hasUnsavedIndexingChanges = useMemo(
-    () => !snapshotsEqual(currentSnapshot, savedSnapshot),
-    [currentSnapshot, savedSnapshot]
-  );
-
-  useEffect(() => {
-    if (!hasUnsavedIndexingChanges) {
-      setSavedSnapshot(currentSnapshot);
-    }
-  }, [currentSnapshot, hasUnsavedIndexingChanges]);
-
-  const showUnsavedIndexingWarning = useCallback(() => {
-    toast.error('Unsaved file indexing changes', {
-      description:
-        'Save Configuration to apply your updates, or undo them before leaving this page.',
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!hasUnsavedIndexingChanges) return;
-
-    // Keep users on the page when pressing browser Back while changes are unsaved.
-    window.history.pushState(null, '', window.location.href);
-
-    const handlePopState = () => {
-      showUnsavedIndexingWarning();
-      window.history.pushState(null, '', window.location.href);
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
-  }, [hasUnsavedIndexingChanges, showUnsavedIndexingWarning]);
-
-  useBeforeUnload(
-    useCallback(
-      (event) => {
-        if (!hasUnsavedIndexingChanges) return;
-        event.preventDefault();
-        event.returnValue = '';
-      },
-      [hasUnsavedIndexingChanges]
-    )
-  );
-
-  const guardNavigate = useCallback(
-    (target: string) => {
-      if (hasUnsavedIndexingChanges) {
-        showUnsavedIndexingWarning();
-        return;
-      }
-      navigate(target);
-    },
-    [hasUnsavedIndexingChanges, navigate, showUnsavedIndexingWarning]
-  );
 
   const handleDarkModeChange = async (enabled: boolean) => {
     setDarkMode(enabled);
@@ -255,7 +150,6 @@ export function SettingsPage() {
       });
 
       if (success) {
-        setSavedSnapshot(currentSnapshot);
         toast.success('File indexing configuration saved successfully!');
       } else {
         toast.error('Failed to save file indexing configuration.');
@@ -272,12 +166,7 @@ export function SettingsPage() {
       {/* Header */}
       <div className="border-b bg-card">
         <div className="px-4 py-4 flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => guardNavigate('/chat')}
-            className="cursor-pointer"
-          >
+          <Button variant="ghost" size="icon" onClick={() => navigate('/chat')} className="cursor-pointer">
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <h1 className="text-2xl font-semibold">Settings</h1>
@@ -286,7 +175,7 @@ export function SettingsPage() {
 
       {/* Settings Content */}
       <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as SettingsTab)} className="w-full">
+        <Tabs defaultValue="general" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="general" className="cursor-pointer">General Settings</TabsTrigger>
             <TabsTrigger value="models" className="cursor-pointer">Model Configuration</TabsTrigger>
@@ -643,11 +532,6 @@ export function SettingsPage() {
                     )}
                   </Button>
                 </div>
-                {hasUnsavedIndexingChanges && (
-                  <p className="text-sm text-amber-700 dark:text-amber-400">
-                    You have unsaved indexing changes. Save Configuration before leaving this page.
-                  </p>
-                )}
               </CardContent>
             </Card>
           </TabsContent>
