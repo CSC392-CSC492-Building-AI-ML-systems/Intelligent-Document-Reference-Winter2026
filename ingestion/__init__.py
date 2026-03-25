@@ -29,7 +29,6 @@ from ingestion.models import (
 from ingestion.ocr import OCRProvider, OCRResult, TesseractOCRProvider
 from ingestion.orchestrator import parse_and_prepare, parse_and_prepare_batch
 from ingestion.parser import (
-    AudioInput,
     CodeInput,
     ImageInput,
     InputDocument,
@@ -59,7 +58,6 @@ __all__ = [
     "InputSource",
     "PDFInput",
     "ImageInput",
-    "AudioInput",
     "TextInput",
     "CodeInput",
     "OCRProvider",

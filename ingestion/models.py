@@ -39,7 +39,6 @@ class SourceModality(str, Enum):
 
     PDF = "pdf"
     IMAGE = "image"
-    AUDIO = "audio"
     TEXT = "text"
     CODE = "code"
 

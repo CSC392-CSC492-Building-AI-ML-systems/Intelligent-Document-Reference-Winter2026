@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useRef, useMemo, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 
 export type MessageRole = 'user' | 'assistant';
 
@@ -8,8 +8,6 @@ export interface Citation {
   snippet: string;
   relevance_score: number;
   chunk_index: number;
-  page_number?: number;
-  section?: string;
 }
 
 export interface Message {
@@ -26,9 +24,8 @@ export interface Message {
 // Chat history removed - not focusing on that right now
 
 export type InferenceMode = 'retrieval' | 'q&a' | 'deep-research';
-export type ModelType = string;
+export type ModelType = 'gpt-4' | 'gemini-2.5' | 'claude-3' | 'llama-3';
 export type ModelProvider = 'local' | 'online';
-export type RuntimeBackend = 'local' | 'api' | 'gemini' | 'voyage';
 
 export interface FileNode {
   id: string;
@@ -36,7 +33,7 @@ export interface FileNode {
   type: 'file' | 'folder';
   path: string;
   selected?: boolean;
-  status?: 'indexed' | 'pending' | 'indexing' | 'unsupported' | 'failed' | 'outdated';
+  status?: 'indexed' | 'pending' | 'unsupported' | 'failed' | 'outdated';
   children?: FileNode[];
 }
 
@@ -47,19 +44,10 @@ interface ChatContextType {
   selectedFiles: string[];
   fileTree: FileNode[];
   modelProvider: ModelProvider;
-  inferenceBackend: RuntimeBackend;
-  embeddingBackend: RuntimeBackend;
   localEndpoint: string;
-  embeddingModel: string;
-  embeddingDimension: number;
-  availableInferenceModels: string[];
-  availableEmbeddingModels: string[];
-  availableEmbeddingDimensions: number[];
-  localOllamaModels: string[];
   apiKeys: Record<string, string>;
   temperature: number;
   contextSize: number;
-  topK: number;
   indexedFiles: string[];
   indexedDirectories: string[];
   excludedFiles: string[];
@@ -68,25 +56,19 @@ interface ChatContextType {
   isLoading: boolean;
   pipelineReady: boolean;
   indexedChunkCount: number;
-  reindexRequired: boolean;
-  outdatedFileCount: number;
   // General settings
   systemPrompt: string;
   darkMode: boolean;
+  userInfo: string;
   sendMessage: (content: string) => Promise<void>;
   setInferenceMode: (mode: InferenceMode) => void;
   setSelectedModel: (model: ModelType) => void;
   toggleFileSelection: (path: string) => void;
   setModelProvider: (provider: ModelProvider) => void;
-  setInferenceBackend: (backend: RuntimeBackend) => void;
-  setEmbeddingBackend: (backend: RuntimeBackend) => void;
   setLocalEndpoint: (endpoint: string) => void;
-  setEmbeddingModel: (model: string) => void;
-  setEmbeddingDimension: (dimension: number) => void;
   setApiKey: (model: string, key: string) => void;
   setTemperature: (temp: number) => void;
   setContextSize: (size: number) => void;
-  setTopK: (k: number) => void;
   toggleIndexedFile: (path: string) => void;
   toggleExcludedFile: (path: string) => void;
   addIndexedDirectory: (path: string) => void;
@@ -97,6 +79,7 @@ interface ChatContextType {
   removeExclusionPattern: (pattern: string) => void;
   setSystemPrompt: (prompt: string) => void;
   setDarkMode: (enabled: boolean) => void;
+  setUserInfo: (info: string) => void;
   importFolder: (files: FileList, type: 'inclusion' | 'exclusion') => Promise<void>;
   setWatcherPath: (path: string) => Promise<boolean>;
   browseFolderForWatcher: (type?: 'inclusion' | 'exclusion') => Promise<{ path: string; status: string } | null>;
@@ -116,18 +99,10 @@ interface ChatContextType {
   getFileIndexingConfig: () => Promise<{ inclusion?: { directories?: string[] } }>;
   loadFileIndexingConfig: () => Promise<void>;
   loadFiles: () => Promise<void>;
-  refreshPipelineStatus: () => Promise<void>;
   saveSettings: () => Promise<void>;
   saveSetting: (key: string, value: any) => Promise<void>;
-  refreshOllamaModels: (endpoint?: string) => Promise<string[]>;
-  refreshEmbeddingDimensions: (
-    backend?: RuntimeBackend,
-    model?: string,
-    options?: { forceDefault?: boolean; forceRefresh?: boolean }
-  ) => Promise<number[]>;
   pickFolder: () => Promise<{ path: string; status: string } | null>;
   pickFiles: () => Promise<{ paths: string[]; status: string } | null>;
-  openPath: (path: string) => Promise<void>;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -135,80 +110,21 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 // Use relative URL when not set so same-origin works (e.g. app at 127.0.0.1:8000)
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
 
-const DEFAULT_INFERENCE_MODELS: Record<string, string[]> = {
-  local: ['llama3'],
-  api: ['gpt-4o', 'gpt-4.1-mini'],
-  gemini: ['gemini-2.5-flash-lite'],
-};
-
-const DEFAULT_EMBEDDING_MODELS: Record<string, string[]> = {
-  local: ['nomic-embed-text'],
-  api: ['text-embedding-3-small', 'text-embedding-3-large'],
-  gemini: ['models/gemini-embedding-001'],
-  voyage: ['voyage-multimodal-3.5'],
-};
-
-const EMBEDDING_DIMS_MIN_FETCH_INTERVAL_MS = 60_000;
-
-const STATIC_EMBEDDING_DIMS: Record<string, { dims: number[]; defaultDimension: number }> = {
-  'gemini|models/gemini-embedding-001': { dims: [3072], defaultDimension: 3072 },
-  'gemini|models/text-embedding-004': { dims: [768], defaultDimension: 768 },
-};
-
-function getStaticDims(backend: string, model: string) {
-  return STATIC_EMBEDDING_DIMS[`${backend}|${model}`] ?? null;
-}
-
-const LOCAL_EMBEDDING_MODEL_HINTS = [
-  'embed',
-  'embedding',
-  'bge',
-  'e5',
-  'nomic',
-  'jina',
-  'snowflake',
-  'gte',
-  'mxbai',
-];
-
-const isLikelyLocalEmbeddingModel = (modelName: string): boolean => {
-  const normalized = modelName.toLowerCase();
-  return LOCAL_EMBEDDING_MODEL_HINTS.some((hint) => normalized.includes(hint));
-};
-
-const sameNumberArray = (a: number[], b: number[]): boolean => {
-  if (a.length !== b.length) return false;
-  for (let i = 0; i < a.length; i += 1) {
-    if (a[i] !== b[i]) return false;
-  }
-  return true;
-};
-
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inferenceMode, setInferenceMode] = useState<InferenceMode>('retrieval');
-  const [selectedModel, setSelectedModel] = useState<ModelType>('gemini-2.5-flash-lite');
+  const [selectedModel, setSelectedModel] = useState<ModelType>('gpt-4');
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [fileTree, setFileTree] = useState<FileNode[]>([]);
-  const [modelProvider, setModelProviderState] = useState<ModelProvider>('online');
-  const [inferenceBackend, setInferenceBackend] = useState<RuntimeBackend>('gemini');
-  const [embeddingBackend, setEmbeddingBackend] = useState<RuntimeBackend>('gemini');
-  const [localEndpoint, setLocalEndpoint] = useState<string>('http://localhost:11434');
-  const [embeddingModel, setEmbeddingModel] = useState<string>('models/gemini-embedding-001');
-  const [embeddingDimension, setEmbeddingDimension] = useState<number>(3072);
-  const [availableEmbeddingDimensions, setAvailableEmbeddingDimensions] = useState<number[]>([3072]);
-  const [localOllamaModels, setLocalOllamaModels] = useState<string[]>([]);
+  const [modelProvider, setModelProvider] = useState<ModelProvider>('online');
+  const [localEndpoint, setLocalEndpoint] = useState<string>('http://localhost:8000');
   const [apiKeys, setApiKeys] = useState<Record<string, string>>({
-    openai: '',
-    gemini: '',
-    voyage: '',
     'gpt-4': '',
     'gemini-2.5': '',
     'claude-3': '',
   });
   const [temperature, setTemperature] = useState<number>(0.7);
   const [contextSize, setContextSize] = useState<number>(4096);
-  const [topK, setTopK] = useState<number>(5);
   const [indexedFiles, setIndexedFiles] = useState<string[]>([]);
   const [indexedDirectories, setIndexedDirectories] = useState<string[]>([]);
   const [excludedFiles, setExcludedFiles] = useState<string[]>([]);
@@ -217,28 +133,17 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [pipelineReady, setPipelineReady] = useState<boolean>(false);
   const [indexedChunkCount, setIndexedChunkCount] = useState<number>(0);
-  const [reindexRequired, setReindexRequired] = useState<boolean>(false);
-  const [outdatedFileCount, setOutdatedFileCount] = useState<number>(0);
   const [watcherPath, setWatcherPathState] = useState<string | null>(null);
   const [userRoot, setUserRootState] = useState<string | null>(null);
   // General settings
-  const [systemPrompt, setSystemPrompt] = useState<string>(
-    "You are a professional assistant. Use the context below to answer accurately and concisely.\n" +
-    "Return markdown only (headings, bullet lists, tables where helpful).\n" +
-    "Do not append source markers in the answer text.\n" +
-    "Do not include absolute or relative source file paths in the answer body."
-  );
+  const [systemPrompt, setSystemPrompt] = useState<string>('You are a helpful AI assistant that provides accurate and detailed answers based on the provided context.');
   const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<string>('');
 
   // Track whether saved context files were loaded from backend (non-empty)
   const hadSavedContextRef = useRef(false);
   // Track whether initial auto-selection has been applied
   const initialSelectionDoneRef = useRef(false);
-  const embeddingDimsCacheRef = useRef(
-    new Map<string, { dims: number[]; defaultDimension: number }>()
-  );
-  const embeddingDimsInFlightRef = useRef(new Map<string, Promise<number[]>>());
-  const embeddingDimsLastFetchRef = useRef(new Map<string, number>());
   // Check pipeline readiness from backend
   const checkPipelineStatus = async () => {
     try {
@@ -247,8 +152,6 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         const data = await response.json();
         setPipelineReady(data.ready ?? false);
         setIndexedChunkCount(data.indexed_chunks ?? 0);
-        setOutdatedFileCount(data.outdated_files ?? 0);
-        setReindexRequired(Boolean(data.reindex_required ?? (data.outdated_files ?? 0) > 0));
       }
     } catch (error) {
       console.error('Failed to check pipeline status:', error);
@@ -270,50 +173,6 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     loadUserRoot();
     checkPipelineStatus();
     loadSettings();
-  }, []);
-
-  useEffect(() => {
-    const applyMiniOpenFile = async (rawPath?: string | null) => {
-      const filePath = String(rawPath || '').trim();
-      if (!filePath) return;
-
-      setSelectedFiles([filePath]);
-
-      try {
-        await fetch(`${API_BASE_URL}/files/indexing`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ context: { files: [filePath] } }),
-        });
-      } catch (error) {
-        console.error('Failed to persist mini mode context file:', error);
-      }
-
-      if (window.location.pathname !== '/chat') {
-        window.location.href = '/chat';
-      }
-    };
-
-    const consumeFromStorage = () => {
-      const pending = localStorage.getItem('miniMode.openFile');
-      if (!pending) return;
-      localStorage.removeItem('miniMode.openFile');
-      void applyMiniOpenFile(pending);
-    };
-
-    const onMiniOpenFile = (event: Event) => {
-      const custom = event as CustomEvent<string>;
-      void applyMiniOpenFile(custom.detail);
-    };
-
-    consumeFromStorage();
-    window.addEventListener('mini-mode-open-file', onMiniOpenFile as EventListener);
-    window.addEventListener('focus', consumeFromStorage);
-
-    return () => {
-      window.removeEventListener('mini-mode-open-file', onMiniOpenFile as EventListener);
-      window.removeEventListener('focus', consumeFromStorage);
-    };
   }, []);
 
   // Auto-select all leaf files when the file tree first loads and no saved
@@ -347,36 +206,6 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }, 10_000);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    if (inferenceBackend === 'local' || embeddingBackend === 'local') {
-      refreshOllamaModels();
-    }
-  }, [inferenceBackend, embeddingBackend, localEndpoint]);
-
-  const setModelProvider = (provider: ModelProvider) => {
-    setModelProviderState(provider);
-    if (provider === 'local') {
-      setInferenceBackend('local');
-      setEmbeddingBackend('local');
-      return;
-    }
-    if (inferenceBackend === 'local') {
-      // Default online inference to Gemini while still allowing manual override.
-      setInferenceBackend('gemini');
-    }
-    if (embeddingBackend === 'local') {
-      setEmbeddingBackend('api');
-    }
-  };
-
-  useEffect(() => {
-    const inferredProvider: ModelProvider =
-      inferenceBackend === 'local' && embeddingBackend === 'local' ? 'local' : 'online';
-    if (modelProvider !== inferredProvider) {
-      setModelProviderState(inferredProvider);
-    }
-  }, [modelProvider, inferenceBackend, embeddingBackend]);
 
   const loadContextFiles = async () => {
     try {
@@ -463,255 +292,20 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const refreshOllamaModels = async (endpoint?: string): Promise<string[]> => {
-    const target = (endpoint ?? localEndpoint).trim();
-    if (!target) {
-      setLocalOllamaModels([]);
-      return [];
-    }
-
-    try {
-      const response = await fetch(
-        `${API_BASE_URL}/settings/ollama/models?endpoint=${encodeURIComponent(target)}`
-      );
-      if (!response.ok) {
-        throw new Error(`Failed to query Ollama (${response.status})`);
-      }
-      const data = await response.json();
-      const models = Array.isArray(data.models)
-        ? data.models.filter((m: unknown): m is string => typeof m === 'string' && m.length > 0)
-        : [];
-      setLocalOllamaModels(models);
-      return models;
-    } catch (error) {
-      console.error('Failed to refresh Ollama models:', error);
-      setLocalOllamaModels([]);
-      return [];
-    }
-  };
-
-  const refreshEmbeddingDimensionsRef = useRef<
-    (backend?: RuntimeBackend, model?: string, options?: { forceDefault?: boolean; forceRefresh?: boolean }) => Promise<number[]>
-  >(async () => []);
-
-  const refreshEmbeddingDimensions: typeof refreshEmbeddingDimensionsRef.current = async (
-    backend,
-    model,
-    options,
-  ) => refreshEmbeddingDimensionsRef.current(backend, model, options);
-
-  refreshEmbeddingDimensionsRef.current = async (
-    backend?: RuntimeBackend,
-    model?: string,
-    options?: { forceDefault?: boolean; forceRefresh?: boolean },
-  ): Promise<number[]> => {
-    const targetBackend = backend ?? embeddingBackend;
-    const targetModel = (model ?? embeddingModel ?? '').trim();
-    if (!targetBackend || !targetModel) {
-      return [];
-    }
-
-    const forceRefresh = options?.forceRefresh === true;
-
-    // Return static dimensions for known models without any network call.
-    const staticDims = getStaticDims(targetBackend, targetModel);
-    if (staticDims && !forceRefresh) {
-      setAvailableEmbeddingDimensions((current) =>
-        sameNumberArray(current, staticDims.dims) ? current : staticDims.dims
-      );
-      setEmbeddingDimension((current) => {
-        if (options?.forceDefault) return staticDims.defaultDimension;
-        return staticDims.dims.includes(current) ? current : staticDims.defaultDimension;
-      });
-      return staticDims.dims;
-    }
-
-    const params = new URLSearchParams({
-      backend: targetBackend,
-      model: targetModel,
-    });
-    if (targetBackend === 'local' && localEndpoint.trim()) {
-      params.set('endpoint', localEndpoint.trim());
-    }
-
-    const cacheKey = params.toString();
-
-    const inFlight = embeddingDimsInFlightRef.current.get(cacheKey);
-    if (inFlight) {
-      return inFlight;
-    }
-
-    const cached = embeddingDimsCacheRef.current.get(cacheKey);
-
-    if (!forceRefresh && cached) {
-      setAvailableEmbeddingDimensions((current) =>
-        sameNumberArray(current, cached.dims) ? current : cached.dims
-      );
-      setEmbeddingDimension((current) => {
-        if (options?.forceDefault) return cached.defaultDimension;
-        return cached.dims.includes(current) ? current : cached.defaultDimension;
-      });
-      return cached.dims;
-    }
-
-    if (!forceRefresh) {
-      const lastFetchedAt = embeddingDimsLastFetchRef.current.get(cacheKey) ?? 0;
-      if (lastFetchedAt > 0 && Date.now() - lastFetchedAt < EMBEDDING_DIMS_MIN_FETCH_INTERVAL_MS) {
-        return cached?.dims ?? [];
-      }
-    }
-
-    const requestPromise = (async () => {
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/settings/embedding-dimensions?${params.toString()}`
-        );
-        if (!response.ok) {
-          throw new Error(`Failed to fetch embedding dimensions (${response.status})`);
-        }
-
-        const data = await response.json();
-        const dims = Array.isArray(data.dimensions)
-          ? data.dimensions
-              .map((d: unknown) => Number(d))
-              .filter((d: number) => Number.isInteger(d) && d > 0)
-          : [];
-
-        if (dims.length === 0) {
-          return [];
-        }
-
-        const defaultDimensionRaw = Number(data.default_dimension);
-        const defaultDimension =
-          Number.isInteger(defaultDimensionRaw) && defaultDimensionRaw > 0
-            ? defaultDimensionRaw
-            : dims[0];
-
-        embeddingDimsCacheRef.current.set(cacheKey, {
-          dims,
-          defaultDimension,
-        });
-        embeddingDimsLastFetchRef.current.set(cacheKey, Date.now());
-
-        setAvailableEmbeddingDimensions((current) =>
-          sameNumberArray(current, dims) ? current : dims
-        );
-        setEmbeddingDimension((current) => {
-          if (options?.forceDefault) return defaultDimension;
-          return dims.includes(current) ? current : defaultDimension;
-        });
-        return dims;
-      } catch (error) {
-        console.error('Failed to refresh embedding dimensions:', error);
-        embeddingDimsLastFetchRef.current.set(cacheKey, Date.now());
-        return [];
-      } finally {
-        embeddingDimsInFlightRef.current.delete(cacheKey);
-      }
-    })();
-
-    embeddingDimsInFlightRef.current.set(cacheKey, requestPromise);
-
-    return requestPromise;
-  };
-
-  const localEmbeddingModels = useMemo(
-    () => localOllamaModels.filter((m) => isLikelyLocalEmbeddingModel(m)),
-    [localOllamaModels],
-  );
-  const localInferenceModels = useMemo(
-    () => localOllamaModels.filter((m) => !isLikelyLocalEmbeddingModel(m)),
-    [localOllamaModels],
-  );
-
-  const availableInferenceModels = useMemo(() => {
-    if (inferenceBackend === 'local') {
-      return localInferenceModels.length > 0
-        ? localInferenceModels
-        : DEFAULT_INFERENCE_MODELS.local;
-    }
-    return DEFAULT_INFERENCE_MODELS[inferenceBackend] ?? [selectedModel];
-  }, [inferenceBackend, localInferenceModels, selectedModel]);
-
-  const availableEmbeddingModels = useMemo(() => {
-    if (embeddingBackend === 'local') {
-      return localEmbeddingModels.length > 0
-        ? localEmbeddingModels
-        : DEFAULT_EMBEDDING_MODELS.local;
-    }
-    return DEFAULT_EMBEDDING_MODELS[embeddingBackend] ?? [embeddingModel];
-  }, [embeddingBackend, localEmbeddingModels, embeddingModel]);
-
-  useEffect(() => {
-    if (availableInferenceModels.length > 0 && !availableInferenceModels.includes(selectedModel)) {
-      setSelectedModel(availableInferenceModels[0]);
-    }
-  }, [availableInferenceModels, selectedModel]);
-
-  useEffect(() => {
-    if (availableEmbeddingModels.length > 0 && !availableEmbeddingModels.includes(embeddingModel)) {
-      setEmbeddingModel(availableEmbeddingModels[0]);
-    }
-  }, [availableEmbeddingModels, embeddingModel]);
-
-  const prevEmbeddingKeyRef = useRef('');
-  useEffect(() => {
-    if (!embeddingModel) return;
-    if (embeddingBackend === 'local' && localEmbeddingModels.length === 0) return;
-    const key = `${embeddingBackend}|${embeddingModel}|${embeddingBackend === 'local' ? localEndpoint : ''}`;
-    if (key === prevEmbeddingKeyRef.current) return;
-    prevEmbeddingKeyRef.current = key;
-
-    // For statically-known models, apply dims directly without any network call.
-    const staticDims = getStaticDims(embeddingBackend, embeddingModel);
-    if (staticDims) {
-      setAvailableEmbeddingDimensions((cur) =>
-        sameNumberArray(cur, staticDims.dims) ? cur : staticDims.dims
-      );
-      setEmbeddingDimension((cur) =>
-        staticDims.dims.includes(cur) ? cur : staticDims.defaultDimension
-      );
-      return;
-    }
-
-    refreshEmbeddingDimensionsRef.current(embeddingBackend, embeddingModel);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [embeddingBackend, embeddingModel, localEndpoint, localEmbeddingModels.length]);
-
   const loadSettings = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/settings/`);
       if (!response.ok) return;
       const data = await response.json();
       if (data.selectedModel) setSelectedModel(data.selectedModel);
-      if (data.inference_model) setSelectedModel(data.inference_model);
-      if (data.embedding_model) setEmbeddingModel(data.embedding_model);
-      if (data.embedding_dimension !== undefined) {
-        const parsed = Number(data.embedding_dimension);
-        if (Number.isInteger(parsed) && parsed > 0) {
-          setEmbeddingDimension(parsed);
-        }
-      }
       if (data.modelProvider) setModelProvider(data.modelProvider);
-      if (data.inference_backend) {
-        setInferenceBackend(data.inference_backend);
-      } else if (data.modelProvider === 'local') {
-        setInferenceBackend('local');
-      }
-      if (data.embedding_backend) {
-        setEmbeddingBackend(data.embedding_backend);
-      } else if (data.modelProvider === 'local') {
-        setEmbeddingBackend('local');
-      }
       if (data.apiKeys) setApiKeys((prev) => ({ ...prev, ...data.apiKeys }));
       if (data.temperature !== undefined) setTemperature(data.temperature);
       if (data.contextSize !== undefined) setContextSize(data.contextSize);
-      if (data.top_k !== undefined) setTopK(data.top_k);
       if (data.systemPrompt !== undefined) setSystemPrompt(data.systemPrompt);
       if (data.darkMode !== undefined) setDarkMode(data.darkMode);
-      if (data.localEndpoint) {
-        setLocalEndpoint(data.localEndpoint);
-      }
+      if (data.userInfo !== undefined) setUserInfo(data.userInfo);
+      if (data.localEndpoint) setLocalEndpoint(data.localEndpoint);
     } catch (error) {
       console.error('Failed to load settings:', error);
     }
@@ -719,35 +313,21 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
   const saveSettings = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/settings/update`, {
+      await fetch(`${API_BASE_URL}/settings/update`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           selectedModel,
-          inference_model: selectedModel,
-          embedding_model: embeddingModel,
-          embedding_dimension: embeddingDimension,
           modelProvider,
-          inference_backend: inferenceBackend,
-          embedding_backend: embeddingBackend,
           apiKeys,
           temperature,
           contextSize,
-          top_k: topK,
           systemPrompt,
           darkMode,
+          userInfo,
           localEndpoint,
         }),
       });
-      const data = await response.json().catch(() => ({}));
-      if (response.ok) {
-        const requiresReindex = Boolean(data?.reindex_required);
-        if (requiresReindex) {
-          setReindexRequired(true);
-        }
-        await loadFiles();
-        await checkPipelineStatus();
-      }
     } catch (error) {
       console.error('Failed to save settings:', error);
     }
@@ -973,25 +553,6 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const openPath = async (path: string) => {
-    const trimmed = path?.trim();
-    if (!trimmed) return;
-    try {
-      const response = await fetch(`${API_BASE_URL}/files/open-path`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: trimmed }),
-      });
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        throw new Error(data.detail || `Failed to open path (${response.status})`);
-      }
-    } catch (error) {
-      console.error('Failed to open path:', error);
-      throw error;
-    }
-  };
-
   const sendMessage = async (content: string) => {
     const userMessage: Message = {
       id: `msg-${Date.now()}`,
@@ -1012,13 +573,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({
           query: content,
           model: selectedModel,
-          inference_backend: inferenceBackend,
           mode: inferenceMode,
           selected_files: selectedFiles,
           temperature,
           context_size: contextSize,
-          top_k: topK,
-          system_prompt: systemPrompt,
         }),
       });
 
@@ -1176,19 +734,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         selectedFiles,
         fileTree,
         modelProvider,
-        inferenceBackend,
-        embeddingBackend,
         localEndpoint,
-        embeddingModel,
-        embeddingDimension,
-        availableInferenceModels,
-        availableEmbeddingModels,
-        availableEmbeddingDimensions,
-        localOllamaModels,
         apiKeys,
         temperature,
         contextSize,
-        topK,
         indexedFiles,
         indexedDirectories,
         excludedFiles,
@@ -1197,24 +746,18 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         isLoading,
         pipelineReady,
         indexedChunkCount,
-        reindexRequired,
-        outdatedFileCount,
         systemPrompt,
         darkMode,
+        userInfo,
         sendMessage,
         setInferenceMode,
         setSelectedModel,
         toggleFileSelection,
         setModelProvider,
-        setInferenceBackend,
-        setEmbeddingBackend,
         setLocalEndpoint,
-        setEmbeddingModel,
-        setEmbeddingDimension,
         setApiKey,
         setTemperature,
         setContextSize,
-        setTopK,
         toggleIndexedFile,
         toggleExcludedFile,
         addIndexedDirectory,
@@ -1225,6 +768,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         removeExclusionPattern,
         setSystemPrompt,
         setDarkMode,
+        setUserInfo,
         importFolder,
         setWatcherPath,
         browseFolderForWatcher,
@@ -1240,14 +784,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         getFileIndexingConfig,
         loadFileIndexingConfig,
         loadFiles,
-        refreshPipelineStatus: checkPipelineStatus,
         saveSettings,
         saveSetting,
-        refreshOllamaModels,
-        refreshEmbeddingDimensions,
         pickFolder,
         pickFiles,
-        openPath,
       }}
     >
       {children}

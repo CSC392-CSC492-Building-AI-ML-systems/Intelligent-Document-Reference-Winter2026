@@ -1,5 +1,4 @@
 import os
-import re
 import sqlite3
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -13,18 +12,13 @@ class UnifiedDatabase:
     Replaces MetadataManager and VectorDB implementations.
     """
 
-    def __init__(
-        self,
-        db_path: str = "local_search.db",
-        vector_dimension: int = 3072,
-    ) -> None:
+    def __init__(self, db_path: str = "local_search.db") -> None:
         """Initialize the Unified Database.
 
         Args:
             db_path: Path to the SQLite database file.
         """
         self.db_path = db_path
-        self.vector_dimension = int(vector_dimension)
         self._init_db()
 
     def _get_conn(self) -> sqlite3.Connection:
@@ -56,93 +50,10 @@ class UnifiedDatabase:
         conn = self._get_conn()
         try:
             conn.executescript(schema_sql)
-            self._ensure_vec_items_table(conn, self.vector_dimension)
-            self._migrate_chunks_metadata(conn)
             conn.commit()
         except Exception as e:
+            # Table already exists error is common and fine
             print(f"DB Init/Check: {e}")
-        finally:
-            conn.close()
-
-    @staticmethod
-    def _migrate_chunks_metadata(conn: sqlite3.Connection) -> None:
-        """Add page_number and section columns if missing (schema migration)."""
-        cols = {row[1] for row in conn.execute("PRAGMA table_info(chunks)").fetchall()}
-        if "page_number" not in cols:
-            conn.execute("ALTER TABLE chunks ADD COLUMN page_number INTEGER")
-        if "section" not in cols:
-            conn.execute("ALTER TABLE chunks ADD COLUMN section TEXT")
-
-    def _current_vector_dimension(self, conn: sqlite3.Connection) -> Optional[int]:
-        row = conn.execute(
-            "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'vec_items'"
-        ).fetchone()
-        if not row or not row["sql"]:
-            return None
-        match = re.search(r"embedding\s+float\[(\d+)\]", row["sql"], re.IGNORECASE)
-        if not match:
-            return None
-        return int(match.group(1))
-
-    def _ensure_vec_items_table(
-        self,
-        conn: sqlite3.Connection,
-        dimension: int,
-    ) -> None:
-        current = self._current_vector_dimension(conn)
-        if current == dimension:
-            return
-        if current is None:
-            conn.execute(
-                f"CREATE VIRTUAL TABLE IF NOT EXISTS vec_items USING vec0(embedding float[{int(dimension)}])"
-            )
-            return
-
-        # Table already exists with a different dimension. On startup, adopt
-        # the existing dimension rather than destroying indexed data. Explicit
-        # reconfiguration goes through reconfigure_vector_dimension() instead.
-        print(
-            f"DB Init: vec_items has dimension {current}, requested {dimension}. "
-            f"Adopting existing dimension {current}."
-        )
-        self.vector_dimension = current
-
-    def get_vector_dimension(self) -> Optional[int]:
-        conn = self._get_conn()
-        try:
-            return self._current_vector_dimension(conn)
-        finally:
-            conn.close()
-
-    def reconfigure_vector_dimension(self, new_dimension: int) -> None:
-        """Rebuild the vector table (and clear related data) for a full reindex.
-
-        Always clears chunks/vectors/versions so a subsequent indexing run
-        starts from scratch.  Only DROP+CREATEs the virtual table when the
-        dimension actually changes, to avoid unnecessary schema churn.
-        """
-        dimension = int(new_dimension)
-        if dimension <= 0:
-            raise ValueError("Vector dimension must be a positive integer")
-
-        conn = self._get_conn()
-        try:
-            current = self._current_vector_dimension(conn)
-            with conn:
-                if current != dimension:
-                    conn.execute("DROP TABLE IF EXISTS vec_items")
-                    conn.execute(
-                        f"CREATE VIRTUAL TABLE vec_items USING vec0(embedding float[{dimension}])"
-                    )
-                else:
-                    conn.execute("DELETE FROM vec_items")
-                conn.execute("DELETE FROM chunks")
-                conn.execute("DELETE FROM file_versions")
-                conn.execute(
-                    "UPDATE files SET status = 'outdated', last_indexed_at = NULL, "
-                    "file_hash = 'needs_reindex', last_modified_timestamp = 0"
-                )
-            self.vector_dimension = dimension
         finally:
             conn.close()
 
@@ -245,30 +156,18 @@ class UnifiedDatabase:
                 f"Chunks ({len(chunks)}) and embeddings ({len(embeddings)}) count mismatch"
             )
 
-        if embeddings:
-            expected_dim = self.get_vector_dimension() or self.vector_dimension
-            actual_dim = len(embeddings[0])
-            if any(len(vec) != actual_dim for vec in embeddings):
-                raise ValueError("Embedding vectors have inconsistent dimensions")
-            if actual_dim != expected_dim:
-                raise ValueError(
-                    "Embedding dimension mismatch. "
-                    f"DB expects {expected_dim} but embedding model produced {actual_dim}. "
-                    "Select a matching embedding dimension in Settings and re-save to reconfigure the index."
-                )
-
         conn = self._get_conn()
         try:
             with conn:  # Atomic Transaction
                 for chunk, vector in zip(chunks, embeddings):
+                    # 1. Insert Metadata
+                    # Use chunk_id from 'id' or 'chunk_id' field.
                     c_uuid = chunk.get("id") or chunk.get("chunk_id")
 
                     cur = conn.execute(
                         """
-                        INSERT INTO chunks (chunk_id, file_id, version_id, chunk_index,
-                                            start_offset, end_offset, text_content,
-                                            page_number, section)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        INSERT INTO chunks (chunk_id, file_id, version_id, chunk_index, start_offset, end_offset, text_content)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
                         """,
                         (
                             c_uuid,
@@ -278,12 +177,11 @@ class UnifiedDatabase:
                             chunk.get("start_offset", 0),
                             chunk.get("end_offset", 0),
                             chunk.get("text_content", ""),
-                            chunk.get("page_number"),
-                            chunk.get("section"),
                         ),
                     )
                     row_id = cur.lastrowid
 
+                    # 2. Insert Vector using the SAME Row ID
                     vec_blob = sqlite_vec.serialize_float32(vector)
                     conn.execute(
                         "INSERT INTO vec_items(rowid, embedding) VALUES (?, ?)",
@@ -377,19 +275,12 @@ class UnifiedDatabase:
             query_blob = sqlite_vec.serialize_float32(query_vector)
 
             sql = """
-                SELECT c.id, c.text_content, f.path as file_path,
-                    c.page_number, c.section,
+                SELECT c.id, c.text_content, f.path as file_path, 
                     vec_distance_cosine(v.embedding, ?) as distance
                 FROM vec_items v
                 JOIN chunks c ON v.rowid = c.id
                 JOIN files f ON c.file_id = f.id
                 WHERE v.embedding MATCH ? AND k = ?
-                  AND f.status = 'indexed'
-                  AND c.version_id = (
-                      SELECT MAX(fv.id)
-                      FROM file_versions fv
-                      WHERE fv.file_id = c.file_id
-                  )
             """
             params: list = [query_blob, query_blob, limit]
             if file_ids:
@@ -404,105 +295,6 @@ class UnifiedDatabase:
                 dict(row)
                 for row in conn.execute(sql + " ORDER BY distance", params).fetchall()
             ]
-        finally:
-            conn.close()
-
-    def search_text_with_metadata(
-        self,
-        query_text: str,
-        limit: int = 5,
-        file_id: Optional[int] = None,
-        file_ids: Optional[List[int]] = None,
-    ) -> List[Dict[str, Any]]:
-        """Lexical chunk search with metadata, scoped to selected files.
-
-        Ranks chunks by a lightweight SQLite score using exact-ish LIKE matching.
-        """
-        normalized = (query_text or "").strip().lower()
-        if not normalized:
-            return []
-
-        terms = [t for t in normalized.split() if len(t) >= 2]
-        if not terms:
-            return []
-
-        conn = self._get_conn()
-        try:
-            score_parts: List[str] = [
-                "CASE WHEN lower(c.text_content) LIKE ? THEN 5 ELSE 0 END",
-                "CASE WHEN lower(f.path) LIKE ? THEN 6 ELSE 0 END",
-                "CASE WHEN lower(COALESCE(c.section,'')) LIKE ? THEN 3 ELSE 0 END",
-            ]
-            params: List[Any] = [
-                f"%{normalized}%",
-                f"%{normalized}%",
-                f"%{normalized}%",
-            ]
-
-            for term in terms[:8]:
-                score_parts.append("CASE WHEN lower(f.path) LIKE ? THEN 2 ELSE 0 END")
-                params.append(f"%{term}%")
-                score_parts.append(
-                    "CASE WHEN lower(c.text_content) LIKE ? THEN 1 ELSE 0 END"
-                )
-                params.append(f"%{term}%")
-
-            score_expr = " + ".join(score_parts)
-
-            sql = f"""
-                SELECT id, text_content, file_path, page_number, section, lexical_score
-                FROM (
-                    SELECT
-                        c.id,
-                        c.text_content,
-                        f.path AS file_path,
-                        c.page_number,
-                        c.section,
-                        ({score_expr}) AS lexical_score
-                    FROM chunks c
-                    JOIN files f ON c.file_id = f.id
-                                        WHERE 1=1
-                                            AND f.status = 'indexed'
-                                            AND c.version_id = (
-                                                    SELECT MAX(fv.id)
-                                                    FROM file_versions fv
-                                                    WHERE fv.file_id = c.file_id
-                                            )
-            """
-
-            if file_ids:
-                placeholders = ",".join("?" for _ in file_ids)
-                sql += f" AND c.file_id IN ({placeholders})"
-                params.extend(file_ids)
-            elif file_id:
-                sql += " AND c.file_id = ?"
-                params.append(file_id)
-
-            sql += (
-                " ) WHERE lexical_score > 0 ORDER BY lexical_score DESC, id ASC LIMIT ?"
-            )
-            params.append(limit)
-
-            rows = conn.execute(sql, params).fetchall()
-            return [dict(row) for row in rows]
-        finally:
-            conn.close()
-
-    def clear_all_indexes(self) -> int:
-        """Remove all indexed data: chunks, vectors, versions, and file records.
-
-        Returns the number of file records removed.
-        """
-        conn = self._get_conn()
-        try:
-            with conn:
-                conn.execute("DELETE FROM vec_items")
-                conn.execute("DELETE FROM chunks")
-                conn.execute("DELETE FROM file_versions")
-                row = conn.execute("SELECT COUNT(*) as cnt FROM files").fetchone()
-                count = row["cnt"] if row else 0
-                conn.execute("DELETE FROM files")
-            return count
         finally:
             conn.close()
 
@@ -545,44 +337,6 @@ class UnifiedDatabase:
 
             # Then delete the file (cascades to chunks, versions, etc.)
             conn.execute("DELETE FROM files WHERE path = ?", (file_path,))
-            conn.commit()
-        finally:
-            conn.close()
-
-    def mark_file_failed(
-        self,
-        path: str,
-        file_hash: str,
-        size: int,
-        modified: float,
-    ) -> None:
-        """Set file row to ``failed`` so APIs (e.g. file tree) can surface ingestion errors.
-
-        Inserts the row if missing; otherwise updates metadata and status.
-        """
-        conn = self._get_conn()
-        try:
-            cur = conn.execute("SELECT id FROM files WHERE path = ?", (path,))
-            if cur.fetchone():
-                conn.execute(
-                    """
-                    UPDATE files
-                    SET status = 'failed',
-                        file_hash = ?,
-                        size_bytes = ?,
-                        last_modified_timestamp = ?
-                    WHERE path = ?
-                    """,
-                    (file_hash, size, modified, path),
-                )
-            else:
-                conn.execute(
-                    """
-                    INSERT INTO files (path, file_hash, size_bytes, last_modified_timestamp, status)
-                    VALUES (?, ?, ?, ?, 'failed')
-                    """,
-                    (path, file_hash, size, modified),
-                )
             conn.commit()
         finally:
             conn.close()

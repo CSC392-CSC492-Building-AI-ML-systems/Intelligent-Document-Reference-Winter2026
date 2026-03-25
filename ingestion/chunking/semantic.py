@@ -27,8 +27,6 @@ class CandidateChunk:
     token_estimate: int
     start_offset: int  # character offset in logical document
     end_offset: int
-    page_number: Optional[int] = None
-    section_hierarchy: tuple[str, ...] = ()
 
 
 def _split_large_text(text: str, max_chars: int) -> List[str]:
@@ -115,10 +113,6 @@ def _merge_blocks_into_chunks(
         content = block.content
         start = offset
 
-        meta = block.metadata
-        page = meta.page_number if meta else None
-        section = meta.section_hierarchy if meta else ()
-
         # Standalone: code, table — one block = one chunk (split if oversized)
         if block.block_type in (BlockType.CODE_BLOCK, BlockType.TABLE):
             segments = (
@@ -136,8 +130,6 @@ def _merge_blocks_into_chunks(
                         token_estimate=estimate_tokens(seg),
                         start_offset=seg_start,
                         end_offset=seg_end,
-                        page_number=page,
-                        section_hierarchy=section,
                     )
                 )
                 offset = seg_end + 2
@@ -157,8 +149,6 @@ def _merge_blocks_into_chunks(
                         token_estimate=estimate_tokens(seg),
                         start_offset=seg_start,
                         end_offset=seg_end,
-                        page_number=page,
-                        section_hierarchy=section,
                     )
                 )
                 offset = seg_end + 2
@@ -196,8 +186,6 @@ def _merge_blocks_into_chunks(
                 token_estimate=token_est,
                 start_offset=start,
                 end_offset=end_offset,
-                page_number=page,
-                section_hierarchy=section,
             )
         )
         offset = end_offset + 2  # \n\n before next chunk
@@ -326,16 +314,13 @@ def chunk_document(
             skip_boilerplate=skip_boilerplate,
         ):
             continue
-        entry: dict[str, Any] = {
-            "chunk_id": str(uuid.uuid4()),
-            "chunk_index": len(out),
-            "start_offset": cand.start_offset,
-            "end_offset": cand.end_offset,
-            "text_content": cand.text,
-        }
-        if cand.page_number is not None:
-            entry["page_number"] = cand.page_number
-        if cand.section_hierarchy:
-            entry["section"] = " > ".join(cand.section_hierarchy)
-        out.append(entry)
+        out.append(
+            {
+                "chunk_id": str(uuid.uuid4()),
+                "chunk_index": len(out),
+                "start_offset": cand.start_offset,
+                "end_offset": cand.end_offset,
+                "text_content": cand.text,
+            }
+        )
     return out

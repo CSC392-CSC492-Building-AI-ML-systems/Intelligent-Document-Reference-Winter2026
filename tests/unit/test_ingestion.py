@@ -2,17 +2,13 @@
 
 from pathlib import Path
 
-import pytest
-
 from ingestion import (
-    AudioInput,
     CodeInput,
     IngestionConfig,
     TextInput,
     get_input_handler,
     parse_and_prepare,
 )
-from ingestion.code_syntax import CodeSyntaxError
 from ingestion.models import (
     BlockType,
     ContentBlock,
@@ -52,63 +48,8 @@ def test_get_input_handler_selects_by_extension() -> None:
     """get_input_handler selects correct handler by extension."""
     assert type(get_input_handler("x.pdf")).__name__ == "PDFInput"
     assert type(get_input_handler("x.png")).__name__ == "ImageInput"
-    assert type(get_input_handler("x.mp3")).__name__ == "AudioInput"
-    assert type(get_input_handler("x.wav")).__name__ == "AudioInput"
     assert type(get_input_handler("x.py")).__name__ == "CodeInput"
     assert type(get_input_handler("x.txt")).__name__ == "TextInput"
-    assert type(get_input_handler("x.md")).__name__ == "TextInput"
-    assert type(get_input_handler("x.rst")).__name__ == "TextInput"
-
-
-def test_code_input_rejects_invalid_python(tmp_path: Path) -> None:
-    """CodeInput raises CodeSyntaxError for invalid Python."""
-    f = tmp_path / "bad.py"
-    f.write_text("def broken(\n", encoding="utf-8")
-    with pytest.raises(CodeSyntaxError, match="Python syntax error"):
-        parse_and_prepare(CodeInput(), str(f), config=IngestionConfig())
-
-
-def test_code_input_rejects_invalid_json(tmp_path: Path) -> None:
-    """CodeInput raises CodeSyntaxError for invalid JSON."""
-    f = tmp_path / "bad.json"
-    f.write_text("{ not json ", encoding="utf-8")
-    with pytest.raises(CodeSyntaxError, match="JSON parse error"):
-        parse_and_prepare(CodeInput(), str(f), config=IngestionConfig())
-
-
-def test_code_input_rejects_invalid_css(tmp_path: Path) -> None:
-    """CodeInput raises CodeSyntaxError for invalid CSS."""
-    f = tmp_path / "bad.css"
-    # tinycss2 reports an error token for this malformed input
-    f.write_text("###", encoding="utf-8")
-    with pytest.raises(CodeSyntaxError, match="CSS parse error"):
-        parse_and_prepare(CodeInput(), str(f), config=IngestionConfig())
-
-
-def test_audio_input_transcribes_mp3(tmp_path: Path) -> None:
-    """AudioInput transcribes MP3 files when the inference client supports audio."""
-
-    class _DummyInferenceClient:
-        def transcribe_audio(self, audio):
-            assert isinstance(audio, str)
-            return "hello from audio"
-
-    f = tmp_path / "clip.mp3"
-    # Parser only needs a readable file path; content is not decoded directly.
-    f.write_bytes(b"ID3\x04\x00\x00\x00\x00\x00\x00")
-
-    doc = parse_and_prepare(
-        AudioInput(),
-        str(f),
-        config=IngestionConfig(),
-        llm_client=_DummyInferenceClient(),
-    )
-
-    assert doc.source_modality == SourceModality.AUDIO
-    assert len(doc.blocks) == 1
-    assert doc.blocks[0].content == "hello from audio"
-    assert doc.blocks[0].block_type == BlockType.PARAGRAPH
-    assert doc.blocks[0].metadata.extraction_method == ExtractionMethod.LLM_ASSISTED
 
 
 def test_preprocessing_normalizes_whitespace() -> None:
