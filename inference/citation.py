@@ -1,22 +1,8 @@
 """Citation formatting helpers with confidence-calibrated scoring."""
 
 import os
-import re
 from typing import Any, Dict, List
 
-NOISE_QUERY_TERMS = {
-    "random",
-    "rubbish",
-    "nonsense",
-    "garbage",
-    "asdf",
-    "qwerty",
-    "blah",
-    "test",
-    "unknown",
-    "irrelevant",
-    "nothing",
-}
 
 STOP_WORDS = {
     "the",
@@ -213,17 +199,15 @@ def format_citations(
     """Extract unique citations from retrieved chunks.
 
     Args:
-        chunks: List of chunk dicts returned by retrieval.
-        max_items: Max citation cards to return.
-        query: User query for intent-sensitive citation filtering.
+        chunks: List of chunk dicts returned by search_with_metadata,
+                each containing at least 'file_path' and optionally 'distance',
+                'text_content', and 'chunk_index'.
 
     Returns:
-        Deduplicated and ranked list of citation dicts matching frontend interface.
+        Deduplicated list of citation dicts matching the frontend Citation interface.
     """
-    q_terms = _query_terms(query)
-    noisy_query = _query_looks_noisy(q_terms, query)
-
-    grouped: Dict[str, Dict[str, Any]] = {}
+    seen = set()
+    citations: List[Dict[str, Any]] = []
     for chunk in chunks:
         path = chunk.get("file_path", "unknown")
         distance = chunk.get("distance")
@@ -332,11 +316,4 @@ def format_citations(
                 max(0.01, min(0.95, float(citation["relevance_score"]) * 0.45)),
                 4,
             )
-
-    for citation in trimmed:
-        citation.pop("_score", None)
-        citation.pop("_path_match", None)
-        citation.pop("_content_overlap", None)
-        citation.pop("_semantic", None)
-        citation.pop("_lexical", None)
-    return trimmed
+    return citations

@@ -157,7 +157,7 @@ export function ChatMessages() {
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="h-full overflow-y-auto overflow-x-hidden"
+        className="h-full overflow-y-auto"
       >
         <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
           {messages.map((message) => (
@@ -178,23 +178,19 @@ export function ChatMessages() {
 
               <div
                 className={cn(
-                  'flex-1 min-w-0 space-y-2 max-w-[80%]',
+                  'flex-1 space-y-2 max-w-[80%]',
                   message.role === 'user' && 'flex flex-col items-end'
                 )}
               >
                 <div
                   className={cn(
-                    'rounded-xl px-4 py-3',
+                    'rounded-lg px-4 py-3',
                     message.role === 'user'
                       ? 'bg-primary text-primary-foreground'
-                      : 'assistant-canvas bg-card border border-border/80 shadow-sm'
+                      : 'bg-muted'
                   )}
                 >
-                  {message.role === 'assistant' ? (
-                    renderMarkdown(message.content)
-                  ) : (
-                    <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
-                  )}
+                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                 </div>
 
                 {/* Citations - clickable to open file/folder locally */}

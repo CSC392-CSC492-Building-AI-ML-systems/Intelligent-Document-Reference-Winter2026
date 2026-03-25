@@ -107,35 +107,8 @@ export function ChatPage() {
         </div>
 
         {/* Input Area */}
-        <div
-          className={cn(
-            'border-t bg-card transition-all duration-200',
-            composerCollapsed ? 'px-4 py-2' : 'p-4'
-          )}
-        >
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-muted-foreground">
-              {composerCollapsed ? 'Message composer is minimized' : 'Ready to ask another question'}
-            </p>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="cursor-pointer"
-              onClick={() => setComposerCollapsed((prev) => !prev)}
-            >
-              {composerCollapsed ? (
-                <Maximize2 className="h-4 w-4 mr-1" />
-              ) : (
-                <Minimize2 className="h-4 w-4 mr-1" />
-              )}
-              {composerCollapsed ? 'Expand' : 'Minimize'}
-            </Button>
-          </div>
-          {!composerCollapsed && (
-            <div className="mt-3">
-              <ChatInput />
-            </div>
-          )}
+        <div className="border-t bg-card p-4">
+          <ChatInput />
         </div>
       </div>
     </div>

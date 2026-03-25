@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useBeforeUnload, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useChatContext } from '@/app/contexts/ChatContext';
 import { ExclusionConfigDialog } from '@/app/components/ExclusionConfigDialog';
 import { Button } from '@/app/components/ui/button';
@@ -30,40 +30,6 @@ import {
 } from '@/app/components/ui/select';
 import { ArrowLeft, Moon, Sun, Save, X, FolderOpen, FilePlus, RefreshCw, Trash2, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
-
-type SettingsTab = 'general' | 'models' | 'indexing' | 'advanced';
-
-interface IndexingSnapshot {
-  indexedFiles: string[];
-  indexedDirectories: string[];
-  excludedFiles: string[];
-  excludedDirectories: string[];
-  exclusionPatterns: string[];
-}
-
-function normalizeList(items: string[]): string[] {
-  return Array.from(new Set(items.map((item) => item.trim()).filter(Boolean))).sort();
-}
-
-function createIndexingSnapshot(
-  indexedFiles: string[],
-  indexedDirectories: string[],
-  excludedFiles: string[],
-  excludedDirectories: string[],
-  exclusionPatterns: string[]
-): IndexingSnapshot {
-  return {
-    indexedFiles: normalizeList(indexedFiles),
-    indexedDirectories: normalizeList(indexedDirectories),
-    excludedFiles: normalizeList(excludedFiles),
-    excludedDirectories: normalizeList(excludedDirectories),
-    exclusionPatterns: normalizeList(exclusionPatterns),
-  };
-}
-
-function snapshotsEqual(a: IndexingSnapshot, b: IndexingSnapshot): boolean {
-  return JSON.stringify(a) === JSON.stringify(b);
-}
 
 export function SettingsPage() {
   const navigate = useNavigate();
@@ -298,7 +264,6 @@ export function SettingsPage() {
       });
 
       if (success) {
-        setSavedSnapshot(currentSnapshot);
         toast.success('File indexing configuration saved successfully!');
       } else {
         toast.error('Failed to save file indexing configuration.');
@@ -402,12 +367,7 @@ export function SettingsPage() {
       {/* Header */}
       <div className="border-b bg-card">
         <div className="px-4 py-4 flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => guardNavigate('/chat')}
-            className="cursor-pointer"
-          >
+          <Button variant="ghost" size="icon" onClick={() => navigate('/chat')} className="cursor-pointer">
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <h1 className="text-2xl font-semibold">Settings</h1>
@@ -889,11 +849,6 @@ export function SettingsPage() {
                     )}
                   </Button>
                 </div>
-                {hasUnsavedIndexingChanges && (
-                  <p className="text-sm text-amber-700 dark:text-amber-400">
-                    You have unsaved indexing changes. Save Configuration before leaving this page.
-                  </p>
-                )}
               </CardContent>
             </Card>
 
