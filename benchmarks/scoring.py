@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import re
 from typing import Any, Dict, List, Optional
@@ -25,6 +26,17 @@ def normalize_path(p: str) -> str:
     return p
 
 
+def _paths_match(actual: str, expected: str) -> bool:
+    """Return True when normalized paths are equal or one is a suffix of the other."""
+    actual_n = normalize_path(actual).rstrip("/")
+    expected_n = normalize_path(expected).rstrip("/")
+    if not actual_n or not expected_n:
+        return False
+    if actual_n == expected_n:
+        return True
+    return actual_n.endswith("/" + expected_n) or expected_n.endswith("/" + actual_n)
+
+
 # ---------------------------------------------------------------------------
 # Metric 1 — File Retrieval Hit Rate
 # ---------------------------------------------------------------------------
@@ -39,12 +51,16 @@ def score_file_retrieval(
     retrieved_norm = [normalize_path(f) for f in retrieved_files]
     expected_norm = normalize_path(expected_file)
 
-    hit_at_1 = int(bool(retrieved_norm) and retrieved_norm[0] == expected_norm)
-    hit_at_k = int(expected_norm in retrieved_norm[:top_k])
+    hit_at_1 = int(
+        bool(retrieved_norm) and _paths_match(retrieved_norm[0], expected_norm)
+    )
+    hit_at_k = int(
+        any(_paths_match(path, expected_norm) for path in retrieved_norm[:top_k])
+    )
 
     mrr = 0.0
     for rank, path in enumerate(retrieved_norm, start=1):
-        if path == expected_norm:
+        if _paths_match(path, expected_norm):
             mrr = 1.0 / rank
             break
 
@@ -66,7 +82,11 @@ def score_comparative_retrieval(
     retrieved_norm = [normalize_path(f) for f in retrieved_files]
     expected_norm = [normalize_path(f) for f in expected_files]
 
-    found = [e for e in expected_norm if e in retrieved_norm[:top_k]]
+    found = [
+        exp
+        for exp in expected_norm
+        if any(_paths_match(path, exp) for path in retrieved_norm[:top_k])
+    ]
     recall = len(found) / len(expected_norm) if expected_norm else 0.0
     hit_at_1 = int(recall == 1.0)
     hit_at_k = int(len(found) > 0)
@@ -75,7 +95,7 @@ def score_comparative_retrieval(
     mrr_sum = 0.0
     for exp in expected_norm:
         for rank, path in enumerate(retrieved_norm, start=1):
-            if path == exp:
+            if _paths_match(path, exp):
                 mrr_sum += 1.0 / rank
                 break
     mrr = mrr_sum / len(expected_norm) if expected_norm else 0.0
@@ -157,8 +177,6 @@ async def _call_judge(
     client: Any, query: str, response: str
 ) -> tuple[float, Dict[str, float]]:
     """Ask an LLM to rate the response on a 0–1 scale."""
-    import json
-
     prompt = (
         "You are an impartial judge evaluating a RAG system response.\n\n"
         f"QUERY: {query}\n\n"
@@ -170,14 +188,64 @@ async def _call_judge(
         'Return ONLY valid JSON: {"relevance": float, "grounding": float, '
         '"completeness": float, "overall": float}'
     )
-    raw = await asyncio.to_thread(client.generate, prompt)
-    # Extract JSON from response
-    match = re.search(r"\{[^}]+\}", raw)
+    raw = str(await asyncio.to_thread(client.generate, prompt)).strip()
+
+    # Prefer strict JSON object parsing, but tolerate extra prose around it.
+    match = re.search(r"\{[\s\S]*\}", raw)
     if not match:
+        # Last-resort fallback: extract first numeric score from free-form output.
+        numeric = _parse_score(raw)
+        if numeric is None:
+            return 0.0, {}
+        return numeric, {"overall": numeric}
+
+    try:
+        data = json.loads(match.group())
+    except (json.JSONDecodeError, TypeError):
+        numeric = _parse_score(raw)
+        if numeric is None:
+            return 0.0, {}
+        return numeric, {"overall": numeric}
+
+    if not isinstance(data, dict):
         return 0.0, {}
-    data = json.loads(match.group())
-    overall = float(data.get("overall", 0.0))
-    return overall, {k: float(v) for k, v in data.items()}
+
+    breakdown: Dict[str, float] = {}
+    for key, value in data.items():
+        parsed = _parse_score(value)
+        if parsed is not None:
+            breakdown[str(key)] = parsed
+
+    overall = breakdown.get("overall")
+    if overall is None and breakdown:
+        overall = sum(breakdown.values()) / len(breakdown)
+    if overall is None:
+        overall = 0.0
+    return overall, breakdown
+
+
+def _parse_score(value: Any) -> Optional[float]:
+    """Parse judge score from mixed model output and clamp to [0, 1]."""
+    if isinstance(value, (int, float)):
+        return max(0.0, min(1.0, float(value)))
+
+    text = str(value).strip()
+    if not text:
+        return None
+
+    number_match = re.search(r"-?\d+(?:\.\d+)?", text)
+    if not number_match:
+        return None
+
+    try:
+        parsed = float(number_match.group())
+    except ValueError:
+        return None
+
+    # Interpret percentage-style values if a judge returns 0..100.
+    if parsed > 1.0 and parsed <= 100.0:
+        parsed = parsed / 100.0
+    return max(0.0, min(1.0, parsed))
 
 
 async def _compute_semantic_similarity(

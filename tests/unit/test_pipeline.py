@@ -10,6 +10,7 @@ from ingestion import (
     PipelineConfig,
     ingest,
 )
+from ingestion.models import SourceModality
 
 # --- Validity: result structure and chunk schema ---
 
@@ -100,6 +101,7 @@ def test_ingest_code_file_produces_code_chunks(tmp_path: Path) -> None:
     f.write_text(code)
 
     result = ingest(str(f), config=PipelineConfig(min_chars_store=10))
+    assert result.document.source_modality == SourceModality.CODE
     assert result.chunk_count >= 1
     combined = " ".join(c["text_content"] for c in result.chunks)
     print(
@@ -108,6 +110,17 @@ def test_ingest_code_file_produces_code_chunks(tmp_path: Path) -> None:
     assert "def greet" in combined
     assert "print" in combined
     assert "Jack" in combined
+
+
+def test_ingest_css_file_routed_as_code(tmp_path: Path) -> None:
+    """CSS is indexed as CODE (not plain TEXT) when using default modality."""
+    f = tmp_path / "styles.css"
+    f.write_text("body { margin: 0; padding: 0; }\n")
+
+    result = ingest(str(f), config=PipelineConfig(min_chars_store=5))
+    assert result.document.source_modality == SourceModality.CODE
+    assert result.chunk_count >= 1
+    assert "margin" in result.chunks[0]["text_content"]
 
 
 def test_ingest_filters_short_boilerplate(tmp_path: Path) -> None:

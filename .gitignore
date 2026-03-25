@@ -5,6 +5,7 @@
 __pycache__/
 *.py[cod]
 .python-version
+.mypy_cache/
 
 # Pytest cache
 .pytest_cache/
@@ -17,6 +18,7 @@ data/
 .env
 file_registry.db
 /node_modules
+desktop/mini-mode/node_modules/
 
 # macOS
 .DS_Store
@@ -26,7 +28,6 @@ file_registry.db
 
 # GitHub
 .github/
-ui/dist/
 
 # Test outputs
 output.txt
@@ -34,3 +35,5 @@ output2.txt
 
 # DB
 *.db
+
+file_indexing.yaml

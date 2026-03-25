@@ -99,7 +99,12 @@ class CrossPlatformWatcher(BaseWatcher):
 
     def unschedule_watch(self, path: str):
         if path in self._watched_paths:
-            self.observer.unschedule(self._watched_paths[path])
+            try:
+                self.observer.unschedule(self._watched_paths[path])
+            except (KeyError, Exception) as e:
+                self.logger.warning(
+                    f"Could not unschedule watch for {path} (already removed?): {e}"
+                )
             del self._watched_paths[path]
             self.logger.info(f"Stopped watching: {path}")
 

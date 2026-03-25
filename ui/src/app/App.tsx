@@ -3,6 +3,7 @@ import { ThemeProvider } from 'next-themes';
 import { ChatProvider, useChatContext } from '@/app/contexts/ChatContext';
 import { ChatPage } from '@/app/pages/ChatPage';
 import { SettingsPage } from '@/app/pages/SettingsPage';
+import { MiniModePage } from '@/app/pages/MiniModePage';
 import { Toaster } from '@/app/components/ui/sonner';
 import { useEffect } from 'react';
 
@@ -31,6 +32,7 @@ function AppContent() {
         <Route path="/" element={<Navigate to="/chat" replace />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/mini" element={<MiniModePage />} />
       </Routes>
       <Toaster theme={darkMode ? 'dark' : 'light'} position="top-right" richColors />
     </>

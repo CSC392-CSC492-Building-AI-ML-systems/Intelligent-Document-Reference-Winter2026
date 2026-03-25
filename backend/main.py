@@ -1,5 +1,6 @@
 """FastAPI app entrypoint."""
 
+import asyncio
 import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -13,6 +14,7 @@ from backend.api import (
     routes_chat,
     routes_files,
     routes_jobs,
+    routes_mini,
     routes_settings,
     routes_watcher,
 )
@@ -44,6 +46,10 @@ async def lifespan(application: FastAPI):
         ctx.watcher.start_background()
         logger.info("File watcher started via lifespan")
 
+    if ctx:
+        asyncio.create_task(routes_settings.prewarm_external_get_caches(ctx))
+        logger.info("Settings external GET cache prewarm scheduled")
+
     yield
 
     if ctx and ctx.watcher:
@@ -70,6 +76,7 @@ app.add_middleware(
 app.include_router(routes_chat.router)
 app.include_router(routes_files.router)
 app.include_router(routes_jobs.router)
+app.include_router(routes_mini.router)
 app.include_router(routes_settings.router)
 app.include_router(routes_watcher.router)
 

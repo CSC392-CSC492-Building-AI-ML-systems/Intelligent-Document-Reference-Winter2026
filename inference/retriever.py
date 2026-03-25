@@ -29,11 +29,8 @@ class Retriever:
         Returns:
             List of chunk dicts with text_content, file_path, distance.
         """
-        # embed_text is synchronous in all current clients
         query_vec = await asyncio.to_thread(self.embedder.embed_text, [query])
 
-        # When file_ids is an explicit empty list the user deselected all files;
-        # return no results instead of falling through to an unfiltered search.
         if file_ids is not None and len(file_ids) == 0:
             return []
 

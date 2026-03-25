@@ -22,7 +22,12 @@ except ImportError:
 class OpenAIEmbeddingClient(EmbeddingClient):
     """OpenAI client for text embeddings."""
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        model: str = "text-embedding-3-small",
+        dimensions: Optional[int] = None,
+    ):
         """Initialize OpenAI embedding client.
 
         Args:
@@ -46,6 +51,8 @@ class OpenAIEmbeddingClient(EmbeddingClient):
             )
 
         self.client = OpenAI(api_key=self.api_key)
+        self.model = model
+        self.dimensions = dimensions
 
     def embed_text(self, texts: List[str]) -> List[List[float]]:
         """Embed text inputs.
@@ -59,9 +66,14 @@ class OpenAIEmbeddingClient(EmbeddingClient):
         if not texts:
             return []
 
-        response = self.client.embeddings.create(
-            model="text-embedding-3-small", input=texts
-        )
+        params: Dict[str, Any] = {
+            "model": self.model,
+            "input": texts,
+        }
+        if self.dimensions is not None:
+            params["dimensions"] = int(self.dimensions)
+
+        response = self.client.embeddings.create(**params)
         return [item.embedding for item in response.data]
 
 

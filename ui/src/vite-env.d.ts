@@ -7,3 +7,11 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+interface Window {
+  miniMode?: {
+    dismiss: () => void;
+    focusMainWindow: () => void;
+    openFileInMain: (filePath: string) => void;
+  };
+}

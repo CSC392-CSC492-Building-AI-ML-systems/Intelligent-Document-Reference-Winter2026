@@ -2,10 +2,10 @@
 
 from config.settings import load_settings
 from core.context import AppContext
+from core.runtime_config import apply_runtime_clients
 from db import UnifiedDatabase
 from db.settings_store import SettingsStore
 from jobs import JobQueue, Scheduler
-from model_clients.registry import ClientRegistry
 from watcher import FileRegistry, FileTrackingService
 
 
@@ -14,16 +14,18 @@ def bootstrap() -> AppContext:
     settings = load_settings()
     ctx = AppContext(settings=settings)
 
-    ctx.embedding_client = ClientRegistry.get_client(
-        "embedding", settings.default_embedding_backend
-    )
-    ctx.inference_client = ClientRegistry.get_client(
-        "inference", settings.default_inference_backend
-    )
-
-    ctx.db = UnifiedDatabase(db_path=settings.unified_db_path)
-
     ctx.settings_store = SettingsStore(db_path=settings.unified_db_path)
+    apply_runtime_clients(ctx)
+
+    vector_dimension = int(
+        (ctx.runtime_preferences or {}).get(
+            "embedding_dimension", settings.embedding_dimension
+        )
+    )
+    ctx.db = UnifiedDatabase(
+        db_path=settings.unified_db_path,
+        vector_dimension=vector_dimension,
+    )
 
     job_queue = JobQueue(db_path=settings.unified_db_path)
     ctx.job_queue = job_queue

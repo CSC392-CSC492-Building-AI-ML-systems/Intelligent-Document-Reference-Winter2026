@@ -48,6 +48,31 @@ class PromptConfig:
 
 
 @dataclass
+class DatasetSuiteConfig:
+    """Per-dataset benchmark suite definition loaded from YAML."""
+
+    id: str
+    path: str
+    levels: Dict[str, int] = field(
+        default_factory=lambda: {"easy": 2, "medium": 2, "hard": 1}
+    )
+
+    @classmethod
+    def from_dict(cls, d: Dict[str, Any]) -> "DatasetSuiteConfig":
+        raw_levels = d.get("levels") if isinstance(d.get("levels"), dict) else {}
+        levels = {
+            "easy": int(raw_levels.get("easy", 2)),
+            "medium": int(raw_levels.get("medium", 2)),
+            "hard": int(raw_levels.get("hard", 1)),
+        }
+        return cls(
+            id=str(d.get("id") or d.get("path") or "dataset"),
+            path=str(d.get("path") or "").strip(),
+            levels=levels,
+        )
+
+
+@dataclass
 class BenchmarkConfig:
     """Top-level benchmark configuration."""
 
@@ -57,6 +82,7 @@ class BenchmarkConfig:
     runs_per_query: int = 3
     top_k: int = 5
     prompts: List[PromptConfig] = field(default_factory=list)
+    dataset_suites: List[DatasetSuiteConfig] = field(default_factory=list)
     no_graphs: bool = False
     output_dir: str = "benchmarks/results/"
     skip_indexing: bool = False
@@ -65,6 +91,7 @@ class BenchmarkConfig:
     def from_dict(cls, d: Dict[str, Any]) -> "BenchmarkConfig":
         bench = d.get("benchmark", {})
         raw_prompts = d.get("prompts", [])
+        raw_suites = bench.get("dataset_suites", [])
         return cls(
             name=bench.get("name", "RAG Pipeline Benchmark"),
             version=bench.get("version", "1.0.0"),
@@ -72,6 +99,11 @@ class BenchmarkConfig:
             runs_per_query=bench.get("runs_per_query", 3),
             top_k=bench.get("top_k", 5),
             prompts=[PromptConfig.from_dict(p) for p in raw_prompts],
+            dataset_suites=[
+                DatasetSuiteConfig.from_dict(s)
+                for s in raw_suites
+                if isinstance(s, dict)
+            ],
         )
 
 
@@ -151,6 +183,7 @@ class QueryResult:
     category: str = ""
     file_type: str = ""
     folder_size: str = ""
+    dataset_id: str = ""
     scores: RunScore = field(default_factory=RunScore)
     raw_runs: List[RunScore] = field(default_factory=list)
 
@@ -162,6 +195,7 @@ class QueryResult:
             "category": self.category,
             "file_type": self.file_type,
             "folder_size": self.folder_size,
+            "dataset_id": self.dataset_id,
             "hit_at_1": self.scores.retrieval.hit_at_1,
             "hit_at_k": self.scores.retrieval.hit_at_k,
             "mrr": self.scores.retrieval.mrr,

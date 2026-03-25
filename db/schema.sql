@@ -35,6 +35,8 @@ CREATE TABLE IF NOT EXISTS chunks (
     start_offset INTEGER,
     end_offset INTEGER,
     text_content TEXT NOT NULL,
+    page_number INTEGER,        -- Source page (PDFs); NULL for non-paged docs
+    section TEXT,               -- Section hierarchy e.g. "Chapter 1 > Methods"
     FOREIGN KEY(file_id) REFERENCES files(id) ON DELETE CASCADE,
     FOREIGN KEY(version_id) REFERENCES file_versions(id)
 );

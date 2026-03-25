@@ -3,13 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { FileNavigator } from '@/app/components/FileNavigator';
 import { ChatMessages } from '@/app/components/ChatMessages';
 import { ChatInput } from '@/app/components/ChatInput';
+import { useChatContext } from '@/app/contexts/ChatContext';
 import { Button } from '@/app/components/ui/button';
-import { Settings, PanelLeftClose, PanelLeft } from 'lucide-react';
+import { Settings, PanelLeftClose, PanelLeft, Minimize2, Maximize2, X } from 'lucide-react';
 import { cn } from '@/app/components/ui/utils';
 
 export function ChatPage() {
   const [showFileNav, setShowFileNav] = useState(true);
+  const [composerCollapsed, setComposerCollapsed] = useState(false);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
   const navigate = useNavigate();
+  const { reindexRequired, outdatedFileCount } = useChatContext();
 
   return (
     <div className="flex h-screen bg-background">
@@ -80,6 +84,22 @@ export function ChatPage() {
             Settings
           </Button>
         </div>
+
+        {reindexRequired && !bannerDismissed && (
+          <div className="border-b border-amber-300 bg-amber-50 px-4 py-2 text-amber-900 flex items-center justify-between gap-2">
+            <p className="text-sm">
+              Reindex required: {outdatedFileCount > 0 ? `${outdatedFileCount} file${outdatedFileCount === 1 ? '' : 's'} outdated.` : 'vectors outdated.'}{' '}
+              Go to Settings/File Indexing and run save/indexing to rebuild embeddings.
+            </p>
+            <button
+              onClick={() => setBannerDismissed(true)}
+              className="shrink-0 rounded p-0.5 hover:bg-amber-200 transition-colors cursor-pointer"
+              aria-label="Dismiss"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        )}
 
         {/* Messages Area */}
         <div className="flex-1 overflow-hidden">

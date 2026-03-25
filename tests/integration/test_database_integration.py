@@ -158,3 +158,15 @@ def test_update_file_metadata(db: UnifiedDatabase):
     assert record is not None
     assert record["file_hash"] == "hash"  # Unchanged
     assert record["last_modified_timestamp"] == new_mtime  # Updated
+
+
+def test_mark_file_failed_inserts_and_updates_status(db: UnifiedDatabase) -> None:
+    """Failed ingestion should persist status for file-tree APIs."""
+    path = "/tmp/failed_doc.py"
+    db.mark_file_failed(path, "h1", 10, 1.0)
+    statuses = db.get_all_file_statuses()
+    assert statuses[path] == "failed"
+
+    db.mark_file_failed(path, "h2", 11, 2.0)
+    statuses = db.get_all_file_statuses()
+    assert statuses[path] == "failed"

@@ -128,6 +128,16 @@
     @apply bg-background text-foreground;
   }
 
+  html.mini-mode-active,
+  body.mini-mode-active,
+  #root.mini-mode-active {
+    background: transparent !important;
+  }
+
+  body.mini-mode-active {
+    margin: 0;
+  }
+
   /**
   * Default typography styles for HTML elements (h1-h4, p, label, button, input).
   * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.

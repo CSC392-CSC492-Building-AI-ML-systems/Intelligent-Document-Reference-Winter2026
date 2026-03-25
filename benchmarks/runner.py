@@ -7,6 +7,7 @@ import csv
 import datetime
 import json
 import logging
+import os
 import time
 from collections import defaultdict
 from contextlib import contextmanager
@@ -16,6 +17,7 @@ from typing import Any, Dict, List, Optional, Set
 from benchmarks.models import (
     BenchmarkConfig,
     BenchmarkReport,
+    DatasetSuiteConfig,
     IndexingResult,
     LatencyProfile,
     QueryResult,
@@ -64,9 +66,15 @@ def timed():
 class BenchmarkRunner:
     """Run benchmark queries against the RAG pipeline and collect metrics."""
 
-    def __init__(self, config: BenchmarkConfig, ctx: Any) -> None:
+    def __init__(
+        self,
+        config: BenchmarkConfig,
+        ctx: Any,
+        indexing_llm_client: Any | None = None,
+    ) -> None:
         self.config = config
         self.ctx = ctx  # AppContext
+        self.indexing_llm_client = indexing_llm_client or ctx.inference_client
 
         # Build the high-level responder from the AppContext components
         from inference.responder import Responder
@@ -96,45 +104,63 @@ class BenchmarkRunner:
         self._log_path = Path(output_dir) / "benchmark_run.log"
         self._init_log_file()
 
-        # Use an isolated DB for the benchmark so we only retrieve
-        # files from the benchmark dataset (not leftover UI-indexed data).
-        self._setup_benchmark_db(output_dir)
-
-        # Step 1 — Indexing (unless --skip-indexing)
-        indexing_result = IndexingResult()
-        if not self.config.skip_indexing:
-            logger.info("Indexing dataset at %s …", self.config.dataset_path)
-            self._append_log("Indexing dataset at %s …" % self.config.dataset_path)
-            indexing_result = await self._run_indexing()
-            self._append_log(
-                "Indexing complete: %d docs, %d chunks in %.1fs"
-                % (
-                    indexing_result.doc_count,
-                    indexing_result.chunk_count,
-                    indexing_result.total_time_s,
-                )
-            )
-        else:
-            logger.info("Skipping indexing (--skip-indexing)")
-            self._append_log("Skipping indexing (--skip-indexing)")
-
-        # Build corpus file set after indexing
-        self._corpus_files = self._collect_corpus_files()
-
-        # Step 2 — Run queries sequentially, logging each result
-        total = len(self.config.prompts)
-        logger.info("Running %d prompts × %d runs …", total, self.config.runs_per_query)
-        self._append_log(
-            "Running %d prompts × %d runs …" % (total, self.config.runs_per_query)
-        )
-
+        suite_mode = bool(self.config.dataset_suites)
         results: List[QueryResult] = []
-        for idx, prompt in enumerate(self.config.prompts):
-            result = await self._run_query(prompt, None, idx + 1, total)
-            results.append(result)
-            self._log_query_result(result, idx + 1, total)
+        indexing_result = IndexingResult()
 
-        self._append_log("All %d prompts completed." % total)
+        if suite_mode:
+            self._append_log(
+                "Running dataset suite mode with %d datasets"
+                % len(self.config.dataset_suites)
+            )
+            for suite in self.config.dataset_suites:
+                suite_results, suite_indexing = await self._run_dataset_suite(
+                    suite=suite,
+                    output_dir=output_dir,
+                )
+                results.extend(suite_results)
+                indexing_result.total_time_s += suite_indexing.total_time_s
+                indexing_result.doc_count += suite_indexing.doc_count
+                indexing_result.chunk_count += suite_indexing.chunk_count
+                indexing_result.embedding_count += suite_indexing.embedding_count
+        else:
+            # Legacy single-dataset behavior.
+            self._setup_benchmark_db(output_dir)
+
+            if not self.config.skip_indexing:
+                logger.info("Indexing dataset at %s …", self.config.dataset_path)
+                self._append_log("Indexing dataset at %s …" % self.config.dataset_path)
+                indexing_result = await self._run_indexing()
+                self._append_log(
+                    "Indexing complete: %d docs, %d chunks in %.1fs"
+                    % (
+                        indexing_result.doc_count,
+                        indexing_result.chunk_count,
+                        indexing_result.total_time_s,
+                    )
+                )
+            else:
+                logger.info("Skipping indexing (--skip-indexing)")
+                self._append_log("Skipping indexing (--skip-indexing)")
+
+            self._corpus_files = self._collect_corpus_files()
+
+            total = len(self.config.prompts)
+            logger.info(
+                "Running %d prompts × %d runs …", total, self.config.runs_per_query
+            )
+            self._append_log(
+                "Running %d prompts × %d runs …" % (total, self.config.runs_per_query)
+            )
+
+            for idx, prompt in enumerate(self.config.prompts):
+                result = await self._run_query(
+                    prompt, None, idx + 1, total, dataset_id=""
+                )
+                results.append(result)
+                self._log_query_result(result, idx + 1, total)
+
+            self._append_log("All %d prompts completed." % total)
 
         # Step 3 — Aggregate
         report = self._aggregate(results, indexing_result, output_dir)
@@ -161,7 +187,7 @@ class BenchmarkRunner:
     # Isolated benchmark database
     # ------------------------------------------------------------------
 
-    def _setup_benchmark_db(self, output_dir: str) -> None:
+    def _setup_benchmark_db(self, output_dir: str, suffix: str = "") -> None:
         """Create a fresh, isolated DB for this benchmark run.
 
         This ensures the retriever only finds files from the benchmark
@@ -169,13 +195,24 @@ class BenchmarkRunner:
         """
         from db.unified import UnifiedDatabase
 
-        db_path = str(Path(output_dir) / "benchmark.db")
+        safe_suffix = f"_{suffix}" if suffix else ""
+        db_path = str(Path(output_dir) / f"benchmark{safe_suffix}.db")
         # Remove stale DB from a previous run so we start clean
         db_file = Path(db_path)
         if db_file.exists():
             db_file.unlink()
 
-        benchmark_db = UnifiedDatabase(db_path=db_path)
+        vector_dimension = int(
+            (getattr(self.ctx, "runtime_preferences", {}) or {}).get(
+                "embedding_dimension",
+                getattr(
+                    getattr(self.ctx, "settings", None), "embedding_dimension", 3072
+                ),
+            )
+        )
+        benchmark_db = UnifiedDatabase(
+            db_path=db_path, vector_dimension=vector_dimension
+        )
         self.ctx.db = benchmark_db
 
         # Re-wire the responder so it uses the benchmark DB too
@@ -187,8 +224,151 @@ class BenchmarkRunner:
             inference_client=self.ctx.inference_client,
         )
 
-        logger.info("Using isolated benchmark DB: %s", db_path)
-        self._append_log("Using isolated benchmark DB: %s" % db_path)
+        logger.info(
+            "Using isolated benchmark DB: %s (vector dim=%d)",
+            db_path,
+            vector_dimension,
+        )
+        self._append_log(
+            "Using isolated benchmark DB: %s (vector dim=%d)"
+            % (db_path, vector_dimension)
+        )
+
+    @staticmethod
+    def _normalize_path(path: str) -> str:
+        return path.replace("\\", "/").lower().strip()
+
+    def _prompt_expected_paths(self, prompt: Any) -> List[str]:
+        paths: List[str] = []
+        if getattr(prompt, "expected_file", None):
+            paths.append(str(prompt.expected_file))
+        if getattr(prompt, "expected_files", None):
+            paths.extend(str(p) for p in (prompt.expected_files or []))
+        if getattr(prompt, "expected_citation_file", None):
+            paths.append(str(prompt.expected_citation_file))
+        return paths
+
+    def _prompt_matches_suite(self, prompt: Any, suite_path: str) -> bool:
+        normalized_suite = self._normalize_path(suite_path).rstrip("/")
+        if not normalized_suite:
+            return False
+        marker = f"/{normalized_suite}/"
+        for raw in self._prompt_expected_paths(prompt):
+            normalized = f"/{self._normalize_path(raw).strip('/')}"
+            if marker in normalized + "/":
+                return True
+        return False
+
+    def _difficulty(self, prompt: Any) -> str:
+        category = str(getattr(prompt, "category", "")).lower()
+        folder_size = str(getattr(prompt, "folder_size", "")).lower()
+        if category in {"file_retrieval", "simple"}:
+            return "easy"
+        if category in {"medium", "comparative"}:
+            return "medium"
+        if category in {"code_understanding", "image_ocr"}:
+            return "hard"
+        if folder_size == "small":
+            return "easy"
+        if folder_size == "medium":
+            return "medium"
+        return "hard"
+
+    def _select_suite_prompts(self, suite: DatasetSuiteConfig) -> List[Any]:
+        matching = [
+            p for p in self.config.prompts if self._prompt_matches_suite(p, suite.path)
+        ]
+        if not matching:
+            return []
+
+        buckets: Dict[str, List[Any]] = {"easy": [], "medium": [], "hard": []}
+        for prompt in matching:
+            buckets[self._difficulty(prompt)].append(prompt)
+
+        selected: List[Any] = []
+        selected_ids: Set[str] = set()
+        for level in ("easy", "medium", "hard"):
+            target = max(0, int((suite.levels or {}).get(level, 0)))
+            if target <= 0:
+                continue
+            for prompt in buckets[level][:target]:
+                if prompt.id not in selected_ids:
+                    selected.append(prompt)
+                    selected_ids.add(prompt.id)
+
+        # If a bucket was short, top up from remaining matching prompts.
+        target_total = sum(max(0, int(v)) for v in (suite.levels or {}).values())
+        if len(selected) < target_total:
+            for prompt in matching:
+                if prompt.id in selected_ids:
+                    continue
+                selected.append(prompt)
+                selected_ids.add(prompt.id)
+                if len(selected) >= target_total:
+                    break
+
+        return selected
+
+    async def _run_dataset_suite(
+        self,
+        *,
+        suite: DatasetSuiteConfig,
+        output_dir: str,
+    ) -> tuple[List[QueryResult], IndexingResult]:
+        suite_id = suite.id or suite.path
+        suite_prompts = self._select_suite_prompts(suite)
+        if not suite_prompts:
+            self._append_log(
+                f"Skipping suite {suite_id}: no matching prompts for {suite.path}"
+            )
+            return [], IndexingResult()
+
+        self._append_log(
+            f"=== Suite {suite_id}: dataset={suite.path}, prompts={len(suite_prompts)} ==="
+        )
+        self._setup_benchmark_db(output_dir, suffix=suite_id)
+
+        previous_dataset_path = self.config.dataset_path
+        self.config.dataset_path = suite.path
+        indexing_result = IndexingResult()
+
+        try:
+            if not self.config.skip_indexing:
+                logger.info("Indexing suite %s at %s …", suite_id, suite.path)
+                self._append_log(f"Indexing dataset at {suite.path} …")
+                indexing_result = await self._run_indexing()
+                self._append_log(
+                    "Indexing complete: %d docs, %d chunks in %.1fs"
+                    % (
+                        indexing_result.doc_count,
+                        indexing_result.chunk_count,
+                        indexing_result.total_time_s,
+                    )
+                )
+            else:
+                self._append_log("Skipping indexing (--skip-indexing)")
+
+            self._corpus_files = self._collect_corpus_files()
+
+            suite_results: List[QueryResult] = []
+            total = len(suite_prompts)
+            self._append_log(
+                "Running %d prompts × %d runs for suite %s …"
+                % (total, self.config.runs_per_query, suite_id)
+            )
+            for idx, prompt in enumerate(suite_prompts):
+                result = await self._run_query(
+                    prompt,
+                    None,
+                    idx + 1,
+                    total,
+                    dataset_id=suite_id,
+                )
+                suite_results.append(result)
+                self._log_query_result(result, idx + 1, total)
+            return suite_results, indexing_result
+        finally:
+            self.config.dataset_path = previous_dataset_path
 
     # ------------------------------------------------------------------
     # Indexing
@@ -196,6 +376,7 @@ class BenchmarkRunner:
 
     async def _run_indexing(self) -> IndexingResult:
         """Index the dataset directory and return timing/counts."""
+        from ingestion.pipeline import PipelineConfig
         from ingestion.pipeline import run as run_ingestion
 
         dataset_path = Path(self.config.dataset_path).resolve()
@@ -203,13 +384,29 @@ class BenchmarkRunner:
             logger.error("Dataset path does not exist: %s", dataset_path)
             return IndexingResult()
 
-        with timed() as t:
-            output = await asyncio.to_thread(
-                run_ingestion,
-                str(dataset_path),
-                db=self.ctx.db,
-                embedder=self.ctx.embedding_client.embed_text,
+        # Benchmarks should be deterministic and independent from optional OCR tools.
+        previous_ocr_enabled = os.environ.get("OCR_ENABLED")
+        os.environ["OCR_ENABLED"] = "false"
+        try:
+            pipeline_cfg = PipelineConfig(
+                # Benchmark retrieval requires vectors to exist in vec_items.
+                embed_after_chunk=True,
+                dedup_enabled=True,
             )
+            with timed() as t:
+                output = await asyncio.to_thread(
+                    run_ingestion,
+                    str(dataset_path),
+                    config=pipeline_cfg,
+                    db=self.ctx.db,
+                    embedder=self.ctx.embedding_client.embed_text,
+                    llm_client=self.indexing_llm_client,
+                )
+        finally:
+            if previous_ocr_enabled is None:
+                os.environ.pop("OCR_ENABLED", None)
+            else:
+                os.environ["OCR_ENABLED"] = previous_ocr_enabled
 
         return IndexingResult(
             total_time_s=t["ms"] / 1000.0,
@@ -228,6 +425,7 @@ class BenchmarkRunner:
         semaphore: Optional[asyncio.Semaphore],
         idx: int,
         total: int,
+        dataset_id: str,
     ) -> QueryResult:
         """Execute a single prompt N times, score each run, and average."""
 
@@ -254,6 +452,7 @@ class BenchmarkRunner:
                 category=prompt.category,
                 file_type=prompt.file_type,
                 folder_size=prompt.folder_size,
+                dataset_id=dataset_id,
                 scores=averaged,
                 raw_runs=runs,
             )
@@ -377,7 +576,13 @@ class BenchmarkRunner:
 
         # Subgroup disaggregation
         subgroups: Dict[str, Dict[str, Any]] = {}
-        for dimension in ("query_type", "category", "file_type", "folder_size"):
+        for dimension in (
+            "query_type",
+            "category",
+            "file_type",
+            "folder_size",
+            "dataset_id",
+        ):
             groups: Dict[str, List[QueryResult]] = defaultdict(list)
             for r in results:
                 key = getattr(r, dimension, "unknown")
@@ -417,8 +622,26 @@ class BenchmarkRunner:
 
         sorted_lat = sorted(latencies)
 
+        expected_scored = [
+            r for r in results if bool((r.scores.retrieval.expected_file or "").strip())
+        ]
+        expected_total = len(expected_scored)
+        correct_at_1_count = sum(r.scores.retrieval.hit_at_1 for r in expected_scored)
+        correct_at_k_count = sum(r.scores.retrieval.hit_at_k for r in expected_scored)
+        incorrect_at_k_count = max(0, expected_total - correct_at_k_count)
+
         return {
             "count": n,
+            "retrieval_expected_total": expected_total,
+            "retrieval_correct_at_1_count": correct_at_1_count,
+            "retrieval_correct_at_k_count": correct_at_k_count,
+            "retrieval_incorrect_at_k_count": incorrect_at_k_count,
+            "retrieval_correct_at_1_rate": (
+                correct_at_1_count / expected_total if expected_total > 0 else 0.0
+            ),
+            "retrieval_correct_at_k_rate": (
+                correct_at_k_count / expected_total if expected_total > 0 else 0.0
+            ),
             "hit_rate_at_1": _avg(hit1),
             "hit_rate_at_k": _avg(hitk),
             "mrr": _avg(mrrs),
@@ -437,6 +660,22 @@ class BenchmarkRunner:
             ),
         }
 
+    @staticmethod
+    def _paths_match_for_report(actual: str, expected: str) -> bool:
+        actual_n = normalize_path(actual).rstrip("/")
+        expected_n = normalize_path(expected).rstrip("/")
+        if not actual_n or not expected_n:
+            return False
+        if actual_n == expected_n:
+            return True
+        return actual_n.endswith("/" + expected_n) or expected_n.endswith(
+            "/" + actual_n
+        )
+
+    @staticmethod
+    def _split_expected_paths(expected: str) -> List[str]:
+        return [part.strip() for part in str(expected).split(",") if part.strip()]
+
     # ------------------------------------------------------------------
     # Output file writing
     # ------------------------------------------------------------------
@@ -451,6 +690,10 @@ class BenchmarkRunner:
             "benchmark_name": self.config.name,
             "version": self.config.version,
             "dataset_path": self.config.dataset_path,
+            "dataset_suites": [
+                {"id": s.id, "path": s.path, "levels": s.levels}
+                for s in self.config.dataset_suites
+            ],
             "runs_per_query": self.config.runs_per_query,
             "top_k": self.config.top_k,
             "total_prompts": len(report.raw_results),
@@ -484,21 +727,46 @@ class BenchmarkRunner:
                 "prompt_id": r.prompt_id,
                 "query_type": r.query_type,
                 "expected_file": r.scores.retrieval.expected_file,
+                "expected_files": self._split_expected_paths(
+                    r.scores.retrieval.expected_file
+                ),
                 "retrieved_files": r.scores.retrieval.retrieved_files,
+                "matched_expected_files": [
+                    exp
+                    for exp in self._split_expected_paths(
+                        r.scores.retrieval.expected_file
+                    )
+                    if any(
+                        self._paths_match_for_report(ret, exp)
+                        for ret in r.scores.retrieval.retrieved_files
+                    )
+                ],
+                "match_debug": {
+                    "matched_expected_count": sum(
+                        1
+                        for exp in self._split_expected_paths(
+                            r.scores.retrieval.expected_file
+                        )
+                        if any(
+                            self._paths_match_for_report(ret, exp)
+                            for ret in r.scores.retrieval.retrieved_files
+                        )
+                    ),
+                    "retrieved_count": len(r.scores.retrieval.retrieved_files),
+                },
                 "hit_at_k": r.scores.retrieval.hit_at_k,
             }
             for r in report.raw_results
             if r.scores.retrieval.expected_file and r.scores.retrieval.hit_at_k == 0
         ]
-        if failed:
-            (out / "failed_retrievals.json").write_text(
-                json.dumps(failed, indent=2, default=str), encoding="utf-8"
-            )
-            logger.info(
-                "Wrote %d failed retrievals to %s",
-                len(failed),
-                out / "failed_retrievals.json",
-            )
+        (out / "failed_retrievals.json").write_text(
+            json.dumps(failed, indent=2, default=str), encoding="utf-8"
+        )
+        logger.info(
+            "Wrote %d failed retrievals to %s",
+            len(failed),
+            out / "failed_retrievals.json",
+        )
 
         # --- hallucinated_citations.json ---
         hallucinated = [
@@ -510,15 +778,14 @@ class BenchmarkRunner:
             for r in report.raw_results
             if r.scores.citation.hallucinated_citations
         ]
-        if hallucinated:
-            (out / "hallucinated_citations.json").write_text(
-                json.dumps(hallucinated, indent=2, default=str), encoding="utf-8"
-            )
-            logger.info(
-                "Wrote %d hallucination records to %s",
-                len(hallucinated),
-                out / "hallucinated_citations.json",
-            )
+        (out / "hallucinated_citations.json").write_text(
+            json.dumps(hallucinated, indent=2, default=str), encoding="utf-8"
+        )
+        logger.info(
+            "Wrote %d hallucination records to %s",
+            len(hallucinated),
+            out / "hallucinated_citations.json",
+        )
 
     # ------------------------------------------------------------------
     # Terminal summary
@@ -545,6 +812,12 @@ class BenchmarkRunner:
 
         # Retrieval
         print(f"║{'  RETRIEVAL':─<{W}}║")
+        print(
+            f"║    Correct@K:    {int(o.get('retrieval_correct_at_k_count', 0)):>4d}/"
+            f"{int(o.get('retrieval_expected_total', 0)):<4d}"
+            f" ({o.get('retrieval_correct_at_k_rate', 0):>5.1%})"
+            f"{'':>{W - 45}}║"
+        )
         print(f"║    Hit@1:        {o.get('hit_rate_at_1', 0):>8.1%}{'':>{W - 29}}║")
         print(f"║    Hit@K:        {o.get('hit_rate_at_k', 0):>8.1%}{'':>{W - 29}}║")
         print(f"║    MRR:          {o.get('mrr', 0):>8.3f}{'':>{W - 29}}║")

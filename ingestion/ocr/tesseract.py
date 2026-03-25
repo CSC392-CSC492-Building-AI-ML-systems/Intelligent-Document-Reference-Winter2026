@@ -23,7 +23,13 @@ class TesseractOCRProvider(OCRProvider):
 
         Args:
             lang: Tesseract language code(s), e.g. 'eng' or 'eng+fra'.
+
+        Raises:
+            ImportError: if pytesseract or Pillow is not installed.
         """
+        import pytesseract  # noqa: F401 — fail fast if not installed
+        from PIL import Image as _Image  # noqa: F401
+
         self._lang = lang
 
     def extract_text(
@@ -56,7 +62,7 @@ class TesseractOCRProvider(OCRProvider):
         except pytesseract.TesseractNotFoundError:
             global _tesseract_warned
             if not _tesseract_warned:
-                logger.warning(
+                logger.debug(
                     "Tesseract binary not found — skipping OCR for image files. "
                     "Install Tesseract to enable OCR: https://github.com/tesseract-ocr/tesseract"
                 )

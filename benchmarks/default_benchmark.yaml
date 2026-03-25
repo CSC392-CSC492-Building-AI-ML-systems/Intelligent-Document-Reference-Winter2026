@@ -7,6 +7,61 @@ benchmark:
   dataset_path: "datasets/"
   runs_per_query: 3
   top_k: 5
+  dataset_suites:
+    - id: dataset0
+      path: datasets/dataset0
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset1
+      path: datasets/dataset1
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset2
+      path: datasets/dataset2
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset3
+      path: datasets/dataset3
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset4
+      path: datasets/dataset4
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset5
+      path: datasets/dataset5
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset6
+      path: datasets/dataset6
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset7
+      path: datasets/dataset7
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset8
+      path: datasets/dataset8
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset9
+      path: datasets/dataset9
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset10
+      path: datasets/dataset10
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset11
+      path: datasets/dataset11
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset12
+      path: datasets/dataset12
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset13
+      path: datasets/dataset13
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset14
+      path: datasets/dataset14
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset15
+      path: datasets/dataset15
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset16
+      path: datasets/dataset16
+      levels: { easy: 2, medium: 2, hard: 1 }
+    - id: dataset17
+      path: datasets/dataset17
+      levels: { easy: 2, medium: 2, hard: 1 }
 
 prompts:
   # ======================================================================

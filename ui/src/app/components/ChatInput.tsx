@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useChatContext, InferenceMode, ModelType } from '@/app/contexts/ChatContext';
+import { useState, useMemo } from 'react';
+import { useChatContext } from '@/app/contexts/ChatContext';
 import { Button } from '@/app/components/ui/button';
 import { Textarea } from '@/app/components/ui/textarea';
 import {
@@ -9,31 +9,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/app/components/ui/select';
-import { Send, Search, MessageCircleQuestion, Microscope, Sparkles } from 'lucide-react';
-
-const modeIcons = {
-  retrieval: Search,
-  'q&a': MessageCircleQuestion,
-  'deep-research': Microscope,
-};
-
-const modeLabels = {
-  retrieval: 'Retrieval',
-  'q&a': 'Q&A',
-  'deep-research': 'Deep Research',
-};
-
-const modelLabels = {
-  'gpt-4': 'GPT-4',
-  'gemini-2.5': 'Gemini 2.5',
-  'claude-3': 'Claude 3',
-  'llama-3': 'Llama 3',
-};
+import { Send, Search, Sparkles } from 'lucide-react';
 
 export function ChatInput() {
-  const { inferenceMode, setInferenceMode, selectedModel, setSelectedModel, sendMessage, indexedFiles, indexedDirectories, pipelineReady, indexedChunkCount } =
+  const {
+    selectedModel,
+    setSelectedModel,
+    availableInferenceModels,
+    sendMessage,
+    messages,
+    indexedFiles,
+    indexedDirectories,
+    pipelineReady,
+    indexedChunkCount,
+  } =
     useChatContext();
   const [input, setInput] = useState('');
+
+  const lastUserPrompt = useMemo(() => {
+    const lastUserMessage = [...messages].reverse().find((message) => message.role === 'user');
+    return lastUserMessage?.content ?? '';
+  }, [messages]);
 
   // Allow chatting if either the YAML config lists files/dirs OR the backend has indexed chunks
   const canChat = indexedFiles.length > 0 || indexedDirectories.length > 0 || (pipelineReady && indexedChunkCount > 0);
@@ -51,6 +47,13 @@ export function ChatInput() {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
+      return;
+    }
+
+    // Recall the latest user prompt when the composer is empty.
+    if (e.key === 'ArrowUp' && !input.trim() && lastUserPrompt) {
+      e.preventDefault();
+      setInput(lastUserPrompt);
     }
   };
 
@@ -87,35 +90,21 @@ export function ChatInput() {
         />
         
         <div className="absolute bottom-2 left-2 right-2 flex items-center gap-2">
-          <Select value={inferenceMode} onValueChange={(value) => setInferenceMode(value as InferenceMode)}>
-            <SelectTrigger className="w-[160px] h-9 border-black cursor-pointer">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {(Object.keys(modeIcons) as InferenceMode[]).map((mode) => {
-                const Icon = modeIcons[mode];
-                return (
-                  <SelectItem key={mode} value={mode} className="cursor-pointer">
-                    <div className="flex items-center gap-2">
-                      <Icon className="h-4 w-4" />
-                      <span>{modeLabels[mode]}</span>
-                    </div>
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
+          <div className="flex items-center gap-2 px-3 h-9 border rounded-md border-black">
+            <Search className="h-4 w-4" />
+            <span className="text-sm">Retrieval</span>
+          </div>
 
-          <Select value={selectedModel} onValueChange={(value) => setSelectedModel(value as ModelType)}>
+          <Select value={selectedModel} onValueChange={setSelectedModel}>
             <SelectTrigger className="w-[160px] h-9 border-black cursor-pointer">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {(Object.keys(modelLabels) as ModelType[]).map((model) => (
+              {availableInferenceModels.map((model) => (
                 <SelectItem key={model} value={model} className="cursor-pointer">
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-4 w-4" />
-                    <span>{modelLabels[model]}</span>
+                    <span>{model}</span>
                   </div>
                 </SelectItem>
               ))}
@@ -134,7 +123,8 @@ export function ChatInput() {
       <div className="text-xs text-muted-foreground">
         Press <kbd className="px-1.5 py-0.5 bg-muted rounded border">Enter</kbd> to send,{' '}
         <kbd className="px-1.5 py-0.5 bg-muted rounded border">Shift</kbd> +{' '}
-        <kbd className="px-1.5 py-0.5 bg-muted rounded border">Enter</kbd> for new line
+        <kbd className="px-1.5 py-0.5 bg-muted rounded border">Enter</kbd> for new line,{' '}
+        <kbd className="px-1.5 py-0.5 bg-muted rounded border">↑</kbd> to recall your last prompt
       </div>
     </form>
   );
